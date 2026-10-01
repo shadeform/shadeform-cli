@@ -5,12 +5,14 @@ management:
   docVersion: 1.0.0
   speakeasyVersion: 1.800.0
   generationVersion: 2.943.0
-  releaseVersion: 0.1.2
-  configChecksum: d792b1ccfdea7a8df7ca1ef9c9e6e05c
+  releaseVersion: 0.1.3
+  configChecksum: de0780804a6a82d45860f438c31f6489
+  repoURL: https://github.com/shadeform/shadeform-cli.git
+  installationURL: https://github.com/shadeform/shadeform-cli
 persistentEdits:
-  generation_id: db0f0558-578a-4787-a42b-48f641bd3e26
-  pristine_commit_hash: be2e272b7636244f85c5e871df3e1b62ebad5aa8
-  pristine_tree_hash: 8dd20b83b40b4d97020ba83275d9d9b69b9d9ed8
+  generation_id: 2d776318-7e4e-4558-884c-1838863111c4
+  pristine_commit_hash: 5be51b193122fc2387dd94615bc6660a53a7f1f3
+  pristine_tree_hash: 229f20193de166783ebe54a2dc86b974ba7f1a63
 features:
   cli:
     constsAndDefaults: 0.0.0
@@ -178,8 +180,8 @@ trackedFiles:
     pristine_git_object: 89fc7db031d67c577574a8f36407591d11244309
   internal/cli/version.go:
     id: 7b0665492f72
-    last_write_checksum: sha1:9ece47960bbe461f3c1fa999a5c2b2d4e59bffcc
-    pristine_git_object: 797d890ea4164a96b19ae1fe801f0ec75cfb9606
+    last_write_checksum: sha1:39d4c2a2c1ec62d6c30fb699b06a6d219ef56c1f
+    pristine_git_object: cd09dd8063d55bd46f0c0c7a7cb290902a24a9ca
   internal/cli/volumes/create.go:
     id: b0b9373f2b85
     last_write_checksum: sha1:a0d85fcd9c8dd9b3102cee4cb9a3f57792d91306
@@ -710,8 +712,8 @@ trackedFiles:
     pristine_git_object: ee524a456747237f820b3889e6eb50b516d40a60
   internal/sdk/shadeform.go:
     id: 16d1ebef77ce
-    last_write_checksum: sha1:f52c8c483fd45a57cf98fb0cf3465f5a8914bc48
-    pristine_git_object: f0ee42c2ac8e8c08ef5dd16c9fd09547fec078d8
+    last_write_checksum: sha1:a87bb015ae32cbd2c38af2fd1cbc16c0b5eecec6
+    pristine_git_object: 03ad5b7f821f8d96e8ab10f0db1a97116b1b1f6e
   internal/sdk/sshkeys.go:
     id: 53ea6c91766f
     last_write_checksum: sha1:2bb09ba0f10c0dc81fdd5f6f82c71910b5eb1109
@@ -750,8 +752,8 @@ trackedFiles:
     pristine_git_object: 6916d304d153859ed48388a8d0d6fea484314656
   internal/usage/schema.go:
     id: 0f40f4612437
-    last_write_checksum: sha1:c4693a7fb2eafb6f9e9852f6702179b07b71d5eb
-    pristine_git_object: b28407dba555cc1af94df67f2c0e7e85dfc01f9b
+    last_write_checksum: sha1:5255bd62b20d4ca6be9fa8569f4ac7b5514ad4d5
+    pristine_git_object: 4310b8fe55e96c1ef73071af031e2161d6fc847e
   scripts/install.ps1:
     id: fee0853709e9
     last_write_checksum: sha1:2aff9aa451ad16c66bacddb2def0db9429a5177d

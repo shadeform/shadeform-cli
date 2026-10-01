@@ -1,0 +1,942 @@
+lockVersion: 2.0.0
+id: 595f323d-8232-4ac8-8c5f-9520148d2bca
+management:
+  docChecksum: 3a0a3801ffd5d3e11d63e060167c2e98
+  docVersion: 1.0.0
+  speakeasyVersion: 1.800.0
+  generationVersion: 2.943.0
+  releaseVersion: 0.1.2
+  configChecksum: d792b1ccfdea7a8df7ca1ef9c9e6e05c
+persistentEdits:
+  generation_id: db0f0558-578a-4787-a42b-48f641bd3e26
+  pristine_commit_hash: be2e272b7636244f85c5e871df3e1b62ebad5aa8
+  pristine_tree_hash: 8dd20b83b40b4d97020ba83275d9d9b69b9d9ed8
+features:
+  cli:
+    constsAndDefaults: 0.0.0
+    core: 0.6.2
+    globalSecurity: 0.1.0
+    globalServerURLs: 0.1.0
+    nameOverrides: 0.0.0
+    responseFormat: 0.1.1
+trackedFiles:
+  .gitattributes:
+    id: 24139dae6567
+    last_write_checksum: sha1:84b0115789fc3ea52e31df701d8a27f76077e29f
+    pristine_git_object: e6a994416d0f527912d2d272e2583458f4fc9bcb
+  .github/workflows/release.yaml:
+    id: 3679a1429145
+    last_write_checksum: sha1:e2f065141111bf701e1d37427ef7538c648da4d5
+    pristine_git_object: 54bb73b86e11fd7bbb8e235689926d17eae04317
+  .goreleaser.yaml:
+    id: 3c333d227063
+    last_write_checksum: sha1:c529abe290826b0c343929e552676a2b3c0951e8
+    pristine_git_object: 1e3784d73f68577ee41fafc40f61f62f4a4966b4
+  USAGE.md:
+    id: 3aed33ce6e6f
+    last_write_checksum: sha1:507f54c607436b2dfa09d4259b7328bc4d5c79e3
+    pristine_git_object: 3c391c91dd64cf2d9a24459ce8534721011bf31c
+  cmd/gendocs/main.go:
+    id: 20d9382a7dff
+    last_write_checksum: sha1:6ac8d60ab59f8e4d70fe69af65db3212004492a1
+    pristine_git_object: a4dead91bf97017c6c6ff69c104c95ae7a34ba62
+  cmd/gendocs/main_test.go:
+    id: a67b0ec90d93
+    last_write_checksum: sha1:0ff1d37bcec8ccedda5f7c5bf6ee7a6a3a106566
+    pristine_git_object: 7ea6b42d1700255d5afb4e0e180ed2c3a21ba9b5
+  cmd/shadeform/main.go:
+    id: 2c1fc06c7444
+    last_write_checksum: sha1:a3cc6be18ec2b2db716172d1c320653cefc8cfc6
+    pristine_git_object: 1dcca5b680223658dfb40783019494e7364b7eeb
+  go.mod:
+    id: c47645c391ad
+    last_write_checksum: sha1:085e9cd017e1ed3db366826ee721bb24c7bfe3a6
+    pristine_git_object: 1012eb8d4e4f5c6639347bfa25bd88461d2643ef
+  internal/cli/auth.go:
+    id: 5ae1b1dce495
+    last_write_checksum: sha1:41b9e1b88dc8d5d142fac8c3024564890e6b8391
+    pristine_git_object: 0eb0a4fadde7376016eaddbb02605d8fd77da668
+  internal/cli/clusters/create.go:
+    id: 216d2bb67f95
+    last_write_checksum: sha1:41942d43c61cfa1f0af381c3f2d249c8d5566dd8
+    pristine_git_object: 40d5985df4fdba85e7f4c03198bb9ff69cfacad9
+  internal/cli/clusters/delete.go:
+    id: c7d1ea7c5b14
+    last_write_checksum: sha1:4c48091321a19fdccf71c055744027e36d0afe45
+    pristine_git_object: 8ef6da0514205faa2e1f4deb0d51dec0418257da
+  internal/cli/clusters/get.go:
+    id: 5e64eca3682a
+    last_write_checksum: sha1:91a0ddfa00358e84ddfc7e467676ebbb27dbc72f
+    pristine_git_object: 26678b4747b2139484e078bc82002683a6c09f00
+  internal/cli/clusters/list.go:
+    id: ae4a1189e70f
+    last_write_checksum: sha1:7008ef8cb124e386cf7bd293608536ba75b14757
+    pristine_git_object: f4b852180d5b0b49e47343867a613ee507dcb597
+  internal/cli/clusters/listtypes.go:
+    id: e4b1134cbe89
+    last_write_checksum: sha1:ae958cc85b237b34bea72391eed7f40ef71ef90c
+    pristine_git_object: 8be5ddf977bc267b5699e980c7cb3b71ae538b61
+  internal/cli/clusters/root.go:
+    id: f966de12bdf0
+    last_write_checksum: sha1:6bbb06022e9fbbba512710488f403d664993067c
+    pristine_git_object: f0def9266b2204ec0003ae59549ddda240ef77f1
+  internal/cli/configure.go:
+    id: 36d400bc4372
+    last_write_checksum: sha1:a805d1678aa1ddaadf1a6d8070a86741e602e05a
+    pristine_git_object: 4ae27ed2c46c5bfa4e67fbc8519d2aff698cde05
+  internal/cli/instances/create.go:
+    id: 9e702d8aea35
+    last_write_checksum: sha1:ffd1f417e596c913db52a0862d244586aad2be7b
+    pristine_git_object: 044b9824544ed961b45d74b56df01c803dd3501c
+  internal/cli/instances/delete.go:
+    id: 4a7e43e335f0
+    last_write_checksum: sha1:02dbe10a73f23fe6eaea4288dc029ed5d68be327
+    pristine_git_object: d563e5ebab995a3116b33fffd8dc4f35fd5e8521
+  internal/cli/instances/get.go:
+    id: 58ae9301ab72
+    last_write_checksum: sha1:16af80be48afc0e1ef48e0aeaba727b7acdfa1ef
+    pristine_git_object: 1c6106084698b9b7582c6b669d83d175baf67d32
+  internal/cli/instances/list.go:
+    id: e22fabcff24f
+    last_write_checksum: sha1:ca53cdf0f015030be585670646ee8a9c348e379c
+    pristine_git_object: 43f49a3859b5cc1ed8328ee44137f6d0482afab7
+  internal/cli/instances/listtypes.go:
+    id: 1ad8d3f12c48
+    last_write_checksum: sha1:c4863bdcba530dd1889bac65f67c9ec9baed43e7
+    pristine_git_object: 72035a543fbdd68f046f8eb0354d21ad7da7a26d
+  internal/cli/instances/restart.go:
+    id: 0a0696aa0e0f
+    last_write_checksum: sha1:08bbb46a9604ca36b64159644621b85a040fb6d9
+    pristine_git_object: 302911518d772b2e28ae517b5d436c6fc8a740ef
+  internal/cli/instances/root.go:
+    id: 9e31164b6cab
+    last_write_checksum: sha1:63fb3d1d2f6a03712eec2d15d3819d997b7a82b4
+    pristine_git_object: 0f4f949c284cc03c5a62b901ffe7cbc085223993
+  internal/cli/instances/update.go:
+    id: 4edd50545f09
+    last_write_checksum: sha1:c5ee10d7dae5a7ea277e52a63d42f083dc0014d6
+    pristine_git_object: 28f14208f65f68f4862ecec90810c363815f1871
+  internal/cli/masking.go:
+    id: dd6ad60ba8bc
+    last_write_checksum: sha1:5a69fa055d628c1b8507cd123f3cd18309aa9a53
+    pristine_git_object: 50ef7ee485832714bbbc1c86cb50b7bcc8eb92c7
+  internal/cli/root.go:
+    id: 239d55a0d6be
+    last_write_checksum: sha1:6cdf7ab91f86d8d116eff91e0f96ef0db9461844
+    pristine_git_object: f9e8d228af4dd4ee9cb1d4c1dfc6d40df59451ce
+  internal/cli/sshkeys/add.go:
+    id: a8537348b160
+    last_write_checksum: sha1:8095db5e7d5a6a08d31486796c4f880f4e337cab
+    pristine_git_object: b14a29dcb61b7fc27723b6dec67d04d351b59625
+  internal/cli/sshkeys/delete.go:
+    id: 342242aee52d
+    last_write_checksum: sha1:9d6d3ccec00d75efa9210941f429ee72b772ecbd
+    pristine_git_object: e32c2bb585814d5e863ec0e59f149cc636dba83e
+  internal/cli/sshkeys/get.go:
+    id: ea2d8a952080
+    last_write_checksum: sha1:3c7f27b9b20be31c0013d758946f10058a12f69d
+    pristine_git_object: 8d39ac6b887fe99bf16774e0e07407a8ef1d0c8b
+  internal/cli/sshkeys/list.go:
+    id: 2d46af5f001a
+    last_write_checksum: sha1:cbe93de8a99658b7e00d4f5d07ec18df34e7ad59
+    pristine_git_object: 359f111fc40f0f1eb056c0f81c8bdddbc779821c
+  internal/cli/sshkeys/root.go:
+    id: a683cf4a8c88
+    last_write_checksum: sha1:20ba3d8e0413cf65aea3f9b8efbc1121adfd5078
+    pristine_git_object: 01e9e85575a420336cf23c2d430d27c6a9ed486b
+  internal/cli/sshkeys/setdefault.go:
+    id: 7a799a53356a
+    last_write_checksum: sha1:bf71d8c24135fefd119d97fdcce7505e5196014f
+    pristine_git_object: 556820f3bb74e05110c1f607555280e446262608
+  internal/cli/templates/delete.go:
+    id: cfece248860d
+    last_write_checksum: sha1:66b132d8618d91b5919ca60b2ef5c65cdf2e44de
+    pristine_git_object: 2f3501a6d2ae8466b9f53fc61224fccb35dc9222
+  internal/cli/templates/get.go:
+    id: f6ee5183fc1c
+    last_write_checksum: sha1:baa80bb62c4e4d01a6328baf8b5e57e34adb6f4e
+    pristine_git_object: 677534bd06311a12945fc761e9d07e39de52b3e6
+  internal/cli/templates/list.go:
+    id: 9d2935a8af37
+    last_write_checksum: sha1:e24e952c3a2be40c9555b6362659737588316715
+    pristine_git_object: f59ac783bbf3fa348177689b9518697d0fc9df13
+  internal/cli/templates/listfeatured.go:
+    id: bff8665df755
+    last_write_checksum: sha1:dc6c01bf0521d361ab82d591b6a212d7fa8d157e
+    pristine_git_object: 1a96cf4248e913fb98f8da9997610f4aee609545
+  internal/cli/templates/root.go:
+    id: 98fa7ce63e9d
+    last_write_checksum: sha1:c45f5592eb3dd9896a4d77c222c7349bd05e8c38
+    pristine_git_object: e313361a27af8fbf884919a08f5ac58fae051caa
+  internal/cli/templates/save.go:
+    id: 3b46abbf1667
+    last_write_checksum: sha1:3da210ded1bf64f5689c03b5f7d47acaf5d6f1ec
+    pristine_git_object: c7054a665e7c3b03c2a1357dd13fe46bc34af8f5
+  internal/cli/templates/update.go:
+    id: 507d9866733f
+    last_write_checksum: sha1:de34413e5d9ccad30bef74f123cb54c97f5bec51
+    pristine_git_object: 89fc7db031d67c577574a8f36407591d11244309
+  internal/cli/version.go:
+    id: 7b0665492f72
+    last_write_checksum: sha1:9ece47960bbe461f3c1fa999a5c2b2d4e59bffcc
+    pristine_git_object: 797d890ea4164a96b19ae1fe801f0ec75cfb9606
+  internal/cli/volumes/create.go:
+    id: b0b9373f2b85
+    last_write_checksum: sha1:a0d85fcd9c8dd9b3102cee4cb9a3f57792d91306
+    pristine_git_object: 274e79c42dc3c20f8db38cf9836b6b4bb2ef6a06
+  internal/cli/volumes/delete.go:
+    id: 9539fcc60bb0
+    last_write_checksum: sha1:ca7d428c10a8620a7c9a28abbeafb6df81532e7f
+    pristine_git_object: 45b025ed160f5cc69e75413d27b518197541eca0
+  internal/cli/volumes/get.go:
+    id: cb13c9ea4da6
+    last_write_checksum: sha1:76ab3a97eba071d8d0c335eef3ba2c177b2bbb30
+    pristine_git_object: 8a03339cdfc907edb925334789d6182d841aac8b
+  internal/cli/volumes/list.go:
+    id: 4c7ba458333a
+    last_write_checksum: sha1:b8d8ed644e1e8ac7d8560cff19e9cfd7b0578ba3
+    pristine_git_object: e288d4e3fb042c411b655dd8f4d4910b2334badf
+  internal/cli/volumes/listtypes.go:
+    id: 344adcf02c31
+    last_write_checksum: sha1:842cecd78a4be78273c7b0959c22cda32ac931b2
+    pristine_git_object: 66ee667adce1c53c10834022ab940044b071299a
+  internal/cli/volumes/root.go:
+    id: ee877f569b53
+    last_write_checksum: sha1:fa6c02b8b6777123e3f91a5a478802e1c8fef2dc
+    pristine_git_object: 4e1f2d23639345c2ef509c618c66dd7c2ac6ba81
+  internal/cli/whoami.go:
+    id: c1787f2298ec
+    last_write_checksum: sha1:b45ee0ce14742fbaaae53ef30b639006e53f3c3f
+    pristine_git_object: 8dc209deb45a0d60cfb50e898f2297382d2b7a9e
+  internal/client/client.go:
+    id: 5898305eedad
+    last_write_checksum: sha1:d8e64ba15d03cf2c91059a5b9fb58c6cbd773c29
+    pristine_git_object: 978f4ed5dd37480b35b3d01f7547f88fa8964c84
+  internal/client/diagnostics.go:
+    id: b4a77b4f6df9
+    last_write_checksum: sha1:c36293f7545854870d644b763fa416a3bb7781b6
+    pristine_git_object: 2d41cb7e19594daf1fd6cf7d004c4873e26866b6
+  internal/clierrors/clierrors.go:
+    id: d96985b77c74
+    last_write_checksum: sha1:e17fb3e33e439c6997834182011540427d760857
+    pristine_git_object: 0763adbc9444341cb43b138373894c29c047ed3b
+  internal/config/config.go:
+    id: 4ccc1a5e56a7
+    last_write_checksum: sha1:8fc1e9dbd3bf32368d1341324ab2e9c8a103168c
+    pristine_git_object: 5f4a62467d0ef1dbd18a13b3d4e4de731afb8962
+  internal/config/keyring.go:
+    id: 61bf1449e290
+    last_write_checksum: sha1:f72a8a7e8804523766bac15ca99e97af94c8ff30
+    pristine_git_object: d4499e5814718c226b6cc692dffad4315e23e35d
+  internal/explorer/explorer.go:
+    id: 544a9bc78db8
+    last_write_checksum: sha1:fce74125eb90e8db82b77cc0f0c96d10bc30bfb9
+    pristine_git_object: 5ef8f627ea103e8970265e216e4a49945dfd9b06
+  internal/explorer/styles.go:
+    id: f50091b6a6af
+    last_write_checksum: sha1:2828c2efe410bee01a8563e1cf7cc985d4d29ee8
+    pristine_git_object: f1124744344d02757ed0a8c87518a714e59cb854
+  internal/explorer/tree.go:
+    id: 81129f3c3c04
+    last_write_checksum: sha1:16dea1c4b16d808202bf0c6f819fb5fba285ade7
+    pristine_git_object: c85dee2441a6a8490edc0a5e7fbf33cde92f088e
+  internal/explorer/tui.go:
+    id: 9bee7d6a891e
+    last_write_checksum: sha1:6323b44c3089bf6cab45c7c7df1d862fea349b7c
+    pristine_git_object: 7035f3c6dbeb6eb30001ddb1d6d8ba97802183e3
+  internal/flagutil/dispatch.go:
+    id: 47cf9337258c
+    last_write_checksum: sha1:fecd48dd69b4743ff5c6c1329a2071fe49d9423e
+    pristine_git_object: fbdc5aacda2f7948baedfa33640b11a0d53fcb21
+  internal/flagutil/flags.go:
+    id: 9e81d6ab2674
+    last_write_checksum: sha1:1d35d22e4beacf398104fd6883510f4c72323f91
+    pristine_git_object: baa2750846d61e74826f1b83bd60aaaf3fc37782
+  internal/flagutil/metadata.go:
+    id: d22ccf2128e9
+    last_write_checksum: sha1:f11c706d6b4c01ed744322661414fbeb6a1bbdad
+    pristine_git_object: 3769798f5fd5a28c03d1862d4b41c429f073bee1
+  internal/flagutil/preset.go:
+    id: b315c1453e80
+    last_write_checksum: sha1:a580b7d4b00cf469415bc53d40f4981d60091423
+    pristine_git_object: 208582c4aa93a10fc9ee64eee42219c1292db9d8
+  internal/interactive/interactive.go:
+    id: 35e3347980bb
+    last_write_checksum: sha1:4bb5534e12ed635aa4205768b49af605927c631f
+    pristine_git_object: 8f8861f085a9809f8a1e0a63b804e213e077aca0
+  internal/interactive/policy.go:
+    id: bc47e6186dd2
+    last_write_checksum: sha1:18a6307411005387bb84bb2ee987f5d44901d073
+    pristine_git_object: a4f708b073aedfba059351f89a859d0cc34a00eb
+  internal/output/agentmode.go:
+    id: de6b0ed77d1c
+    last_write_checksum: sha1:acb6e724a6571c615e0b75ab906b6421017b91fa
+    pristine_git_object: 9fbba1d9c847916deb180b83a10a89ae2cbe6430
+  internal/output/classify.go:
+    id: 40ffe068dbd8
+    last_write_checksum: sha1:170f1b76a35bd6c92d555087593a30a1e993e0cb
+    pristine_git_object: 28d7528f06fefa7fbeb04ea51621c9e956eff54d
+  internal/output/color.go:
+    id: d240050a2a84
+    last_write_checksum: sha1:c618ec769569213c248114c0e42b07582fffefcc
+    pristine_git_object: d7c74560e580e33392f0667297d9fd6f5f0cd55e
+  internal/output/errortable.go:
+    id: e6b374643bf3
+    last_write_checksum: sha1:32c3c56ec5c562c93ea20d0df40ff5a206bdf94f
+    pristine_git_object: 958fafb981228bd6c01a2cdfce733113741b3622
+  internal/output/exitcodes.go:
+    id: b1e388d3bacc
+    last_write_checksum: sha1:eea5ce24a35c27036a6d95940e6786fdb82e833c
+    pristine_git_object: aaa049d6760c8fcebca8ef908b434c36ad9025e7
+  internal/output/jq.go:
+    id: a0e589d8385d
+    last_write_checksum: sha1:42bcc0f3b1b68cb2d073600129f8a4b2c10c0aae
+    pristine_git_object: 71341cfbc8258d7c28f44c45fccd4573f485537a
+  internal/output/output.go:
+    id: a9c3352b3b56
+    last_write_checksum: sha1:2417a13c03de56cf56159d286bd6398b62540f06
+    pristine_git_object: e9d3ddb4d9e99515687f0281f4f898ccf260570c
+  internal/output/pretty.go:
+    id: ef4c76789fd4
+    last_write_checksum: sha1:b7c74bd93d4e8a464956f098724dc653e9f8e594
+    pristine_git_object: 53df76308efb6e10725f7cd8e28cd08e5d1419b1
+  internal/sdk/.gitattributes:
+    id: 1ea4c4e0a39d
+    last_write_checksum: sha1:84b0115789fc3ea52e31df701d8a27f76077e29f
+    pristine_git_object: e6a994416d0f527912d2d272e2583458f4fc9bcb
+  internal/sdk/clusters.go:
+    id: 9be19375f459
+    last_write_checksum: sha1:5a111c8b725b40e010aa3172a2195341fdaebba4
+    pristine_git_object: 6042311e824917214c6b278b569c1acc6256e4b0
+  internal/sdk/instances.go:
+    id: a87df50e827b
+    last_write_checksum: sha1:faee8c78398b9416594526d88bbced503bf43aee
+    pristine_git_object: 40a76ed22c43cd24fbb0ece94530244dcc5b6d24
+  internal/sdk/models/components/addsshkeyrequest.go:
+    id: 9a4cdaee66e0
+    last_write_checksum: sha1:1e76e4ffeb9968eacb7981ac1d80f173b492414a
+    pristine_git_object: a0dbac1642d01101c9f51eb11662be692263374b
+  internal/sdk/models/components/addsshkeyresponse.go:
+    id: 883ad5fbcf80
+    last_write_checksum: sha1:e0f0436cc41670c1dcf38f59b33eb29e07e911ef
+    pristine_git_object: 6df36096956db14ac2c07cdd8a60b0ee8ead1245
+  internal/sdk/models/components/alert.go:
+    id: 53d8198883b2
+    last_write_checksum: sha1:a8aad26aae3272c03324e0dd24b660d5fe92873a
+    pristine_git_object: 6f01b211496bbbe1e50ba77d9a050ca625cd8860
+  internal/sdk/models/components/autodelete.go:
+    id: 51706c63946e
+    last_write_checksum: sha1:e35fb31c47d03aae07f7abb11eface36a44f5c44
+    pristine_git_object: 68b273ab7b325d754ea4fcbe405d26a385c89d38
+  internal/sdk/models/components/availability.go:
+    id: 66389e5b8437
+    last_write_checksum: sha1:4d513a189808ca1d1af4ef8fa401c97088abef1a
+    pristine_git_object: dfc68e36fd97e242b13a875e85f48726155b334f
+  internal/sdk/models/components/boottime.go:
+    id: c6fbe1f0f485
+    last_write_checksum: sha1:fcedc481c743645db1e8d722459312fef2fb84ec
+    pristine_git_object: bf653d4c2e18633eae9f390f447d70c34ce18e4b
+  internal/sdk/models/components/cluster.go:
+    id: 0cad7bf30b0f
+    last_write_checksum: sha1:fe942abb692d4d988dd0acc5b81250168306fddc
+    pristine_git_object: e099a9d9c84254b9f84e82222be2e37b22e61ac8
+  internal/sdk/models/components/clusteravailability.go:
+    id: fb01adb46c02
+    last_write_checksum: sha1:689be59c35493967c93498fc52d4953f029e8e02
+    pristine_git_object: f538f3a59bdcc69692da887e4c5de1a99a3513a2
+  internal/sdk/models/components/clusterregioninfo.go:
+    id: c7f70d33a7bf
+    last_write_checksum: sha1:8cb8155ff7cbb3fd4315247022a976b2058895a3
+    pristine_git_object: 06617c0f13e523799eaab0895e14315033764a16
+  internal/sdk/models/components/clustersresponse.go:
+    id: 1b6e8d1d2fc5
+    last_write_checksum: sha1:4d248b0d73a9f2e455fb34e348c1ede2e7393d22
+    pristine_git_object: 6ff96717f5449d5041493974f4706735b79d8989
+  internal/sdk/models/components/clustertype.go:
+    id: 4ac3d2918791
+    last_write_checksum: sha1:92dfd7543cf47c61643eec4a8029aed18dd75d9a
+    pristine_git_object: 1c828cccf633b05aa3c8937fdc980016493d4887
+  internal/sdk/models/components/clustertypesresponse.go:
+    id: 09eaf096e7fc
+    last_write_checksum: sha1:f8a72aa861679c47df329a107db05d3caa31843a
+    pristine_git_object: 67452b0abb90bc0797bd465cd693a13c9ef1ecff
+  internal/sdk/models/components/createclusterrequest.go:
+    id: 06c25e0cc7e7
+    last_write_checksum: sha1:f9820e1148254d867f9da9f5c37ea2e4f237381d
+    pristine_git_object: ad099bc57e602790894cc5a6912b7d689751994a
+  internal/sdk/models/components/createclusterresponse.go:
+    id: c391848086e8
+    last_write_checksum: sha1:a81d78e66c67781080086db143baf5315b34fde1
+    pristine_git_object: 24eccf3b69fac42e010158af990c5a86874c227e
+  internal/sdk/models/components/createrequest.go:
+    id: 36f51e3814f1
+    last_write_checksum: sha1:3d28b486f1289760607b841e7354a652c5b0e8bf
+    pristine_git_object: 68d80900bfc04f4eea2e6b0db1cba6687214d7e0
+  internal/sdk/models/components/createresponse.go:
+    id: d3e4cb8adedd
+    last_write_checksum: sha1:926b5bb48e1a7b1a1e4c06c0181a8d6e6692023b
+    pristine_git_object: 36d6da539c86d28e1b2f24928f7e222342fb8d1c
+  internal/sdk/models/components/createvolumerequest.go:
+    id: 4b571fadcc05
+    last_write_checksum: sha1:2262facdf0d2c4fa8294f7351684f7c4e3ad23c6
+    pristine_git_object: f2d2d0938b34a6e0bddaa3eed75cf1c71375eb00
+  internal/sdk/models/components/createvolumeresponse.go:
+    id: 7ddad289973b
+    last_write_checksum: sha1:e87f142def6658ea489d6ef9acc3dff23d4b25f9
+    pristine_git_object: 27ccaf316594acfffb3f238191b15a4d27b30ca9
+  internal/sdk/models/components/dockerconfiguration.go:
+    id: b63cd1b2e6b0
+    last_write_checksum: sha1:aca1a6dcb77864f4704294e3f3c4e706d96816f3
+    pristine_git_object: a5c2ab71171b21d64b6f03816a1e44eec2b8b8bc
+  internal/sdk/models/components/env.go:
+    id: 4250c0d7a98c
+    last_write_checksum: sha1:0f37ae7d35ce7b10bc30ae86de9d848d64f060c9
+    pristine_git_object: 90719a03f2bb825bddcd26bbd37f49340bca2deb
+  internal/sdk/models/components/httpmetadata.go:
+    id: 2e30cdb779b3
+    last_write_checksum: sha1:01a20fcff33179809ff9920ee431c7adabbd98f1
+    pristine_git_object: 148ec47fb2dea6c188ec68eb3532d93169608168
+  internal/sdk/models/components/instance.go:
+    id: bc81e19f788c
+    last_write_checksum: sha1:268f26754cfaf824427ea5f99f648defddd961ff
+    pristine_git_object: 3d2325e6bc162395d250bbb965076e7307ed6ac4
+  internal/sdk/models/components/instanceinforesponse.go:
+    id: 2e9f26fba8be
+    last_write_checksum: sha1:9e75fec916851da00ff1462d63875dc70ad010fe
+    pristine_git_object: f20b595b46920898d9abf72d82949fba1cf2945b
+  internal/sdk/models/components/instanceportmappings.go:
+    id: 5950135fc735
+    last_write_checksum: sha1:a669c1afe7d415fa57fefa531a7ba90f3d375ff1
+    pristine_git_object: 94bc048ca77c1bff94f8f642126d3fe62f83a036
+  internal/sdk/models/components/instancesresponse.go:
+    id: 160b80056512
+    last_write_checksum: sha1:d02d210f68a02bc38840d1c6780cd12c0a060e62
+    pristine_git_object: 1f40a10fe3933424c0deeb9ce785b1a74bd294dd
+  internal/sdk/models/components/instancetype.go:
+    id: a6152931c314
+    last_write_checksum: sha1:c010e0c55cd8090f4f877969f8f6f7bc77f3d641
+    pristine_git_object: 32fc081baaaec4867d259df457919f6978fdfef3
+  internal/sdk/models/components/instancetypeconfiguration.go:
+    id: 155ae031418c
+    last_write_checksum: sha1:d11815bcc9bcb7d67198f53841523f9e0ce7239f
+    pristine_git_object: 504bf39fca466e080e962e4549e39b09017ee62c
+  internal/sdk/models/components/instancetypesresponse.go:
+    id: 05f5b816a843
+    last_write_checksum: sha1:fa62b9a25533e6d71e5827772de715361f14f869
+    pristine_git_object: 1cf3a85710a2922bdafb59bfe249332934972664
+  internal/sdk/models/components/launchconfiguration.go:
+    id: 71253103f6c4
+    last_write_checksum: sha1:f3ed80bfb0e3e727c9058122ce8123fd20edd6a5
+    pristine_git_object: 044bac484b56cc5e49200212f5a9fbb5d955b6aa
+  internal/sdk/models/components/networking.go:
+    id: 351cf71a8a27
+    last_write_checksum: sha1:7c6a18f4ca02d68d682f264adfd4c63b7a859d85
+    pristine_git_object: 8a07524179a32bbf324e018ac2d4fae85071226a
+  internal/sdk/models/components/portmappings.go:
+    id: 9a645debeb96
+    last_write_checksum: sha1:9e4568857e3458f736dee8d85b126671e56b2419
+    pristine_git_object: 75696fd3e952df3c916b50c34a17c25cd2e6355e
+  internal/sdk/models/components/registrycredentials.go:
+    id: 67bb50f5149a
+    last_write_checksum: sha1:00da01ae1feded5f4299b18610ded6ee0c5ecaac
+    pristine_git_object: a3b3246e77f96ac072afcd3859f46c5618a27d45
+  internal/sdk/models/components/rentalterms.go:
+    id: 5eb4fff466da
+    last_write_checksum: sha1:be542df851d1c998fb1742612006e12f3045d2a7
+    pristine_git_object: 53e1fca723534802a9f85c9f6525bf383198f344
+  internal/sdk/models/components/scriptconfiguration.go:
+    id: a2b007d91dd1
+    last_write_checksum: sha1:fdeea4515528af0dd9a3b6bb4e8ee7566be96ef9
+    pristine_git_object: 1a03933a4bdc110ed3dc0cb8631fb60aa37a7407
+  internal/sdk/models/components/security.go:
+    id: c1a78fe12ea5
+    last_write_checksum: sha1:979003a49f83d196fe13b41a38a9a034575a9e23
+    pristine_git_object: c2b5f8b23b770ddbb2b3305da3690b324ad2bfe7
+  internal/sdk/models/components/sshkey.go:
+    id: 1a1644f2b3b6
+    last_write_checksum: sha1:ba3343688fb5bc0b4f9cbbc05a06f6d4ac1f8bfa
+    pristine_git_object: 845cd650a18f627b667f693e4bef4354d2ef5377
+  internal/sdk/models/components/sshkeysresponse.go:
+    id: d99ce12618e1
+    last_write_checksum: sha1:58d699385b6d5d91c824788e8552f9e3efe9cc81
+    pristine_git_object: f2e0cd41525672c32cf36591fb48dd43ad9c9248
+  internal/sdk/models/components/status.go:
+    id: bf85eba857ca
+    last_write_checksum: sha1:2ac811c4773aea66267338c44a50d460c44f716f
+    pristine_git_object: db3309a31351f0a19bf67f9e08036d1fcb86db80
+  internal/sdk/models/components/template.go:
+    id: 2883a403e8c4
+    last_write_checksum: sha1:ac78cbf1f9dbc61b382d48934a4f368959f10b6b
+    pristine_git_object: ba48ed0d4db7aab1d61fbfcdf7cf60d3cddb15ac
+  internal/sdk/models/components/templatecreateresponse.go:
+    id: 4bbcfe9aa6cc
+    last_write_checksum: sha1:cdf2292415165fabb33aad0a484a1d0c0864eb01
+    pristine_git_object: af860678d442c2b7338c985dbf7df59ef7af1d33
+  internal/sdk/models/components/templatesaverequest.go:
+    id: 7f56a4f74b09
+    last_write_checksum: sha1:b8aebdefd62b596f9b3160f71ab87008e0eaefbd
+    pristine_git_object: b7826ebfdd9f1c7c2e0d6cdb4d08aca7fa2cb3af
+  internal/sdk/models/components/templatesresponse.go:
+    id: e5df03a56431
+    last_write_checksum: sha1:43a3163ffafa5b8d0e94b669ed84fa521d17bde3
+    pristine_git_object: 3270eeb0588400334ea0da0c207a6bb13601a679
+  internal/sdk/models/components/ufwrule.go:
+    id: c9e7f26a9e65
+    last_write_checksum: sha1:fd00fb7d671c3062d856f454545ee196427ddeda
+    pristine_git_object: 4588e7ed88876873578d7d5d781b13c7702596d8
+  internal/sdk/models/components/updaterequest.go:
+    id: 5689d503e83f
+    last_write_checksum: sha1:71cf4ca319276908aab5d6e17108abf8ff1a2ff9
+    pristine_git_object: ec0e24c083b2f897b79ee668b4fd99b8304ee7c5
+  internal/sdk/models/components/volume.go:
+    id: 11ac77e58c3a
+    last_write_checksum: sha1:61c2c974310c43ad048da0e6a24d1b352bf07674
+    pristine_git_object: e7fa01adad08ac9e936321646828667c7ce8697d
+  internal/sdk/models/components/volumemount.go:
+    id: f38f65843097
+    last_write_checksum: sha1:19a9d74a8b19709c9bed78a710bb1b521a80a55c
+    pristine_git_object: 46b3bfa9c952e342a21c6da7598e806fbd6d68c6
+  internal/sdk/models/components/volumemounts.go:
+    id: c53053f85966
+    last_write_checksum: sha1:e2618bf3e42df6ebb34d28d60a0856e5b9fc76c0
+    pristine_git_object: 86552c64806bd1c543d9456ee40c2922262cbb83
+  internal/sdk/models/components/volumesresponse.go:
+    id: 6ba13e71d37e
+    last_write_checksum: sha1:362004a100d60113fc200eeef5592ef7d6b31ae6
+    pristine_git_object: 401e63201499af043cb8a0da8187131b13b6a0f8
+  internal/sdk/models/components/volumestypesresponse.go:
+    id: f7b9de4aa3b1
+    last_write_checksum: sha1:d35981a53cb897baa3d4743bef0c47d8def5dca0
+    pristine_git_object: 1dd461ff1cc26549af6aec04e28c87a4671dc6ba
+  internal/sdk/models/components/volumetypes.go:
+    id: 73e0cd1f5e7e
+    last_write_checksum: sha1:eacd00dfef7afc1f1eb8acc6e6fc30ddbd19754d
+    pristine_git_object: 6d55e47e32972335cceef95f3ab94447ef830906
+  internal/sdk/models/operations/clusters.go:
+    id: 10a1062169d7
+    last_write_checksum: sha1:0d7760e3f5525eb236c8361abf2c8be19e61bc5b
+    pristine_git_object: 6c2a32b408ba4fdb1499107ada0502bd25e3a494
+  internal/sdk/models/operations/clusterscreate.go:
+    id: 233300725f52
+    last_write_checksum: sha1:c2d8207015b49eabb53fbb6982ff4b7178dc1c3b
+    pristine_git_object: 8cb32414409044c96f84298a719a66daf517e2fd
+  internal/sdk/models/operations/clustersdelete.go:
+    id: e1be9869208a
+    last_write_checksum: sha1:6e7df1e283c0ff1e6cf832873a1cd2fb016acdef
+    pristine_git_object: 5312eabe93bf1198b6eed03ffadd7d47bd7f1ab3
+  internal/sdk/models/operations/clustersinfo.go:
+    id: cf01786910e8
+    last_write_checksum: sha1:3eea4f3fc2428f88d62db911623fc2db5ec38109
+    pristine_git_object: 6e65afae433d9c99953172051cb724806a958917
+  internal/sdk/models/operations/clusterstypes.go:
+    id: 282d2b1fd710
+    last_write_checksum: sha1:9426f90b43dc525cf306ee363a3853b7a6b61f04
+    pristine_git_object: 383775351960dd670f9daaa229ac658eca79c7bf
+  internal/sdk/models/operations/instances.go:
+    id: 3b23de445e43
+    last_write_checksum: sha1:9eacee5fa5d3e22b9edfc484022ace3a97e8aa16
+    pristine_git_object: 9c68cba8c29418f4ec1689e1237f966d1d80d6ca
+  internal/sdk/models/operations/instancescreate.go:
+    id: 7279a469fc2c
+    last_write_checksum: sha1:c17c7393406e01681b1692a7d8c7726ded6911f9
+    pristine_git_object: 06cdd31c633ed9691f98482fed60eb70ab85f945
+  internal/sdk/models/operations/instancesdelete.go:
+    id: 2941d490befa
+    last_write_checksum: sha1:f83212494aea546bd17790067b70b94ff331732d
+    pristine_git_object: 5c411ea70a6726d66bad4383dcec928636c241d7
+  internal/sdk/models/operations/instancesinfo.go:
+    id: 88c5f77cb7c1
+    last_write_checksum: sha1:774fa879a71223d073a5241561f7fe6b596280fe
+    pristine_git_object: e693c6fbf509f064c27dde63981a0e57935b162d
+  internal/sdk/models/operations/instancesrestart.go:
+    id: 5c81b5e7e698
+    last_write_checksum: sha1:2e5e4911cf3be6ec100da375532491d06d9eb4af
+    pristine_git_object: b23db43e76c8f48eeec0e57b563f07d7e6035db3
+  internal/sdk/models/operations/instancestypes.go:
+    id: 500e99288eb7
+    last_write_checksum: sha1:418168dedf48cbc154a22440346e880c579cee23
+    pristine_git_object: 13c7656d4727207e146f1e294901f0fc603420cb
+  internal/sdk/models/operations/instancesupdate.go:
+    id: 5d2d5636aa68
+    last_write_checksum: sha1:37bef70c88b6af0cea64947f2e8085911a7edbc9
+    pristine_git_object: fa48b356ae46aeca46c2c9dd35d1d233e7de8e28
+  internal/sdk/models/operations/options.go:
+    id: 6d0d29414e00
+    last_write_checksum: sha1:4984087f97a826d5ba3cb0188a52eff5ec546332
+    pristine_git_object: ca501377396cf0ad708ce80075f624d34082cddf
+  internal/sdk/models/operations/sshkeys.go:
+    id: 53c99337df7f
+    last_write_checksum: sha1:f230824e87cdf2c435c0c5b716bfae1650210c82
+    pristine_git_object: ef5520471a19a035243e3446d212e6b74f820c21
+  internal/sdk/models/operations/sshkeysadd.go:
+    id: 278932d88ed2
+    last_write_checksum: sha1:bb1d15fbe605c0a927b2cd80a9591dc59b17247d
+    pristine_git_object: b598672988db09b3e481ef116cb03e0a13aa4de4
+  internal/sdk/models/operations/sshkeysdelete.go:
+    id: d93b5b8e30ba
+    last_write_checksum: sha1:df95dc03679837749a88fd0559424ea53680e39d
+    pristine_git_object: 7355c9b5993a33a77bac5627f03e54a812b84e57
+  internal/sdk/models/operations/sshkeysinfo.go:
+    id: c04027568b4c
+    last_write_checksum: sha1:b139718778640721eb49a8d3228b7d85938bd458
+    pristine_git_object: d4b9a8625837236a087489d46fd07ef14d3f25dc
+  internal/sdk/models/operations/sshkeyssetdefault.go:
+    id: 99331a4ef591
+    last_write_checksum: sha1:415e8dc44443387d2f8d6950be6d709ffbdb03ca
+    pristine_git_object: 17a5031da4fdf5a42280eac173628c50454a9235
+  internal/sdk/models/operations/templates.go:
+    id: 1d32c9c4e360
+    last_write_checksum: sha1:09d58019a4900e0833227c59d75b028cc8814d10
+    pristine_git_object: e2fc4b16ec433a0f401b853401dc6d3121c1bb68
+  internal/sdk/models/operations/templatesdelete.go:
+    id: 9c4b8af710fc
+    last_write_checksum: sha1:5facf215c0a8b4e98b4d9b23852f39efd89cc35c
+    pristine_git_object: dbd8c310cae32d965931a1d3b480383424f13225
+  internal/sdk/models/operations/templatesfeatured.go:
+    id: 6c5cdbbbe6a8
+    last_write_checksum: sha1:c627f9e757f55ed9d6b971f894c35db51a4fccf6
+    pristine_git_object: 389b55b9be6dd06489cf36bb741b7654d8ccfccb
+  internal/sdk/models/operations/templatesinfo.go:
+    id: da2ae52b7761
+    last_write_checksum: sha1:4e4c8c4cf2a0f56218bf26083ce82f5802eb7a88
+    pristine_git_object: b07ecbfe4ac8880d1d814d188684176743e46821
+  internal/sdk/models/operations/templatessave.go:
+    id: cabf44f800c3
+    last_write_checksum: sha1:71cb94257821632e2044b71e811baae3117ba461
+    pristine_git_object: d27d5af1a5652e9ec0e2819a6cc22437b1a10f9a
+  internal/sdk/models/operations/templatesupdate.go:
+    id: 7623a1e9bbe1
+    last_write_checksum: sha1:1003674a2989002083804b8e06b49bcab9d8399e
+    pristine_git_object: e9d20cbf8147eaf16cc7e05d5962f974bb66b0d6
+  internal/sdk/models/operations/volumes.go:
+    id: 1bde2813655f
+    last_write_checksum: sha1:2b2045e853beb0c29d46b88fbebbdd300c3c860f
+    pristine_git_object: c4d67725cba202c3f3b797568cd774afefbfedcb
+  internal/sdk/models/operations/volumescreate.go:
+    id: 01b700ca531c
+    last_write_checksum: sha1:1dc16cef8295d139d88951ff8bcaf8e8ba7bfdc3
+    pristine_git_object: 1cc0c0a2a540c34439bf9c207e3219ed38b87b2f
+  internal/sdk/models/operations/volumesdelete.go:
+    id: b38383cc40ff
+    last_write_checksum: sha1:7c416309f8e3f128a1b8afdfa6e6b8ba4373bd64
+    pristine_git_object: fa9f02e851b32c2271220fc56e216395cb3a4742
+  internal/sdk/models/operations/volumesinfo.go:
+    id: 18f71f12be76
+    last_write_checksum: sha1:a7634261bfacc3f13bae5bce4d3c8d722459d71b
+    pristine_git_object: 2f13a8f3cb0af9e90b6dd2108eb7071f51bee318
+  internal/sdk/models/operations/volumestypes.go:
+    id: efda9b9933c0
+    last_write_checksum: sha1:e788b3da380b692b2344539528ff37a8984f8251
+    pristine_git_object: fe00f8ae14bcf1e292cb29f996ad5ce1d40227d8
+  internal/sdk/models/sdkerrors/responsevalidationerror.go:
+    id: 055ef02d0eb3
+    last_write_checksum: sha1:77189808f8c0d0fc49a2e8cc77a8a4006e61682c
+    pristine_git_object: 722897c3a5e71037ddc15d2080bda3a4e2b5141b
+  internal/sdk/models/sdkerrors/sdkdefaulterror.go:
+    id: 78e4ee2e2586
+    last_write_checksum: sha1:437b3a3eacb54d8648a68f80b3cd38fa5019f006
+    pristine_git_object: 29ad145394a59846a19bcb95c3f4cb4e0d5ba373
+  internal/sdk/optionalnullable/optionalnullable.go:
+    id: 4b83aa3f3df3
+    last_write_checksum: sha1:b828c94c45116e632925027e4e2c211e971e04e2
+    pristine_git_object: 51c78bcc4f55abb8f64c89a7b70db62335f16e47
+  internal/sdk/optionalnullable/optionalnullable_test.go:
+    id: 3920a41dfc4c
+    last_write_checksum: sha1:d3991667754ed67db803aeab4a6239f6f9a1be37
+    pristine_git_object: 786206153d8252101a56c2ab1b661466bb8b5b7c
+  internal/sdk/retry/config.go:
+    id: 7ea5fa9128b6
+    last_write_checksum: sha1:102d1953fbd7e9f312c4442c71ccca2eaaeaa27d
+    pristine_git_object: 767002c7898128324d8741ce9c534bd466492169
+  internal/sdk/sdkinternal/config/sdkconfiguration.go:
+    id: f175ab9b0273
+    last_write_checksum: sha1:5687490c67feca5e073d19c5f25ec461cec635ec
+    pristine_git_object: 80e1e013fe56091c0b241a258274b111c3246006
+  internal/sdk/sdkinternal/hooks/hooks.go:
+    id: 0cdbe7360fd5
+    last_write_checksum: sha1:c92a205fdeea6f4b134b1f393a1c7af0cf360b3f
+    pristine_git_object: 3dfdad1b5b4ebc004e0132f439ec9d44843b3c32
+  internal/sdk/sdkinternal/utils/contenttype.go:
+    id: ad544f05ded3
+    last_write_checksum: sha1:ab5cfd860d02c6e6a37f89e2b5649a9859947fb1
+    pristine_git_object: f6487e01eb987c0aa49e7aa50b5ff24830314c63
+  internal/sdk/sdkinternal/utils/env.go:
+    id: 53fb5707bfee
+    last_write_checksum: sha1:1e0bcb2d2caed9f3657f1dbc99b55811bed0298c
+    pristine_git_object: 110d464eacf2387b347bad1cb903666354a339e9
+  internal/sdk/sdkinternal/utils/form.go:
+    id: d685469eb548
+    last_write_checksum: sha1:9dd2d30aa727776565470079ff1d22d441c297d4
+    pristine_git_object: 8f52d19b462a456025899b2022f0819b9546977c
+  internal/sdk/sdkinternal/utils/headers.go:
+    id: 8688b3dd5618
+    last_write_checksum: sha1:e56f7e461cf3c70b7c75c314a25d48bf752199b9
+    pristine_git_object: d7c8b766f1b5cc551da993d1f9020cbd0ad10ef8
+  internal/sdk/sdkinternal/utils/json.go:
+    id: 3204a301ca6d
+    last_write_checksum: sha1:ae0a97c7aa991af5263691a0328c6665a648d6e9
+    pristine_git_object: 5b375132a6642c1d0f8774752d4b28c54c63000b
+  internal/sdk/sdkinternal/utils/pathparams.go:
+    id: 9fe9b40a3c1c
+    last_write_checksum: sha1:f87a33206799a6f389ccdfd5c4e739b27daa8925
+    pristine_git_object: 8522133eeee42e11bd694d03ce4aa6982099fa1d
+  internal/sdk/sdkinternal/utils/queryparams.go:
+    id: beaa4ae6c0a4
+    last_write_checksum: sha1:351d5cb60bd891a0e2228b37530605fccfa752c9
+    pristine_git_object: ce1af78c3ae52f37bd7ca75b69a040d03ea54dc7
+  internal/sdk/sdkinternal/utils/requestbody.go:
+    id: d0da812b8a0b
+    last_write_checksum: sha1:990a8958b370b96d4aad73be3c7177090259f43e
+    pristine_git_object: 8cb8822587518e5aabc0c2dad87fe81b964e32c4
+  internal/sdk/sdkinternal/utils/retries.go:
+    id: 95ebeea8a512
+    last_write_checksum: sha1:05f9fb5bb5a81e2a3339131640542ba63df7e0c0
+    pristine_git_object: 73ca7f449bf11fdbffc7ce061b3e41296ece57ef
+  internal/sdk/sdkinternal/utils/security.go:
+    id: 3c39d5f860f3
+    last_write_checksum: sha1:03542ef1eae34ce2056cfb15c80beff75b726761
+    pristine_git_object: d27f06d82ecdf026eff8b82622404ee43c674e1a
+  internal/sdk/sdkinternal/utils/union.go:
+    id: ec0c94b40a7d
+    last_write_checksum: sha1:79da1a41d6d46a962c58a6cd652aa858a3e85337
+    pristine_git_object: 59e0c89c6444aac5ef6e4976dbb0d49c2dab31d7
+  internal/sdk/sdkinternal/utils/union_test.go:
+    id: 79cdd83fbae3
+    last_write_checksum: sha1:c55e5e44c26dfae67b83359851996122a3dfc9cf
+    pristine_git_object: d7d4c8a141f997cdac886c1f41805cc8cabcb210
+  internal/sdk/sdkinternal/utils/utils.go:
+    id: f79aa64cde4d
+    last_write_checksum: sha1:1bcfc531eff137c7c930d54964b524e72246ac8f
+    pristine_git_object: ee524a456747237f820b3889e6eb50b516d40a60
+  internal/sdk/shadeform.go:
+    id: 16d1ebef77ce
+    last_write_checksum: sha1:f52c8c483fd45a57cf98fb0cf3465f5a8914bc48
+    pristine_git_object: f0ee42c2ac8e8c08ef5dd16c9fd09547fec078d8
+  internal/sdk/sshkeys.go:
+    id: 53ea6c91766f
+    last_write_checksum: sha1:2bb09ba0f10c0dc81fdd5f6f82c71910b5eb1109
+    pristine_git_object: 5f8e8b6feb227890c5e6d32f96d7d774adf9be6f
+  internal/sdk/templates.go:
+    id: 03b26cc56f2e
+    last_write_checksum: sha1:f1ab6150eeab5ff42caf8ef0f4078a4a93707ead
+    pristine_git_object: f90371183a4743cd8e1ca942c8a74e96934fe86a
+  internal/sdk/types/bigint.go:
+    id: fc530b70337e
+    last_write_checksum: sha1:49b004005d0461fb04b846eca062b070b0360b31
+    pristine_git_object: 9c6a086d51595888a6ff787ebcb8693559afee95
+  internal/sdk/types/date.go:
+    id: c4bff082c66f
+    last_write_checksum: sha1:3036a2e1ed15a1d484c093367eba000c38f384d0
+    pristine_git_object: 5b2782f219efe6bfbce46fc2dec68998eb759438
+  internal/sdk/types/datetime.go:
+    id: a8109857c712
+    last_write_checksum: sha1:196d050af6450669214e9ae4fd28e56263ae2b5d
+    pristine_git_object: 3eff332daa04e34cec5ffb10add670bafd8ac454
+  internal/sdk/types/pointers.go:
+    id: 2f3f971639f6
+    last_write_checksum: sha1:fc2275ea006257ba9ba4ff6f2a2cdb6205371eef
+    pristine_git_object: 35c439d2661e08fcb6a854096fd7b9a8561b3938
+  internal/sdk/volumes.go:
+    id: 39778bc10437
+    last_write_checksum: sha1:acee5ff99d5719a063b24b3a4bcdde3b6a0f63ec
+    pristine_git_object: 25ccfd8d1f3a1273632e5c74a7fc8090030e8477
+  internal/testclient/testclient.go:
+    id: 20fc511b8b00
+    last_write_checksum: sha1:7107e59d336235c44af152c5a61ee3896a7841fa
+    pristine_git_object: 159a87ec97aba99e4edd132f69652e123434303e
+  internal/usage/bodyschemas.go:
+    id: 4b0b56c39dfb
+    last_write_checksum: sha1:3da135c949f3d18961489c4d42f0b11376d554be
+    pristine_git_object: 6916d304d153859ed48388a8d0d6fea484314656
+  internal/usage/schema.go:
+    id: 0f40f4612437
+    last_write_checksum: sha1:c4693a7fb2eafb6f9e9852f6702179b07b71d5eb
+    pristine_git_object: b28407dba555cc1af94df67f2c0e7e85dfc01f9b
+  scripts/install.ps1:
+    id: fee0853709e9
+    last_write_checksum: sha1:2aff9aa451ad16c66bacddb2def0db9429a5177d
+    pristine_git_object: c1c338554e0f580918f4f5ce63ce21cb7b0a5d59
+  scripts/install.sh:
+    id: 1f022802374d
+    last_write_checksum: sha1:e0dda884011a25cf056e94cb67208ad6535bfeef
+    pristine_git_object: e21ce97c8a21f528c3dad8d289a5b5c208bb6f92
+examples:
+  Instances:
+    speakeasy-default-instances:
+      responses:
+        "200":
+          application/json: {"instances": [{"id": "d290f1ee-6c54-4b01-90e6-d701748f0851", "cloud": "hyperstack", "region": "canada-1", "shade_instance_type": "A6000", "cloud_instance_type": "gpu_1x_a6000", "cloud_assigned_id": "13b057d7-e266-4869-985f-760fe75a78b3", "shade_cloud": true, "name": "cool-gpu-server", "configuration": {"memory_in_gb": 12, "storage_in_gb": 256, "vcpus": 6, "num_gpus": 1, "gpu_type": "A100", "interconnect": "pcie", "nvlink": true, "vram_per_gpu_in_gb": 48, "gpu_manufacturer": "nvidia", "os": "ubuntu_22_shade_os"}, "ip": "1.0.0.1", "ssh_user": "shadeform", "ssh_port": 22, "status": "active", "status_details": "downloading", "cost_estimate": "103.4", "hourly_price": 210, "rental_terms": {"rental_type": "spot", "hourly_price": "1.50", "ending_at": null}, "launch_configuration": {"type": "docker", "docker_configuration": {"image": "vllm/vllm-openai:latest", "args": "--model mistralai/Mistral-7B-v0.1", "shared_memory_in_gb": 8, "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "port_mappings": [{"host_port": 80, "container_port": 8000}], "volume_mounts": [{"host_path": "~/.cache/huggingface", "container_path": "/root/.cache/huggingface"}], "registry_credentials": {"username": "username", "password": "password"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKCiMgRW5kbGVzcyBsb29wCndoaWxlIHRydWUKZG8KICAgICMgRmV0Y2ggYSBjYXQgZmFjdCB3aXRoIGEgbWF4aW11bSBsZW5ndGggb2YgMTQwIGNoYXJhY3RlcnMKICAgIGN1cmwgLS1uby1wcm9ncmVzcy1tZXRlciBodHRwczovL2NhdGZhY3QubmluamEvZmFjdD9tYXhfbGVuZ3RoPTE0MAoKICAgICMgUHJpbnQgYSBuZXdsaW5lIGZvciByZWFkYWJpbGl0eQogICAgZWNobwoKICAgICMgU2xlZXAgZm9yIDMgc2Vjb25kcyBiZWZvcmUgdGhlIG5leHQgaXRlcmF0aW9uCiAgICBzbGVlcCAzCmRvbmUKCgo="}}, "tags": ["tag1"], "port_mappings": [{"internal_port": 8000, "external_port": 80}], "active_at": "2016-08-29T09:12:33.001Z", "created_at": "2016-08-29T09:12:33.001Z", "deleted_at": "2016-08-29T09:12:33.001Z", "boot_time": {"min_boot_in_sec": 180, "max_boot_in_sec": 300}}]}
+  InstancesTypes:
+    speakeasy-default-instances-types:
+      parameters:
+        query:
+          cloud: "aws"
+          region: "us-east-1a"
+          num_gpus: "1"
+          gpu_type: "A100_80G"
+          shade_instance_type: "A100_80G"
+          available: true
+          sort: "price"
+      responses:
+        "200":
+          application/json: {"instance_types": []}
+  InstancesCreate:
+    speakeasy-default-instances-create:
+      requestBody:
+        application/json: {"cloud": "hyperstack", "region": "canada-1", "shade_instance_type": "A6000", "shade_cloud": true, "name": "cool-gpu-server", "rental_type": "spot", "os": "ubuntu22.04_cuda12.2_shade_os", "template_id": "template-123", "launch_configuration": {"type": "docker", "docker_configuration": {"image": "vllm/vllm-openai:latest", "args": "--model mistralai/Mistral-7B-v0.1", "shared_memory_in_gb": 8, "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "port_mappings": [{"host_port": 80, "container_port": 8000}], "volume_mounts": [{"host_path": "~/.cache/huggingface", "container_path": "/root/.cache/huggingface"}], "registry_credentials": {"username": "username", "password": "password"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKCiMgRW5kbGVzcyBsb29wCndoaWxlIHRydWUKZG8KICAgICMgRmV0Y2ggYSBjYXQgZmFjdCB3aXRoIGEgbWF4aW11bSBsZW5ndGggb2YgMTQwIGNoYXJhY3RlcnMKICAgIGN1cmwgLS1uby1wcm9ncmVzcy1tZXRlciBodHRwczovL2NhdGZhY3QubmluamEvZmFjdD9tYXhfbGVuZ3RoPTE0MAoKICAgICMgUHJpbnQgYSBuZXdsaW5lIGZvciByZWFkYWJpbGl0eQogICAgZWNobwoKICAgICMgU2xlZXAgZm9yIDMgc2Vjb25kcyBiZWZvcmUgdGhlIG5leHQgaXRlcmF0aW9uCiAgICBzbGVlcCAzCmRvbmUKCgo="}}, "volume_ids": ["78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40"], "ssh_key_id": "78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40", "auto_delete": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "alert": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "tags": ["tag1"], "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}]}
+      responses:
+        "200":
+          application/json: {"id": "d290f1ee-6c54-4b01-90e6-d701748f0851"}
+  InstancesInfo:
+    speakeasy-default-instances-info:
+      parameters:
+        path:
+          id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      responses:
+        "200":
+          application/json: {"id": "d290f1ee-6c54-4b01-90e6-d701748f0851", "cloud": "hyperstack", "region": "canada-1", "shade_instance_type": "A6000", "cloud_instance_type": "gpu_1x_a6000", "cloud_assigned_id": "13b057d7-e266-4869-985f-760fe75a78b3", "shade_cloud": true, "name": "cool-gpu-server", "configuration": {"memory_in_gb": 12, "storage_in_gb": 256, "vcpus": 6, "num_gpus": 1, "gpu_type": "A100", "interconnect": "pcie", "nvlink": true, "vram_per_gpu_in_gb": 48, "gpu_manufacturer": "nvidia", "os": "ubuntu_22_shade_os"}, "ip": "1.0.0.1", "ssh_user": "shadeform", "ssh_port": 22, "status": "active", "status_details": "downloading", "cost_estimate": "103.4", "hourly_price": 210, "rental_terms": {"rental_type": "spot", "hourly_price": "1.50", "ending_at": null}, "volume_ids": ["78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40"], "ssh_key_id": "78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40", "launch_configuration": {"type": "docker", "docker_configuration": {"image": "vllm/vllm-openai:latest", "args": "--model mistralai/Mistral-7B-v0.1", "shared_memory_in_gb": 8, "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "port_mappings": [{"host_port": 80, "container_port": 8000}], "volume_mounts": [{"host_path": "~/.cache/huggingface", "container_path": "/root/.cache/huggingface"}], "registry_credentials": {"username": "username", "password": "password"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKCiMgRW5kbGVzcyBsb29wCndoaWxlIHRydWUKZG8KICAgICMgRmV0Y2ggYSBjYXQgZmFjdCB3aXRoIGEgbWF4aW11bSBsZW5ndGggb2YgMTQwIGNoYXJhY3RlcnMKICAgIGN1cmwgLS1uby1wcm9ncmVzcy1tZXRlciBodHRwczovL2NhdGZhY3QubmluamEvZmFjdD9tYXhfbGVuZ3RoPTE0MAoKICAgICMgUHJpbnQgYSBuZXdsaW5lIGZvciByZWFkYWJpbGl0eQogICAgZWNobwoKICAgICMgU2xlZXAgZm9yIDMgc2Vjb25kcyBiZWZvcmUgdGhlIG5leHQgaXRlcmF0aW9uCiAgICBzbGVlcCAzCmRvbmUKCgo="}}, "auto_delete": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "alert": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "tags": ["tag1"], "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "port_mappings": [{"internal_port": 8000, "external_port": 80}], "active_at": "2016-08-29T09:12:33.001Z", "created_at": "2016-08-29T09:12:33.001Z", "deleted_at": "2016-08-29T09:12:33.001Z", "boot_time": {"min_boot_in_sec": 180, "max_boot_in_sec": 300}}
+  InstancesUpdate:
+    speakeasy-default-instances-update:
+      parameters:
+        path:
+          id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      requestBody:
+        application/json: {"name": "cool-gpu-server", "auto_delete": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "alert": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "tags": ["tag1"]}
+  InstancesDelete:
+    speakeasy-default-instances-delete:
+      parameters:
+        path:
+          id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  InstancesRestart:
+    speakeasy-default-instances-restart:
+      parameters:
+        path:
+          id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  Clusters:
+    speakeasy-default-clusters:
+      responses:
+        "200":
+          application/json: {"clusters": [{"id": "8eda86fe-0f36-41ed-9837-0ccf8f6e0fcb", "cloud": "denvr", "name": "devnr-cluster1", "cloud_cluster_id": "cluster-abc123", "region_info": {"region": "houston-usa-1", "display_name": "US, Houston, TX"}, "status": "active", "status_details": "Cluster is provisioning", "created_at": "2025-11-17T17:10:12.243Z", "updated_at": "2024-10-07T04:05:19.920Z", "instances": [{"id": "d290f1ee-6c54-4b01-90e6-d701748f0851", "cloud": "hyperstack", "region": "canada-1", "shade_instance_type": "A6000", "cloud_instance_type": "gpu_1x_a6000", "cloud_assigned_id": "13b057d7-e266-4869-985f-760fe75a78b3", "shade_cloud": true, "name": "cool-gpu-server", "configuration": {"memory_in_gb": 12, "storage_in_gb": 256, "vcpus": 6, "num_gpus": 1, "gpu_type": "A100", "interconnect": "pcie", "nvlink": true, "vram_per_gpu_in_gb": 48, "gpu_manufacturer": "nvidia", "os": "ubuntu_22_shade_os"}, "ip": "1.0.0.1", "ssh_user": "shadeform", "ssh_port": 22, "status": "active", "status_details": "downloading", "cost_estimate": "103.4", "hourly_price": 210, "rental_terms": {"rental_type": "spot", "hourly_price": "1.50", "ending_at": null}, "launch_configuration": {"type": "docker", "docker_configuration": {"image": "vllm/vllm-openai:latest", "args": "--model mistralai/Mistral-7B-v0.1", "shared_memory_in_gb": 8, "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "port_mappings": [{"host_port": 80, "container_port": 8000}], "volume_mounts": [{"host_path": "~/.cache/huggingface", "container_path": "/root/.cache/huggingface"}], "registry_credentials": {"username": "username", "password": "password"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKCiMgRW5kbGVzcyBsb29wCndoaWxlIHRydWUKZG8KICAgICMgRmV0Y2ggYSBjYXQgZmFjdCB3aXRoIGEgbWF4aW11bSBsZW5ndGggb2YgMTQwIGNoYXJhY3RlcnMKICAgIGN1cmwgLS1uby1wcm9ncmVzcy1tZXRlciBodHRwczovL2NhdGZhY3QubmluamEvZmFjdD9tYXhfbGVuZ3RoPTE0MAoKICAgICMgUHJpbnQgYSBuZXdsaW5lIGZvciByZWFkYWJpbGl0eQogICAgZWNobwoKICAgICMgU2xlZXAgZm9yIDMgc2Vjb25kcyBiZWZvcmUgdGhlIG5leHQgaXRlcmF0aW9uCiAgICBzbGVlcCAzCmRvbmUKCgo="}}, "tags": ["tag1"], "port_mappings": [{"internal_port": 8000, "external_port": 80}], "active_at": "2016-08-29T09:12:33.001Z", "created_at": "2016-08-29T09:12:33.001Z", "deleted_at": "2016-08-29T09:12:33.001Z", "boot_time": {"min_boot_in_sec": 180, "max_boot_in_sec": 300}}], "hourly_price": 1500, "cost_estimate": "$15.00"}]}
+  ClustersTypes:
+    speakeasy-default-clusters-types:
+      responses:
+        "200":
+          application/json: {"cluster_types": [{"cloud": "denvr", "num_instances": 2, "availability": {"region": "houston-usa-1", "display_name": "US, Houston, TX", "available": true}, "cluster_type": {"cloud": "denvr", "shade_instance_type": "H100_sxm5x8", "cloud_instance_type": "H100_80GB_SXM_8x", "configuration": {"memory_in_gb": 940, "storage_in_gb": 20000, "vcpus": 208, "num_gpus": 8, "gpu_type": "H100", "interconnect": "sxm5", "nvlink": true, "vram_per_gpu_in_gb": 80, "os_options": ["ubuntu22.04_cuda12.4_shade_os", "ubuntu20.04_cuda12.4_shade_os", "ubuntu20.04", "ubuntu22.04"], "gpu_manufacturer": "nvidia"}, "hourly_price": 1400, "deployment_type": "vm", "availability": [{"region": "us-central-1", "available": true, "display_name": "US, Wichita, KS", "rental_type": "on_demand"}, {"region": "us-central-2", "available": false, "display_name": "US, Wichita, KS", "rental_type": "on_demand"}, {"region": "us-central-1", "available": true, "display_name": "US, Wichita, KS", "rental_type": "spot", "hourly_price": "1.50"}], "boot_time": {"min_boot_in_sec": 600, "max_boot_in_sec": 1200}}}]}
+  ClustersCreate:
+    speakeasy-default-clusters-create:
+      requestBody:
+        application/json: {"name": "protestant-aquamarine-cluster", "cloud": "denvr", "region": "houston-usa-1", "cluster_type": "H100_sxm5x8", "num_instances": 2, "ssh_key_id": "f0c6ac6d-7240-4968-8eb7-a11c4a0a5dc6", "os": "ubuntu20.04"}
+      responses:
+        "200":
+          application/json: {"id": "8eda86fe-0f36-41ed-9837-0ccf8f6e0fcb"}
+  ClustersInfo:
+    speakeasy-default-clusters-info:
+      parameters:
+        path:
+          id: "8eda86fe-0f36-41ed-9837-0ccf8f6e0fcb"
+      responses:
+        "200":
+          application/json: {"id": "8eda86fe-0f36-41ed-9837-0ccf8f6e0fcb", "cloud": "denvr", "name": "devnr-cluster1", "cloud_cluster_id": "cluster-abc123", "region_info": {"region": "houston-usa-1", "display_name": "US, Houston, TX"}, "status": "active", "status_details": "Cluster is provisioning", "created_at": "2024-03-07T14:39:16.250Z", "updated_at": "2026-03-08T09:49:01.935Z", "instances": [], "hourly_price": 1500, "cost_estimate": "$15.00"}
+  ClustersDelete:
+    speakeasy-default-clusters-delete:
+      parameters:
+        path:
+          id: "b1450ae8-2fa3-4ceb-a4f3-b834805418fc"
+  SshKeys:
+    speakeasy-default-ssh-keys:
+      responses:
+        "200":
+          application/json: {"ssh_keys": []}
+  SshKeysAdd:
+    speakeasy-default-ssh-keys-add:
+      requestBody:
+        application/json: {"name": "My ssh key", "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU GPl+nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3 Pbv7kOdJ/MTyBlWXFCR+HAo3FXRitBqxiX1nKhXpHAZsMciLq8V6RjsNAQwdsdMFvSlVK/7XA t3FaoJoAsncM1Q9x5+3V0Ww68/eIFmb1zuUFljQJKprrX88XypNDvjYNby6vw/Pb0rwert/En mZ+AW4OZPnTPI89ZPmVMLuayrD2cE86Z/il8b+gw3r3+1nKatmIkjn2so1d01QraTlMqVSsbx NrRFi9wrf+M7Q== schacon@mylaptop.local"}
+      responses:
+        "200":
+          application/json: {"id": "78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40"}
+  SshKeysDelete:
+    speakeasy-default-ssh-keys-delete:
+      parameters:
+        path:
+          id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  SshKeysInfo:
+    speakeasy-default-ssh-keys-info:
+      parameters:
+        path:
+          id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      responses:
+        "200":
+          application/json: {"id": "78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40", "name": "My ssh key", "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU GPl+nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3 Pbv7kOdJ/MTyBlWXFCR+HAo3FXRitBqxiX1nKhXpHAZsMciLq8V6RjsNAQwdsdMFvSlVK/7XA t3FaoJoAsncM1Q9x5+3V0Ww68/eIFmb1zuUFljQJKprrX88XypNDvjYNby6vw/Pb0rwert/En mZ+AW4OZPnTPI89ZPmVMLuayrD2cE86Z/il8b+gw3r3+1nKatmIkjn2so1d01QraTlMqVSsbx NrRFi9wrf+M7Q== schacon@mylaptop.local", "is_default": false}
+  SshKeysSetDefault:
+    speakeasy-default-ssh-keys-set-default:
+      parameters:
+        path:
+          id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  Volumes:
+    speakeasy-default-volumes:
+      responses:
+        "200":
+          application/json: {"volumes": [{"id": "78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40", "cloud": "hyperstack", "cloud_assigned_id": "13b057d7-e266-4869-985f-760fe75a78b3", "region": "canada-1", "name": "My storage volume", "fixed_size": true, "size_in_gb": 100, "cost_estimate": "103.4", "supports_multi_mount": true, "mounted_by": "13b057d7-e266-4869-985f-760fe75a78b3"}]}
+  VolumesCreate:
+    speakeasy-default-volumes-create:
+      requestBody:
+        application/json: {"cloud": "hyperstack", "region": "canada-1", "size_in_gb": 100, "name": "My storage volume"}
+      responses:
+        "200":
+          application/json: {"id": "78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40"}
+  VolumesDelete:
+    speakeasy-default-volumes-delete:
+      parameters:
+        path:
+          id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  VolumesInfo:
+    speakeasy-default-volumes-info:
+      parameters:
+        path:
+          id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      responses:
+        "200":
+          application/json: {"id": "78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40", "cloud": "hyperstack", "cloud_assigned_id": "13b057d7-e266-4869-985f-760fe75a78b3", "region": "canada-1", "name": "My storage volume", "fixed_size": true, "size_in_gb": 100, "cost_estimate": "103.4", "supports_multi_mount": true, "mounted_by": "13b057d7-e266-4869-985f-760fe75a78b3"}
+  VolumesTypes:
+    speakeasy-default-volumes-types:
+      responses:
+        "200":
+          application/json: {"volume_types": []}
+  Templates:
+    speakeasy-default-templates:
+      responses:
+        "200":
+          application/json: {"templates": []}
+  TemplatesFeatured:
+    speakeasy-default-templates-featured:
+      responses:
+        "200":
+          application/json: {"templates": []}
+  TemplatesInfo:
+    speakeasy-default-templates-info:
+      parameters:
+        path:
+          template_id: "<id>"
+      responses:
+        "200":
+          application/json: {"id": "d290f1ee-6c54-4b01-90e6-d701748f0851", "name": "My AwesomeTemplate", "description": "A template for running vLLM", "author": "John Doe", "logo": "https://example.com/logo.png", "public": true, "launch_configuration": {"type": "docker", "docker_configuration": {"image": "vllm/vllm-openai:latest", "args": "--model mistralai/Mistral-7B-v0.1", "shared_memory_in_gb": 8, "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "port_mappings": [{"host_port": 80, "container_port": 8000}], "volume_mounts": [{"host_path": "~/.cache/huggingface", "container_path": "/root/.cache/huggingface"}], "registry_credentials": {"username": "username", "password": "password"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKCiMgRW5kbGVzcyBsb29wCndoaWxlIHRydWUKZG8KICAgICMgRmV0Y2ggYSBjYXQgZmFjdCB3aXRoIGEgbWF4aW11bSBsZW5ndGggb2YgMTQwIGNoYXJhY3RlcnMKICAgIGN1cmwgLS1uby1wcm9ncmVzcy1tZXRlciBodHRwczovL2NhdGZhY3QubmluamEvZmFjdD9tYXhfbGVuZ3RoPTE0MAoKICAgICMgUHJpbnQgYSBuZXdsaW5lIGZvciByZWFkYWJpbGl0eQogICAgZWNobwoKICAgICMgU2xlZXAgZm9yIDMgc2Vjb25kcyBiZWZvcmUgdGhlIG5leHQgaXRlcmF0aW9uCiAgICBzbGVlcCAzCmRvbmUKCgo="}}, "auto_delete": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "alert": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "tags": ["tag1"], "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "networking": {"ufw_rules": [{"rule": "allow", "from_ip": "192.168.1.0/24", "to_ip": "10.0.0.0/8", "port": "80", "proto": "tcp"}]}}
+  TemplatesSave:
+    speakeasy-default-templates-save:
+      requestBody:
+        application/json: {"name": "My Template", "description": "A template for ML workloads", "public": true, "launch_configuration": {"type": "docker", "docker_configuration": {"image": "vllm/vllm-openai:latest", "args": "--model mistralai/Mistral-7B-v0.1", "shared_memory_in_gb": 8, "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "port_mappings": [{"host_port": 80, "container_port": 8000}], "volume_mounts": [{"host_path": "~/.cache/huggingface", "container_path": "/root/.cache/huggingface"}], "registry_credentials": {"username": "username", "password": "password"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKCiMgRW5kbGVzcyBsb29wCndoaWxlIHRydWUKZG8KICAgICMgRmV0Y2ggYSBjYXQgZmFjdCB3aXRoIGEgbWF4aW11bSBsZW5ndGggb2YgMTQwIGNoYXJhY3RlcnMKICAgIGN1cmwgLS1uby1wcm9ncmVzcy1tZXRlciBodHRwczovL2NhdGZhY3QubmluamEvZmFjdD9tYXhfbGVuZ3RoPTE0MAoKICAgICMgUHJpbnQgYSBuZXdsaW5lIGZvciByZWFkYWJpbGl0eQogICAgZWNobwoKICAgICMgU2xlZXAgZm9yIDMgc2Vjb25kcyBiZWZvcmUgdGhlIG5leHQgaXRlcmF0aW9uCiAgICBzbGVlcCAzCmRvbmUKCgo="}}, "auto_delete": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "alert": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "tags": ["ml", "pytorch"], "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "networking": {"ufw_rules": [{"rule": "allow", "from_ip": "192.168.1.0/24", "to_ip": "10.0.0.0/8", "port": "80", "proto": "tcp"}]}}
+      responses:
+        "200":
+          application/json: {"id": "d290f1ee-6c54-4b01-90e6-d701748f0851"}
+  TemplatesUpdate:
+    speakeasy-default-templates-update:
+      parameters:
+        path:
+          template_id: "<id>"
+      requestBody:
+        application/json: {"name": "My Template", "description": "A template for ML workloads", "public": true, "launch_configuration": {"type": "docker", "docker_configuration": {"image": "vllm/vllm-openai:latest", "args": "--model mistralai/Mistral-7B-v0.1", "shared_memory_in_gb": 8, "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "port_mappings": [{"host_port": 80, "container_port": 8000}], "volume_mounts": [{"host_path": "~/.cache/huggingface", "container_path": "/root/.cache/huggingface"}], "registry_credentials": {"username": "username", "password": "password"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKCiMgRW5kbGVzcyBsb29wCndoaWxlIHRydWUKZG8KICAgICMgRmV0Y2ggYSBjYXQgZmFjdCB3aXRoIGEgbWF4aW11bSBsZW5ndGggb2YgMTQwIGNoYXJhY3RlcnMKICAgIGN1cmwgLS1uby1wcm9ncmVzcy1tZXRlciBodHRwczovL2NhdGZhY3QubmluamEvZmFjdD9tYXhfbGVuZ3RoPTE0MAoKICAgICMgUHJpbnQgYSBuZXdsaW5lIGZvciByZWFkYWJpbGl0eQogICAgZWNobwoKICAgICMgU2xlZXAgZm9yIDMgc2Vjb25kcyBiZWZvcmUgdGhlIG5leHQgaXRlcmF0aW9uCiAgICBzbGVlcCAzCmRvbmUKCgo="}}, "auto_delete": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "alert": {"date_threshold": "2006-01-02T15:04:05-07:00", "spend_threshold": "3.14"}, "tags": ["ml", "pytorch"], "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hugging_face_api_token"}], "networking": {"ufw_rules": [{"rule": "allow", "from_ip": "192.168.1.0/24", "to_ip": "10.0.0.0/8", "port": "80", "proto": "tcp"}]}}
+  TemplatesDelete:
+    speakeasy-default-templates-delete:
+      parameters:
+        path:
+          template_id: "<id>"
+examplesVersion: 1.0.2

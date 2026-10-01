@@ -1,0 +1,306 @@
+overlay: 1.0.0
+info:
+  title: Shadeform Speakeasy overlay
+  version: 1.0.0
+  description: >-
+    Adds Speakeasy-specific metadata (tags, method names, MCP scopes) to the
+    published Shadeform OpenAPI document without modifying the upstream spec.
+actions:
+  - target: $
+    description: Group operations into SDK namespaces / CLI command groups
+    update:
+      tags:
+        - name: instances
+          description: Create, inspect, update, restart and delete GPU instances.
+        - name: clusters
+          description: Create, inspect and delete multi-node GPU clusters.
+        - name: ssh-keys
+          description: Manage SSH keys used to access instances.
+        - name: volumes
+          description: Create, inspect and delete persistent storage volumes.
+        - name: templates
+          description: Save and reuse launch configurations as templates.
+  - target: $.components.securitySchemes.ApiKeyAuth
+    description: Name the credential apiKey so env vars/flags become SHADEFORM_API_KEY / --api-key
+    update:
+      x-speakeasy-name-override: apiKey
+  - target: $.paths['/instances'].get
+    update:
+      summary: List instances
+      tags:
+        - instances
+      x-speakeasy-name-override: list
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/instances/types'].get
+    update:
+      summary: List available instance types
+      tags:
+        - instances
+      x-speakeasy-name-override: listTypes
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/instances/create'].post
+    update:
+      summary: Create an instance
+      tags:
+        - instances
+      x-speakeasy-name-override: create
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/instances/{id}/info'].get
+    update:
+      summary: Get an instance
+      tags:
+        - instances
+      x-speakeasy-name-override: get
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/instances/{id}/update'].post
+    update:
+      summary: Update an instance
+      tags:
+        - instances
+      x-speakeasy-name-override: update
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/instances/{id}/delete'].post
+    update:
+      summary: Delete an instance
+      tags:
+        - instances
+      x-speakeasy-name-override: delete
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/instances/{id}/restart'].post
+    update:
+      summary: Restart an instance
+      tags:
+        - instances
+      x-speakeasy-name-override: restart
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/clusters'].get
+    update:
+      summary: List clusters
+      tags:
+        - clusters
+      x-speakeasy-name-override: list
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/clusters/types'].get
+    update:
+      summary: List available cluster types
+      tags:
+        - clusters
+      x-speakeasy-name-override: listTypes
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/clusters/create'].post
+    update:
+      summary: Create a cluster
+      tags:
+        - clusters
+      x-speakeasy-name-override: create
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/clusters/{id}/info'].get
+    update:
+      summary: Get a cluster
+      tags:
+        - clusters
+      x-speakeasy-name-override: get
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/clusters/{id}/delete'].post
+    update:
+      summary: Delete a cluster
+      tags:
+        - clusters
+      x-speakeasy-name-override: delete
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/sshkeys'].get
+    update:
+      summary: List SSH keys
+      tags:
+        - ssh-keys
+      x-speakeasy-name-override: list
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/sshkeys/add'].post
+    update:
+      summary: Add an SSH key
+      tags:
+        - ssh-keys
+      x-speakeasy-name-override: add
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/sshkeys/{id}/delete'].post
+    update:
+      summary: Delete an SSH key
+      tags:
+        - ssh-keys
+      x-speakeasy-name-override: delete
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/sshkeys/{id}/info'].get
+    update:
+      summary: Get an SSH key
+      tags:
+        - ssh-keys
+      x-speakeasy-name-override: get
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/sshkeys/{id}/setdefault'].post
+    update:
+      summary: Set the default SSH key
+      tags:
+        - ssh-keys
+      x-speakeasy-name-override: setDefault
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/volumes'].get
+    update:
+      summary: List volumes
+      tags:
+        - volumes
+      x-speakeasy-name-override: list
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/volumes/create'].post
+    update:
+      summary: Create a volume
+      tags:
+        - volumes
+      x-speakeasy-name-override: create
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/volumes/{id}/delete'].post
+    update:
+      summary: Delete a volume
+      tags:
+        - volumes
+      x-speakeasy-name-override: delete
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/volumes/{id}/info'].get
+    update:
+      summary: Get a volume
+      tags:
+        - volumes
+      x-speakeasy-name-override: get
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/volumes/types'].get
+    update:
+      summary: List available volume types
+      tags:
+        - volumes
+      x-speakeasy-name-override: listTypes
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/templates'].get
+    update:
+      summary: List templates
+      tags:
+        - templates
+      x-speakeasy-name-override: list
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/templates/featured'].get
+    update:
+      summary: List featured templates
+      tags:
+        - templates
+      x-speakeasy-name-override: listFeatured
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/templates/{template_id}/info'].get
+    update:
+      summary: Get a template
+      tags:
+        - templates
+      x-speakeasy-name-override: get
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  - target: $.paths['/templates/save'].post
+    update:
+      summary: Save a template
+      tags:
+        - templates
+      x-speakeasy-name-override: save
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/templates/{template_id}/update'].post
+    update:
+      summary: Update a template
+      tags:
+        - templates
+      x-speakeasy-name-override: update
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/templates/{template_id}/delete'].post
+    update:
+      summary: Delete a template
+      tags:
+        - templates
+      x-speakeasy-name-override: delete
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/instances/create'].post.requestBody
+    description: Request body is mandatory for this operation
+    update:
+      required: true
+  - target: $.paths['/instances/{id}/update'].post.requestBody
+    description: Request body is mandatory for this operation
+    update:
+      required: true
+  - target: $.paths['/clusters/create'].post.requestBody
+    description: Request body is mandatory for this operation
+    update:
+      required: true
+  - target: $.paths['/sshkeys/add'].post.requestBody
+    description: Request body is mandatory for this operation
+    update:
+      required: true
+  - target: $.paths['/volumes/create'].post.requestBody
+    description: Request body is mandatory for this operation
+    update:
+      required: true
+  - target: $.paths['/templates/save'].post.requestBody
+    description: Request body is mandatory for this operation
+    update:
+      required: true
+  - target: $.paths['/templates/{template_id}/update'].post.requestBody
+    description: Request body is mandatory for this operation
+    update:
+      required: true

@@ -1,0 +1,2074 @@
+openapi: 3.0.0
+servers:
+  - description: Shadeform Production
+    url: https://api.shadeform.ai/v1
+info:
+  description: 'Shadeform is a single API and platform for deploying and managing cloud GPUs.'
+  version: 1.0.0
+  title: Shadeform API
+  contact:
+    name: Shadeform
+    email: support@shadeform.ai
+    url: https://www.shadeform.ai
+security:
+  - ApiKeyAuth: []
+paths:
+  /instances:
+    get:
+      summary: List instances
+      operationId: Instances
+      description: 'Get all non deleted instances. Note: instances in the "deleting" status will also show up here.'
+      responses:
+        '200':
+          description: 'Returns an InstancesResponse object.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstancesResponse'
+      tags:
+        - instances
+      x-speakeasy-name-override: list
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  /instances/types:
+    get:
+      parameters:
+        - in: query
+          name: cloud
+          schema:
+            type: string
+          example: aws
+          description: "Filter the instance type results by cloud."
+        - in: query
+          name: region
+          schema:
+            type: string
+          example: us-east-1a
+          description: "Filter the instance type results by region."
+        - in: query
+          name: num_gpus
+          schema:
+            type: string
+          example: 1
+          description: "Filter the instance type results by the number of gpus."
+        - in: query
+          name: gpu_type
+          schema:
+            type: string
+          example: A100_80G
+          description: "Filter the instance type results by gpu type."
+        - in: query
+          name: shade_instance_type
+          schema:
+            type: string
+          example: A100_80G
+          description: "Filter the instance type results by the shade instance type."
+        - in: query
+          name: available
+          schema:
+            type: boolean
+          example: true
+          description: "Filter the instance type results by availability. Applies to individual availability entries, so an instance type whose region is available only as spot is still returned with just its spot entry; filter by `rental_type` client-side if you only want on-demand."
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum:
+              - price
+          example: price
+          description: "Sort the order of the instance type results."
+      summary: List available instance types
+      operationId: InstancesTypes
+      description: "Return all the GPU instance types with their corresponding availability and specs.\n\nEvery `availability` entry carries a `rental_type` (`on_demand` or `spot`). Instance types that offer spot list each region twice, once per rental type, and the two entries can differ in `available`. If your integration keys on `region` or checks whether any region is available, filter to `rental_type: on_demand` first to keep the previous behavior. See the [Spot Instances guide](/guides/spotinstances) for details."
+      responses:
+        '200':
+          description: Returns an InstanceTypesResponse object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstanceTypesResponse'
+      tags:
+        - instances
+      x-speakeasy-name-override: listTypes
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  /instances/create:
+    post:
+      summary: Create an instance
+      operationId: InstancesCreate
+      description: 'Create a new GPU instance. Our create API is designed to be asynchronous, so the response will be a CreateResponse object with a status of "creating". We then have a process that will pick it up and create it. You can poll the /instances/{id}/info endpoint to check the status of the instance.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRequest'
+        required: true
+      responses:
+        '200':
+          description: Returns a CreateResponse object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResponse'
+      tags:
+        - instances
+      x-speakeasy-name-override: create
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/instances/{id}/info':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        schema:
+          type: string
+          minimum: 1
+        description: 'The instance id'
+    get:
+      summary: Get an instance
+      operationId: InstancesInfo
+      description: "Get details for the specified, non deleted, instance in the url."
+      responses:
+        '200':
+          description: "Return an instance object."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstanceInfoResponse'
+      tags:
+        - instances
+      x-speakeasy-name-override: get
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  '/instances/{id}/update':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        schema:
+          type: string
+          minimum: 1
+        description: 'The instance id'
+    post:
+      summary: Update an instance
+      operationId: InstancesUpdate
+      description: "Update mutable details about the instance. Set a value to null to delete it. Omit a value or leave undefined to keep unchanged."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: 'Confirms the update of an instance.'
+      tags:
+        - instances
+      x-speakeasy-name-override: update
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/instances/{id}/delete':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        schema:
+          type: string
+          minimum: 1
+        description: The instance id
+    post:
+      summary: Delete an instance
+      operationId: InstancesDelete
+      description: "This will move the instance to the 'deleting' status while the instance is being deleted. Once the instance has entered the 'deleting' status, the account will no longer be billed for the instance."
+      responses:
+        '200':
+          description: 'Confirms the deletion of an instance.'
+      tags:
+        - instances
+      x-speakeasy-name-override: delete
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/instances/{id}/restart':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        schema:
+          type: string
+          minimum: 1
+        description: The instance id
+    post:
+      summary: Restart an instance
+      operationId: InstancesRestart
+      description: "Restart an instance. The status of the instance will stay as 'active' throughout, but you may have to wait a few minutes for the instance to be ready to use again."
+      responses:
+        '200':
+          description: 'Confirms the restart of an instance has been initiated. This does not confirm that the instance restarted successfully.'
+      tags:
+        - instances
+      x-speakeasy-name-override: restart
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  /clusters:
+    get:
+      summary: List clusters
+      operationId: Clusters
+      description: 'Get all non deleted clusters.'
+      responses:
+        '200':
+          description: 'Returns a ClustersResponse object.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClustersResponse'
+      tags:
+        - clusters
+      x-speakeasy-name-override: list
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  /clusters/types:
+    get:
+      summary: List available cluster types
+      operationId: ClustersTypes
+      description: 'Return all the GPU cluster types with their corresponding availability and specs.'
+      responses:
+        '200':
+          description: Returns a ClusterTypesResponse object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterTypesResponse'
+      tags:
+        - clusters
+      x-speakeasy-name-override: listTypes
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  /clusters/create:
+    post:
+      summary: Create a cluster
+      operationId: ClustersCreate
+      description: 'Create a new GPU cluster.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClusterRequest'
+        required: true
+      responses:
+        '200':
+          description: Returns a CreateClusterResponse object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateClusterResponse'
+      tags:
+        - clusters
+      x-speakeasy-name-override: create
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/clusters/{id}/info':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: '8eda86fe-0f36-41ed-9837-0ccf8f6e0fcb'
+        schema:
+          type: string
+          minimum: 1
+        description: 'The cluster id'
+    get:
+      summary: Get a cluster
+      operationId: ClustersInfo
+      description: "Get details for the specified, non deleted, cluster in the url."
+      responses:
+        '200':
+          description: "Return a cluster object."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterInfoResponse'
+      tags:
+        - clusters
+      x-speakeasy-name-override: get
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  '/clusters/{id}/delete':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: 'b1450ae8-2fa3-4ceb-a4f3-b834805418fc'
+        schema:
+          type: string
+          minimum: 1
+        description: The cluster id
+    post:
+      summary: Delete a cluster
+      operationId: ClustersDelete
+      description: "This will move the cluster to the 'deleting' status while the cluster is being deleted. Once the cluster has entered the 'deleting' status, the account will no longer be billed for the cluster."
+      responses:
+        '200':
+          description: 'Confirms the deletion of a cluster.'
+      tags:
+        - clusters
+      x-speakeasy-name-override: delete
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/sshkeys':
+    get:
+      summary: List SSH keys
+      operationId: SshKeys
+      description: 'Get all SSH Keys for the account.'
+      responses:
+        '200':
+          description: 'Returns an SSHKeysResponse object'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshKeysResponse'
+      tags:
+        - ssh-keys
+      x-speakeasy-name-override: list
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  '/sshkeys/add':
+    post:
+      summary: Add an SSH key
+      operationId: SshKeysAdd
+      description: 'Add a new SSH Key'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddSshKeyRequest'
+        required: true
+      responses:
+        '200':
+          description: 'Returns a AddSshKeyResponse object'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddSshKeyResponse'
+      tags:
+        - ssh-keys
+      x-speakeasy-name-override: add
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/sshkeys/{id}/delete':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        schema:
+          type: string
+          minimum: 1
+        description: 'The ssh key id'
+    post:
+      summary: Delete an SSH key
+      operationId: SshKeysDelete
+      description: 'Delete an ssh key. The Shadeform managed SSH Key, current default ssh key, and in use SSH Keys cannot be deleted.'
+      responses:
+        '200':
+          description: 'Confirms the deletion of an ssh key.'
+      tags:
+        - ssh-keys
+      x-speakeasy-name-override: delete
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/sshkeys/{id}/info':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        schema:
+          type: string
+          minimum: 1
+        description: 'The ssh key id'
+    get:
+      summary: Get an SSH key
+      operationId: SshKeysInfo
+      description: "Get details for the specified SSH Key in the url."
+      responses:
+        '200':
+          description: "Return an SshKey object."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshKey'
+      tags:
+        - ssh-keys
+      x-speakeasy-name-override: get
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  '/sshkeys/{id}/setdefault':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        schema:
+          type: string
+          minimum: 1
+        description: 'The ssh key id'
+    post:
+      summary: Set the default SSH key
+      operationId: SshKeysSetDefault
+      description: 'Set the specified SSH Key as the default SSH Key used by Shadeform.'
+      responses:
+        '200':
+          description: 'Confirms that the specified SSH Key was as set as the default key.'
+      tags:
+        - ssh-keys
+      x-speakeasy-name-override: setDefault
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/volumes':
+    get:
+      summary: List volumes
+      operationId: Volumes
+      description: 'Get all storage volumes for the account.'
+      responses:
+        '200':
+          description: 'Returns an VolumesResponse object'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VolumesResponse'
+      tags:
+        - volumes
+      x-speakeasy-name-override: list
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  '/volumes/create':
+    post:
+      summary: Create a volume
+      operationId: VolumesCreate
+      description: 'Create a new storage volume'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVolumeRequest'
+        required: true
+      responses:
+        '200':
+          description: 'Returns a CreateVolumeResponse object'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateVolumeResponse'
+      tags:
+        - volumes
+      x-speakeasy-name-override: create
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/volumes/{id}/delete':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        schema:
+          type: string
+          minimum: 1
+        description: 'The volume id.'
+    post:
+      summary: Delete a volume
+      operationId: VolumesDelete
+      description: 'Delete a storage volume.'
+      responses:
+        '200':
+          description: 'Confirms the deletion of the specified storage volume.'
+      tags:
+        - volumes
+      x-speakeasy-name-override: delete
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/volumes/{id}/info':
+    parameters:
+      - in: path
+        name: id
+        required: true
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        schema:
+          type: string
+          minimum: 1
+        description: 'The volume id.'
+    get:
+      summary: Get a volume
+      operationId: VolumesInfo
+      description: "Get details for the specified storage volume."
+      responses:
+        '200':
+          description: "Return a volume object."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volume'
+      tags:
+        - volumes
+      x-speakeasy-name-override: get
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  '/volumes/types':
+    get:
+      summary: List available volume types
+      operationId: VolumesTypes
+      description: 'Get list of supported storage volumes.'
+      responses:
+        '200':
+          description: 'Returns an VolumesTypesResponse object.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VolumesTypesResponse'
+      tags:
+        - volumes
+      x-speakeasy-name-override: listTypes
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  '/templates':
+    get:
+      summary: List templates
+      operationId: Templates
+      description: 'List all templates created by the user'
+      responses:
+        '200':
+          description: 'Returns a list of templates'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplatesResponse'
+      tags:
+        - templates
+      x-speakeasy-name-override: list
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  '/templates/featured':
+    get:
+      summary: List featured templates
+      operationId: TemplatesFeatured
+      description: 'List featured templates'
+      responses:
+        '200':
+          description: 'Returns a list of featured templates'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplatesResponse'
+      tags:
+        - templates
+      x-speakeasy-name-override: listFeatured
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  '/templates/{template_id}/info':
+    parameters:
+      - in: path
+        name: template_id
+        required: true
+        schema:
+          type: string
+        description: 'The template ID'
+    get:
+      summary: Get a template
+      operationId: TemplatesInfo
+      description: 'Get information about a specific template'
+      responses:
+        '200':
+          description: 'Returns template information'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+      tags:
+        - templates
+      x-speakeasy-name-override: get
+      x-speakeasy-mcp:
+        scopes:
+          - read
+  '/templates/save':
+    post:
+      summary: Save a template
+      operationId: TemplatesSave
+      description: 'Create a new template'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateSaveRequest'
+      responses:
+        '200':
+          description: Returns a TemplateCreateResponse object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateCreateResponse'
+      tags:
+        - templates
+      x-speakeasy-name-override: save
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/templates/{template_id}/update':
+    parameters:
+      - in: path
+        name: template_id
+        required: true
+        schema:
+          type: string
+        description: 'The template ID'
+    post:
+      summary: Update a template
+      operationId: TemplatesUpdate
+      description: 'Update an existing template'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateSaveRequest'
+      responses:
+        '200':
+          description: 'Template updated successfully'
+      tags:
+        - templates
+      x-speakeasy-name-override: update
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  '/templates/{template_id}/delete':
+    parameters:
+      - in: path
+        name: template_id
+        required: true
+        schema:
+          type: string
+        description: 'The template ID'
+    post:
+      summary: Delete a template
+      operationId: TemplatesDelete
+      description: 'Delete a template'
+      responses:
+        '200':
+          description: 'Template deleted successfully'
+      tags:
+        - templates
+      x-speakeasy-name-override: delete
+      x-speakeasy-mcp:
+        scopes:
+          - write
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      x-speakeasy-name-override: apiKey
+  schemas:
+    InstanceTypesResponse:
+      description: 'Response of /instances/types'
+      type: object
+      required:
+        - instance_types
+      properties:
+        instance_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceType'
+    InstanceType:
+      description: "Information about a specific instance type"
+      type: object
+      required:
+        - cloud
+        - shade_instance_type
+        - cloud_instance_type
+        - configuration
+        - hourly_price
+        - deployment_type
+        - availability
+      properties:
+        cloud:
+          $ref: '#/components/schemas/Cloud'
+        shade_instance_type:
+          $ref: '#/components/schemas/ShadeInstanceType'
+        cloud_instance_type:
+          $ref: '#/components/schemas/CloudInstanceType'
+        configuration:
+          $ref: '#/components/schemas/InstanceTypeConfiguration'
+        hourly_price:
+          $ref: '#/components/schemas/HourlyPrice'
+        deployment_type:
+          $ref: '#/components/schemas/DeploymentType'
+        availability:
+          type: array
+          items:
+            $ref: '#/components/schemas/Availability'
+          example:
+            - region: us-central-1
+              available: true
+              display_name: US, Wichita, KS
+              rental_type: on_demand
+            - region: us-central-2
+              available: false
+              display_name: US, Wichita, KS
+              rental_type: on_demand
+            - region: us-central-1
+              available: true
+              display_name: US, Wichita, KS
+              rental_type: spot
+              hourly_price: "1.50"
+        boot_time:
+          $ref: '#/components/schemas/BootTime'
+    InstancesResponse:
+      type: object
+      required:
+        - instances
+      properties:
+        instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/Instance'
+    Instance:
+      type: object
+      required:
+        - id
+        - cloud
+        - region
+        - shade_instance_type
+        - cloud_instance_type
+        - cloud_assigned_id
+        - shade_cloud
+        - name
+        - configuration
+        - ip
+        - ssh_user
+        - ssh_port
+        - status
+        - cost_estimate
+        - created_at
+        - deleted_at
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        cloud:
+          $ref: '#/components/schemas/Cloud'
+        region:
+          $ref: '#/components/schemas/Region'
+        shade_instance_type:
+          $ref: '#/components/schemas/ShadeInstanceType'
+        cloud_instance_type:
+          $ref: '#/components/schemas/CloudInstanceType'
+        cloud_assigned_id:
+          $ref: '#/components/schemas/CloudAssignedId'
+        shade_cloud:
+          $ref: '#/components/schemas/ShadeCloud'
+        name:
+          $ref: '#/components/schemas/Name'
+        configuration:
+          allOf:
+            - $ref: '#/components/schemas/InstanceConfiguration'
+            - type: object
+              required:
+                - os
+              properties:
+                os:
+                  type: string
+                  example: ubuntu_22_shade_os
+                  description: "The operating system of the instance."
+        ip:
+          $ref: '#/components/schemas/Ip'
+        ssh_user:
+          $ref: '#/components/schemas/SshUser'
+        ssh_port:
+          $ref: '#/components/schemas/SshPort'
+        status:
+          $ref: '#/components/schemas/Status'
+        status_details:
+          $ref: '#/components/schemas/StatusDetails'
+        cost_estimate:
+          $ref: '#/components/schemas/CostEstimate'
+        hourly_price:
+          $ref: '#/components/schemas/HourlyPrice'
+        rental_terms:
+          $ref: '#/components/schemas/RentalTerms'
+        launch_configuration:
+          $ref: '#/components/schemas/LaunchConfiguration'
+        tags:
+          type: array
+          description: 'Add custom, searchable tags to instances.'
+          items:
+            $ref: '#/components/schemas/Tag'
+        port_mappings:
+          type: array
+          description: 'List of port mappings on an instance that a Cloud Provider might have automatically set up.'
+          items:
+            $ref: '#/components/schemas/InstancePortMappings'
+        active_at:
+          $ref: '#/components/schemas/ActiveAt'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        deleted_at:
+          $ref: '#/components/schemas/DeletedAt'
+        boot_time:
+          $ref: '#/components/schemas/BootTime'
+    InstanceInfoResponse:
+      type: object
+      required:
+        - id
+        - cloud
+        - region
+        - shade_instance_type
+        - cloud_instance_type
+        - cloud_assigned_id
+        - shade_cloud
+        - name
+        - configuration
+        - ip
+        - ssh_user
+        - ssh_port
+        - status
+        - cost_estimate
+        - created_at
+        - deleted_at
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        cloud:
+          $ref: '#/components/schemas/Cloud'
+        region:
+          $ref: '#/components/schemas/Region'
+        shade_instance_type:
+          $ref: '#/components/schemas/ShadeInstanceType'
+        cloud_instance_type:
+          $ref: '#/components/schemas/CloudInstanceType'
+        cloud_assigned_id:
+          $ref: '#/components/schemas/CloudAssignedId'
+        shade_cloud:
+          $ref: '#/components/schemas/ShadeCloud'
+        name:
+          $ref: '#/components/schemas/Name'
+        configuration:
+          allOf:
+            - $ref: '#/components/schemas/InstanceConfiguration'
+            - type: object
+              required:
+                - os
+              properties:
+                os:
+                  type: string
+                  example: ubuntu_22_shade_os
+                  description: "The operating system of the instance."
+        ip:
+          $ref: '#/components/schemas/Ip'
+        ssh_user:
+          $ref: '#/components/schemas/SshUser'
+        ssh_port:
+          $ref: '#/components/schemas/SshPort'
+        status:
+          $ref: '#/components/schemas/Status'
+        status_details:
+          $ref: '#/components/schemas/StatusDetails'
+        cost_estimate:
+          $ref: '#/components/schemas/CostEstimate'
+        hourly_price:
+          $ref: '#/components/schemas/HourlyPrice'
+        rental_terms:
+          $ref: '#/components/schemas/RentalTerms'
+        volume_ids:
+          type: array
+          description: "List of volume IDs to be mounted. Currently only supports 1 volume at a time."
+          items:
+            $ref: '#/components/schemas/VolumeID'
+        ssh_key_id:
+          $ref: '#/components/schemas/SshKeyID'
+        launch_configuration:
+          $ref: '#/components/schemas/LaunchConfiguration'
+        auto_delete:
+          $ref: '#/components/schemas/AutoDelete'
+        alert:
+          $ref: '#/components/schemas/Alert'
+        volume_mount:
+          $ref: '#/components/schemas/VolumeMount'
+        tags:
+          type: array
+          description: 'Add custom, searchable tags to instances.'
+          items:
+            $ref: '#/components/schemas/Tag'
+        envs:
+          type: array
+          description: 'List of environment variable name and values to automatically add to the instance'
+          items:
+            $ref: '#/components/schemas/Env'
+        port_mappings:
+          type: array
+          description: 'List of port mappings on an instance that a Cloud Provider might have automatically set up.'
+          items:
+            $ref: '#/components/schemas/InstancePortMappings'
+        active_at:
+          $ref: '#/components/schemas/ActiveAt'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        deleted_at:
+          $ref: '#/components/schemas/DeletedAt'
+        boot_time:
+          $ref: '#/components/schemas/BootTime'
+    InstanceTypeConfiguration:
+      type: object
+      required:
+        - memory_in_gb
+        - storage_in_gb
+        - vcpus
+        - num_gpus
+        - gpu_type
+        - interconnect
+        - os_options
+        - vram_per_gpu_in_gb
+        - gpu_manufacturer
+      properties:
+        memory_in_gb:
+          type: integer
+          example: 12
+          description: "The amount of memory for the instance in gigabytes. Note that this is not VRAM which is determined by GPU type and the number of GPUs."
+        storage_in_gb:
+          type: integer
+          example: 256
+          description: 'The amount of storage for the instance. If this storage is too low for the instance type, please email support@shadeform.ai as the storage may be adjustable.'
+        vcpus:
+          type: integer
+          example: 6
+          description: "The number of vCPUs for the instance."
+        num_gpus:
+          type: integer
+          example: 1
+          description: "The number of GPUs for the instance."
+        gpu_type:
+          type: string
+          example: A100
+          description: "The type of GPU for the instance."
+        interconnect:
+          type: string
+          example: pcie
+          description: "The type of GPU interconnect."
+        nvlink:
+          type: boolean
+          example: true
+          description: "If the instance has NVLink"
+        vram_per_gpu_in_gb:
+          type: integer
+          example: 48
+          description: "The video memory per GPU for the instance in gigabytes."
+        os_options:
+          type: array
+          items:
+            type: string
+          example: ["ubuntu22.04_cuda12.2_shade_os", "ubuntu20.04_cuda12.0_shade_os"]
+          description: 'The list of available operating systems for the instance.'
+        gpu_manufacturer:
+          type: string
+          example: 'nvidia'
+          description: 'The manufacturer of the gpu'
+    InstanceConfiguration:
+      type: object
+      required:
+        - memory_in_gb
+        - storage_in_gb
+        - vcpus
+        - num_gpus
+        - gpu_type
+        - interconnect
+        - os
+        - vram_per_gpu_in_gb
+        - gpu_manufacturer
+      properties:
+        memory_in_gb:
+          type: integer
+          example: 12
+          description: "The amount of memory for the instance in gigabytes. Note that this is not VRAM which is determined by GPU type and the number of GPUs."
+        storage_in_gb:
+          type: integer
+          example: 256
+          description: 'The amount of storage for the instance. If this storage is too low for the instance type, please email support@shadeform.ai as the storage may be adjustable.'
+        vcpus:
+          type: integer
+          example: 6
+          description: "The number of vCPUs for the instance."
+        num_gpus:
+          type: integer
+          example: 1
+          description: "The number of GPUs for the instance."
+        gpu_type:
+          type: string
+          example: A100
+          description: "The type of GPU for the instance."
+        interconnect:
+          type: string
+          example: pcie
+          description: "The type of GPU interconnect."
+        nvlink:
+          type: boolean
+          example: true
+          description: "If the instance has NVLink"
+        vram_per_gpu_in_gb:
+          type: integer
+          example: 48
+          description: "The video memory per GPU for the instance in gigabytes."
+        gpu_manufacturer:
+          type: string
+          example: nvidia
+          description: "The manufacturer of the gpu"
+    Availability:
+      type: object
+      required:
+        - region
+        - available
+        - display_name
+        - rental_type
+      properties:
+        region:
+          $ref: '#/components/schemas/Region'
+        available:
+          type: boolean
+          example: true
+          description: "Indicate whether the instance is available in the region."
+        display_name:
+          type: string
+          example: "Toronto, Canana"
+          description: "The display name of the region"
+        rental_type:
+          type: string
+          enum:
+            - on_demand
+            - spot
+          example: spot
+          description: "The rental type this entry describes. Regular entries are tagged `on_demand`; an instance type that offers spot lists a second entry per region tagged `spot` with its own `available` verdict and `hourly_price`. Filter by `rental_type` rather than assuming one entry per region."
+        hourly_price:
+          type: string
+          example: "1.50"
+          description: "The spot hourly price as a decimal string in dollars. Only present on spot availability entries."
+    RentalTerms:
+      type: object
+      description: "How the instance is rented and on what terms."
+      required:
+        - rental_type
+      properties:
+        rental_type:
+          type: string
+          enum:
+            - on_demand
+            - spot
+            - commitment
+          example: spot
+          description: "How the instance is rented."
+        hourly_price:
+          type: string
+          example: "1.50"
+          description: "The hourly price as a decimal string in dollars. A spot instance shows its discounted spot rate. Omitted for commitments."
+        ending_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+          description: "The promised end of the rental when one is known. Null for open-ended rentals. Spot instances are open-ended and can be reclaimed at any time, so this is null; a reclaim shows up as the instance moving to `deleting` with `status_details: \"preempted\"`."
+    BootTime:
+      type: object
+      properties:
+        min_boot_in_sec:
+          type: integer
+          example: 180
+          description: 'boot time minimum estimate'
+        max_boot_in_sec:
+          type: integer
+          example: 300
+          description: 'boot time maximum estimate'
+    CreateRequest:
+      type: object
+      required:
+        - cloud
+        - region
+        - shade_instance_type
+        - shade_cloud
+        - name
+      properties:
+        cloud:
+          $ref: '#/components/schemas/Cloud'
+        region:
+          $ref: '#/components/schemas/Region'
+        shade_instance_type:
+          $ref: '#/components/schemas/ShadeInstanceType'
+        shade_cloud:
+          $ref: '#/components/schemas/ShadeCloud'
+        name:
+          $ref: '#/components/schemas/Name'
+        rental_type:
+          type: string
+          enum:
+            - on_demand
+            - spot
+          default: on_demand
+          example: spot
+          description: 'How the instance is rented. Defaults to on_demand. Spot instances run at a discounted hourly price but are interruptible: Shadeform may reclaim the capacity at any time, at which point the instance is terminated. Spot requires an instance type that supports it (see the availability entries tagged rental_type spot in the instance types response) and shade_cloud set to true.'
+        os:
+          type: string
+          example: "ubuntu22.04_cuda12.2_shade_os"
+          description: 'The operating system of the instance.'
+        template_id:
+          type: string
+          example: "template-123"
+          description: 'The ID of the template to use for this instance'
+        launch_configuration:
+          $ref: '#/components/schemas/LaunchConfiguration'
+        volume_ids:
+          type: array
+          description: "List of volume IDs to be mounted. Currently only supports 1 volume at a time."
+          items:
+            $ref: '#/components/schemas/VolumeID'
+        ssh_key_id:
+          $ref: '#/components/schemas/SshKeyID'
+        auto_delete:
+          $ref: '#/components/schemas/AutoDelete'
+        alert:
+          $ref: '#/components/schemas/Alert'
+        volume_mount:
+          $ref: '#/components/schemas/VolumeMount'
+        tags:
+          type: array
+          description: 'Add custom, searchable tags to instances.'
+          items:
+            $ref: '#/components/schemas/Tag'
+        envs:
+          type: array
+          description: 'List of environment variable name and values to automatically add to the instance'
+          items:
+            $ref: '#/components/schemas/Env'
+    UpdateRequest:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+        auto_delete:
+          $ref: '#/components/schemas/AutoDelete'
+        alert:
+          $ref: '#/components/schemas/Alert'
+        tags:
+          type: array
+          description: 'Add custom, searchable tags to instances.'
+          items:
+            $ref: '#/components/schemas/Tag'
+    LaunchConfiguration:
+      type: object
+      required:
+        - type
+      description: 'Defines automatic actions after the instance becomes active.'
+      properties:
+        type:
+          type: string
+          example: docker
+          enum:
+            - docker
+            - script
+          description: "Specifies the type of launch configuration. See [Launch Configuration](/getting-started/concepts#launch-configuration) for more details."
+        docker_configuration:
+          $ref: '#/components/schemas/DockerConfiguration'
+        script_configuration:
+          $ref: '#/components/schemas/ScriptConfiguration'
+    DockerConfiguration:
+      type: object
+      required:
+        - image
+      description: "May only be used if launch_configuration.type is 'docker'. Use docker_configuration to automatically pull and run a docker image. See this [tutorial](/guides/dockercontainers) for examples."
+      properties:
+        image:
+          type: string
+          example: vllm/vllm-openai:latest
+          description: 'Specifies the docker image to be pulled and run on the instance at startup.'
+        args:
+          type: string
+          example: --model mistralai/Mistral-7B-v0.1
+          description: 'Specifies the container arguments passed into the image at runtime.'
+        shared_memory_in_gb:
+          type: integer
+          example: 8
+          description: "Describes the amount of shared memory allocated for the container. Equivalent to using the --shm-size flag in the docker cli. If shared_memory_in_gb is not specified, then the container will use the host namespace which is the equivalent of --ipc=host."
+        envs:
+          type: array
+          description: "List of environment variable name-value pairs that will be passed to the docker container."
+          items:
+            $ref: '#/components/schemas/Env'
+        port_mappings:
+          type: array
+          description: "List of port mappings between the host instance and the docker container. Equivalent of -p flag for docker run command."
+          items:
+            $ref: '#/components/schemas/PortMappings'
+        volume_mounts:
+          type: array
+          description: "List of volume mounts between the host instance and the docker container. Equivalent of -v flag for docker run command."
+          items:
+            $ref: '#/components/schemas/VolumeMounts'
+        registry_credentials:
+          $ref: '#/components/schemas/RegistryCredentials'
+    RegistryCredentials:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "username"
+          description: "The username for the docker registry."
+        password:
+          type: string
+          example: "password"
+          description: "The password for the docker registry."
+    ScriptConfiguration:
+      type: object
+      required:
+        - base64_script
+      description: "May only be used if launch_configuration.type is 'script'. Configures a startup script to be run automatically after the instance is active. See this [tutorial]/guides/startupscript) for examples."
+      properties:
+        base64_script:
+          type: string
+          description: "A startup script that is base64 encoded."
+          example: IyEvYmluL2Jhc2gKCiMgRW5kbGVzcyBsb29wCndoaWxlIHRydWUKZG8KICAgICMgRmV0Y2ggYSBjYXQgZmFjdCB3aXRoIGEgbWF4aW11bSBsZW5ndGggb2YgMTQwIGNoYXJhY3RlcnMKICAgIGN1cmwgLS1uby1wcm9ncmVzcy1tZXRlciBodHRwczovL2NhdGZhY3QubmluamEvZmFjdD9tYXhfbGVuZ3RoPTE0MAoKICAgICMgUHJpbnQgYSBuZXdsaW5lIGZvciByZWFkYWJpbGl0eQogICAgZWNobwoKICAgICMgU2xlZXAgZm9yIDMgc2Vjb25kcyBiZWZvcmUgdGhlIG5leHQgaXRlcmF0aW9uCiAgICBzbGVlcCAzCmRvbmUKCgo=
+    Env:
+      type: object
+      required:
+        - name
+        - value
+      description: "Environment variables for the container image."
+      properties:
+        name:
+          type: string
+          example: HUGGING_FACE_HUB_TOKEN
+          description: "Name of the environment variable"
+        value:
+          type: string
+          example: hugging_face_api_token
+          description: "Value of the environment variable"
+    PortMappings:
+      type: object
+      required:
+        - host_port
+        - container_port
+      description: "Maps the public instance port to a port on the container."
+      properties:
+        host_port:
+          type: integer
+          example: 80
+          description: "Port of the host."
+        container_port:
+          type: integer
+          example: 8000
+          description: "Port of the container."
+    VolumeMounts:
+      type: object
+      required:
+        - host_path
+        - container_path
+      description: "Mounts the host volume to a container file path."
+      properties:
+        host_path:
+          type: string
+          example: "~/.cache/huggingface"
+          description: "Filepath of the host."
+        container_path:
+          type: string
+          example: "/root/.cache/huggingface"
+          description: "Filepath of the container."
+    CreateResponse:
+      type: object
+      required:
+        - id
+      description: Response of the /instances/create API call
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+    ClustersResponse:
+      type: object
+      required:
+        - clusters
+      properties:
+        clusters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cluster'
+    Cluster:
+      type: object
+      required:
+        - id
+        - cloud
+        - name
+        - region_info
+        - status
+        - created_at
+        - updated_at
+        - instances
+        - hourly_price
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 8eda86fe-0f36-41ed-9837-0ccf8f6e0fcb
+          description: 'The unique identifier for the cluster.'
+        cloud:
+          type: string
+          example: denvr
+          description: 'The cloud provider for the cluster.'
+        name:
+          type: string
+          example: devnr-cluster1
+          description: 'The name of the cluster.'
+        cloud_cluster_id:
+          type: string
+          nullable: true
+          example: cluster-abc123
+          description: 'The cloud provider assigned cluster ID.'
+        region_info:
+          $ref: '#/components/schemas/ClusterRegionInfo'
+        status:
+          type: string
+          example: active
+          description: 'The current status of the cluster.'
+        status_details:
+          type: string
+          nullable: true
+          example: 'Cluster is provisioning'
+          description: 'Additional details about the cluster status.'
+        created_at:
+          type: string
+          format: date-time
+          description: 'The timestamp when the cluster was created.'
+        updated_at:
+          type: string
+          format: date-time
+          description: 'The timestamp when the cluster was last updated.'
+        instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/Instance'
+          description: 'Array of instances in the cluster.'
+        hourly_price:
+          type: integer
+          example: 1500
+          description: 'The hourly price of the cluster in cents.'
+        cost_estimate:
+          type: string
+          nullable: true
+          example: '$15.00'
+          description: 'Estimated cost of the cluster.'
+        active_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: 'The timestamp when the cluster became active.'
+    ClusterRegionInfo:
+      type: object
+      required:
+        - region
+        - display_name
+      properties:
+        region:
+          type: string
+          example: houston-usa-1
+          description: 'The region code.'
+        display_name:
+          type: string
+          example: 'US, Houston, TX'
+          description: 'Human-readable display name for the region.'
+    ClusterAvailability:
+      type: object
+      required:
+        - region
+        - display_name
+        - available
+      properties:
+        region:
+          type: string
+          example: houston-usa-1
+          description: 'The region code.'
+        display_name:
+          type: string
+          example: 'US, Houston, TX'
+          description: 'Human-readable display name for the region.'
+        available:
+          type: boolean
+          example: true
+          description: 'Whether the cluster type is available in this region.'
+    ClusterTypesResponse:
+      type: object
+      required:
+        - cluster_types
+      properties:
+        cluster_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClusterType'
+          example:
+            - cloud: denvr
+              num_instances: 2
+              availability:
+                region: houston-usa-1
+                display_name: US, Houston, TX
+                available: true
+              cluster_type:
+                cloud: denvr
+                shade_instance_type: H100_sxm5x8
+                cloud_instance_type: H100_80GB_SXM_8x
+                configuration:
+                  memory_in_gb: 940
+                  storage_in_gb: 20000
+                  vcpus: 208
+                  num_gpus: 8
+                  gpu_type: H100
+                  interconnect: sxm5
+                  nvlink: true
+                  os_options:
+                    - ubuntu22.04_cuda12.4_shade_os
+                    - ubuntu20.04_cuda12.4_shade_os
+                    - ubuntu20.04
+                    - ubuntu22.04
+                  vram_per_gpu_in_gb: 80
+                  gpu_manufacturer: nvidia
+                memory_in_gb: 940
+                storage_in_gb: 20000
+                vcpus: 208
+                num_gpus: 8
+                gpu_type: H100
+                interconnect: sxm5
+                nvlink: true
+                hourly_price: 1400
+                boot_time:
+                  min_boot_in_sec: 600
+                  max_boot_in_sec: 1200
+                deployment_type: vm
+    ClusterType:
+      type: object
+      required:
+        - cloud
+        - num_instances
+        - availability
+        - cluster_type
+      properties:
+        cloud:
+          type: string
+          example: denvr
+          description: 'The cloud provider.'
+        num_instances:
+          type: integer
+          example: 2
+          description: 'The number of instances in this cluster type.'
+        availability:
+          $ref: '#/components/schemas/ClusterAvailability'
+        cluster_type:
+          $ref: '#/components/schemas/InstanceType'
+    CreateClusterRequest:
+      type: object
+      required:
+        - cloud
+        - region
+        - cluster_type
+        - name
+        - num_instances
+      properties:
+        name:
+          type: string
+          example: protestant-aquamarine-cluster
+          description: 'The name of the cluster.'
+        cloud:
+          type: string
+          example: denvr
+          description: 'The cloud provider for the cluster.'
+        region:
+          type: string
+          example: houston-usa-1
+          description: 'The region where the cluster will be deployed.'
+        cluster_type:
+          type: string
+          example: H100_sxm5x8
+          description: 'The type of GPU cluster to create.'
+        num_instances:
+          type: integer
+          example: 2
+          description: 'The number of instances in the cluster.'
+        ssh_key_id:
+          type: string
+          example: 'f0c6ac6d-7240-4968-8eb7-a11c4a0a5dc6'
+          description: 'The SSH key ID to use for the cluster instances.'
+        os:
+          type: string
+          example: ubuntu20.04
+          description: 'The operating system for the cluster.'
+    CreateClusterResponse:
+      type: object
+      required:
+        - id
+      description: Response of the /clusters/create API call
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 8eda86fe-0f36-41ed-9837-0ccf8f6e0fcb
+          description: 'The unique identifier for the newly created cluster.'
+    ClusterInfoResponse:
+      allOf:
+        - $ref: '#/components/schemas/Cluster'
+    Cloud:
+      type: string
+      example: hyperstack
+      description: 'Specifies the underlying cloud provider. See this [explanation](/getting-started/concepts#cloud-cloud-provider) for more details.'
+    Region:
+      type: string
+      example: 'canada-1'
+      description: 'Specifies the region.'
+    Id:
+      type: string
+      format: uuid
+      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      description: 'The unique identifier for the instance. Used in the instances for the /instances/{id}/info and /instances/{id}/delete APIs.'
+    CloudAssignedId:
+      type: string
+      example: 13b057d7-e266-4869-985f-760fe75a78b3
+      description: 'The unique identifier of the instance issued by the underlying cloud provider.'
+    Name:
+      type: string
+      example: cool-gpu-server
+      description: The name of the instance
+    ShadeInstanceType:
+      type: string
+      example: A6000
+      description: 'The Shadeform standardized instance type. See this [explanation](/getting-started/concepts#shade-instance-type-and-cloud-instance-type) for more details.'
+    ShadeCloud:
+      type: boolean
+      example: true
+      description: 'Specifies if the instance is launched in [Shade Cloud](/getting-started/concepts#shade-cloud) or in a linked cloud account.'
+    CloudInstanceType:
+      type: string
+      example: gpu_1x_a6000
+      description: 'The instance type for the underlying cloud provider. See this [explanation](/getting-started/concepts#shade-instance-type-and-cloud-instance-type) for more details.'
+    HourlyPrice:
+      type: integer
+      example: 210
+      description: 'The hourly price of the instance in cents.'
+    DeploymentType:
+      type: string
+      example: vm
+      description: 'Whether the instance is a "vm" (virtual machine), a "container" (docker container), or "baremetal" (bare metal server).'
+    Ip:
+      type: string
+      example: 1.0.0.1
+      description: 'The public IP address of the instance. In select cases, it may also be the DNS.'
+    SshUser:
+      type: string
+      example: shadeform
+      description: 'The SSH user used to SSH into the instance.'
+    SshPort:
+      type: integer
+      example: 22
+      description: 'The SSH port of the instance. In most cases, this will be port 22 but for some clouds, this may be a different port.'
+    Status:
+      type: string
+      example: active
+      enum:
+        - creating
+        - pending_provider
+        - pending
+        - active
+        - error
+        - deleting
+        - deleted
+      description: 'The status of the instance.'
+    StatusDetails:
+      type: string
+      example: downloading
+      description: 'Additional context for the status. A spot instance that was reclaimed by Shadeform (rather than deleted by you) carries the value "preempted" once terminated.'
+    CostEstimate:
+      type: string
+      example: '103.4'
+      description: 'The cost incurred by the instance. This only the cost via Shadeform. If the instance is deployed in your own cloud account, then all billing is through your cloud provider.'
+    ActiveAt:
+      type: string
+      format: date-time
+      example: '2016-08-29T09:12:33.001Z'
+      description: 'The timestamp of when the instance was active in UTC.'
+    CreatedAt:
+      type: string
+      format: date-time
+      example: '2016-08-29T09:12:33.001Z'
+      description: 'The timestamp of when the instance was created in UTC.'
+    DeletedAt:
+      type: string
+      format: date-time
+      example: '2016-08-29T09:12:33.001Z'
+      description: 'The timestamp of when the instance was deleted in UTC.'
+    SshKeysResponse:
+      type: object
+      required:
+        - ssh_keys
+      properties:
+        ssh_keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/SshKey'
+    SshKey:
+      type: object
+      required:
+        - id
+        - name
+        - public_key
+        - is_default
+      properties:
+        id:
+          $ref: '#/components/schemas/SshKeyID'
+        name:
+          $ref: '#/components/schemas/SshKeyName'
+        public_key:
+          $ref: '#/components/schemas/PublicKey'
+        is_default:
+          $ref: '#/components/schemas/IsDefault'
+    AddSshKeyRequest:
+      type: object
+      required:
+        - name
+        - public_key
+      properties:
+        name:
+          $ref: '#/components/schemas/SshKeyName'
+        public_key:
+          $ref: '#/components/schemas/PublicKey'
+    AddSshKeyResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/SshKeyID'
+    SshKeyID:
+      type: string
+      example: '78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40'
+      description: 'The ID of the SSH Key.'
+    AutoDelete:
+      type: object
+      description: 'Set a date or spend threshold to automatically delete the instance'
+      properties:
+        date_threshold:
+          $ref: '#/components/schemas/DateThreshold'
+        spend_threshold:
+          $ref: '#/components/schemas/SpendThreshold'
+    InstancePortMappings:
+      type: object
+      description: 'List of port mappings on an instance that a Cloud Provider might have automatically set up.'
+      properties:
+        internal_port:
+          type: integer
+          example: 8000
+        external_port:
+          type: integer
+          example: 80
+    Alert:
+      type: object
+      description: 'Set a date or spend threshold to receive an email alert'
+      properties:
+        date_threshold:
+          $ref: '#/components/schemas/DateThreshold'
+        spend_threshold:
+          $ref: '#/components/schemas/SpendThreshold'
+    DateThreshold:
+      type: string
+      example: '2006-01-02T15:04:05-07:00'
+      description: 'RFC3339 date string'
+    SpendThreshold:
+      type: string
+      example: '3.14'
+      description: 'Valid decimal representation of a dollar amount'
+    VolumeMount:
+      type: object
+      description: 'Settings for mounting volumes onto file systems'
+      properties:
+        auto:
+          type: boolean
+          description: 'Set to true to automatically mount unmounted disks to a default filesystem.'
+    SshKeyName:
+      type: string
+      example: 'My ssh key'
+      description: "The name of the SSH Key."
+    PublicKey:
+      type: string
+      example: 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU GPl+nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3 Pbv7kOdJ/MTyBlWXFCR+HAo3FXRitBqxiX1nKhXpHAZsMciLq8V6RjsNAQwdsdMFvSlVK/7XA t3FaoJoAsncM1Q9x5+3V0Ww68/eIFmb1zuUFljQJKprrX88XypNDvjYNby6vw/Pb0rwert/En mZ+AW4OZPnTPI89ZPmVMLuayrD2cE86Z/il8b+gw3r3+1nKatmIkjn2so1d01QraTlMqVSsbx NrRFi9wrf+M7Q== schacon@mylaptop.local'
+      description: "The public key."
+    IsDefault:
+      type: boolean
+      example: false
+      description: "Indicates the default key."
+    Tag:
+      type: string
+      example: "tag1"
+      description: "Tag for searching and grouping"
+    VolumesResponse:
+      type: object
+      required:
+        - volumes
+      properties:
+        volumes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Volume'
+    CreateVolumeRequest:
+      type: object
+      required:
+        - cloud
+        - region
+        - size_in_gb
+        - name
+      properties:
+        cloud:
+          $ref: '#/components/schemas/Cloud'
+        region:
+          $ref: '#/components/schemas/Region'
+        size_in_gb:
+          $ref: '#/components/schemas/VolumeSizeInGB'
+        name:
+          $ref: '#/components/schemas/VolumeName'
+    CreateVolumeResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/VolumeID'
+    VolumesTypesResponse:
+      type: object
+      required:
+        - volume_types
+      properties:
+        volume_types:
+          $ref: '#/components/schemas/VolumeTypes'
+    Volume:
+      type: object
+      required:
+        - id
+        - cloud
+        - cloud_assigned_id
+        - region
+        - name
+        - fixed_size
+        - size_in_gb
+        - cost_estimate
+        - supports_multi_mount
+        - mounted_by
+      properties:
+        id:
+          $ref: '#/components/schemas/VolumeID'
+        cloud:
+          $ref: '#/components/schemas/Cloud'
+        cloud_assigned_id:
+          $ref: '#/components/schemas/VolumeCloudAssignedId'
+        region:
+          $ref: '#/components/schemas/Region'
+        name:
+          $ref: '#/components/schemas/VolumeName'
+        fixed_size:
+          $ref: '#/components/schemas/VolumeFixedSize'
+        size_in_gb:
+          $ref: '#/components/schemas/VolumeSizeInGB'
+        cost_estimate:
+          $ref: '#/components/schemas/CostEstimate'
+        supports_multi_mount:
+          $ref: '#/components/schemas/VolumeSupportsMultiMount'
+        mounted_by:
+          $ref: '#/components/schemas/VolumeMountedBy'
+    VolumeID:
+      type: string
+      example: '78a0dd5a-dbb1-4568-b55c-5e7e0a8b0c40'
+      description: 'The ID of the storage volume.'
+    VolumeName:
+      type: string
+      example: 'My storage volume'
+      description: 'The name of the storage volume.'
+    VolumeCloudAssignedId:
+      type: string
+      example: '13b057d7-e266-4869-985f-760fe75a78b3'
+      description: 'The unique identifier of the storage volume issued by the underlying cloud provider.'
+    VolumeFixedSize:
+      type: boolean
+      example: true
+      description: 'Denotes whether the volume is fixed in size or elastically scaling.'
+    VolumeSizeInGB:
+      type: integer
+      example: 100
+      description: 'Storage volume size in GB'
+    VolumeCostEstimate:
+      type: string
+      example: '12.01'
+      description: 'Cost incurred by the storage volume'
+    VolumeSupportsMultiMount:
+      type: boolean
+      example: true
+      description: 'Denotes whether the volume supports multiple instances mounting to it at the same time.'
+    VolumeMountedBy:
+      type: string
+      example: '13b057d7-e266-4869-985f-760fe75a78b3'
+      description: 'The ID of the instance that is currently mounting the volume.'
+    VolumePricePerGBPerHour:
+      type: string
+      example: '0.0001'
+      description: 'Price of the specified volume type per GB per hour'
+    VolumeTypes:
+      type: array
+      items:
+        type: object
+        required:
+          - cloud
+          - region
+          - supports_multi_mount
+          - fixed_size
+          - price_per_gb_per_hour
+        properties:
+          cloud:
+            $ref: '#/components/schemas/Cloud'
+          region:
+            $ref: '#/components/schemas/Region'
+          supports_multi_mount:
+            $ref: '#/components/schemas/VolumeSupportsMultiMount'
+          fixed_size:
+            $ref: '#/components/schemas/VolumeFixedSize'
+          price_per_gb_per_hour:
+            $ref: '#/components/schemas/VolumePricePerGBPerHour'
+    Template:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          description: "Unique identifier for the template, generated by Shadeform"
+        name:
+          type: string
+          example: "My AwesomeTemplate"
+          description: "Name of the template"
+        description:
+          type: string
+          example: "A template for running vLLM"
+          description: "Description of the template"
+        author:
+          type: string
+          example: "John Doe"
+          description: "Author of the template"
+        logo:
+          type: string
+          example: "https://example.com/logo.png"
+          description: "URL to the template's logo"
+        public:
+          type: boolean
+          example: true
+          description: "Whether the template is publicly available"
+        launch_configuration:
+          $ref: '#/components/schemas/LaunchConfiguration'
+        auto_delete:
+          $ref: '#/components/schemas/AutoDelete'
+        alert:
+          $ref: '#/components/schemas/Alert'
+        volume_mount:
+          $ref: '#/components/schemas/VolumeMount'
+        tags:
+          type: array
+          description: 'Add custom, searchable tags to instances.'
+          items:
+            $ref: '#/components/schemas/Tag'
+        envs:
+          type: array
+          description: 'List of environment variable name and values to automatically add to the instance'
+          items:
+            $ref: '#/components/schemas/Env'
+        networking:
+          $ref: '#/components/schemas/Networking'
+          description: "Network and firewall configuration"
+    TemplatesResponse:
+      type: object
+      required:
+        - templates
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Template'
+    FeaturedTemplate:
+      type: object
+      required:
+        - name
+        - description
+        - public
+      properties:
+        name:
+          type: string
+          example: "Featured Template"
+          description: "Name of the featured template"
+        description:
+          type: string
+          example: "A featured template for ML workloads"
+          description: "Description of the featured template"
+        public:
+          type: boolean
+          example: true
+          description: "Whether the template is publicly available"
+        launch_configuration:
+          type: object
+          description: "Configuration for launching the instance"
+        auto_delete:
+          type: object
+          description: "Auto-deletion configuration"
+        alert:
+          type: object
+          description: "Alert configuration"
+        volume_mount:
+          type: object
+          description: "Volume mount configuration"
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["ml", "pytorch"]
+          description: "Tags associated with the template"
+        envs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Env'
+          description: "Environment variables for the template"
+        networking:
+          $ref: '#/components/schemas/Networking'
+          description: "Network and firewall configuration"
+    FeaturedTemplatesResponse:
+      type: object
+      required:
+        - templates
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeaturedTemplate'
+    TemplateSaveRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "My Template"
+          description: "Name of the template"
+        description:
+          type: string
+          example: "A template for ML workloads"
+          description: "Description of the template"
+        public:
+          type: boolean
+          example: true
+          description: "Whether the template is publicly available"
+        launch_configuration:
+          $ref: '#/components/schemas/LaunchConfiguration'
+        auto_delete:
+          $ref: '#/components/schemas/AutoDelete'
+        alert:
+          $ref: '#/components/schemas/Alert'
+          description: "Alert configuration"
+        volume_mount:
+          $ref: '#/components/schemas/VolumeMount'
+          description: "Volume mount configuration"
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["ml", "pytorch"]
+          description: "Tags associated with the template"
+        envs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Env'
+          description: "Environment variables for the template"
+        networking:
+          $ref: '#/components/schemas/Networking'
+          description: "Network and firewall configuration"
+    Networking:
+      type: object
+      description: "Network configuration including firewall rules"
+      properties:
+        ufw_rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/UfwRule'
+          description: "List of UFW (Uncomplicated Firewall) rules"
+    UfwRule:
+      type: object
+      description: "Uncomplicated Firewall rule configuration"
+      properties:
+        rule:
+          type: string
+          example: "allow"
+          description: "The UFW rule action"
+        from_ip:
+          type: string
+          example: "192.168.1.0/24"
+          nullable: true
+          description: "Source IP address or CIDR range"
+        to_ip:
+          type: string
+          example: "10.0.0.0/8"
+          nullable: true
+          description: "Destination IP address or CIDR range"
+        port:
+          type: string
+          example: "80"
+          nullable: true
+          description: "Port number or range (e.g. '80' or '8000:8999')"
+        proto:
+          type: string
+          example: "tcp"
+          nullable: true
+          description: "Protocol (e.g. tcp, udp)"
+    TemplateCreateResponse:
+      type: object
+      required:
+        - id
+      description: Response of the /templates/save API call
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+tags:
+  - name: instances
+    description: Create, inspect, update, restart and delete GPU instances.
+  - name: clusters
+    description: Create, inspect and delete multi-node GPU clusters.
+  - name: ssh-keys
+    description: Manage SSH keys used to access instances.
+  - name: volumes
+    description: Create, inspect and delete persistent storage volumes.
+  - name: templates
+    description: Save and reuse launch configurations as templates.

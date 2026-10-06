@@ -43,6 +43,10 @@ func InitSshKeysRoot(parent *cobra.Command) error {
 		return err
 	}
 
+	if err := initDownloadCmd(SshKeysCmd); err != nil {
+		return err
+	}
+
 	parent.AddCommand(SshKeysCmd)
 	return nil
 }

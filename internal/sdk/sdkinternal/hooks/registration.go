@@ -25,4 +25,6 @@ func initHooks(h *Hooks) {
 	// h.registerBeforeRequestHook(exampleHook)
 	// h.registerAfterErrorHook(exampleHook)
 	// h.registerAfterSuccessHook(exampleHook)
+
+	h.registerAfterSuccessHook(&RedactPrivateKeyHook{})
 }

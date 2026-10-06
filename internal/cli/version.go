@@ -15,7 +15,7 @@ import (
 // which propagates the value here (see cmd/shade/main.go):
 //
 //	go build -ldflags "-X main.version=x.y.z" ./cmd/shade
-var Version = "0.1.5"
+var Version = "0.1.6"
 
 // BuildTime is optionally set at build time via ldflags targeting the main package.
 var BuildTime string

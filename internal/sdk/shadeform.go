@@ -137,10 +137,10 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *Shadeform {
 	sdk := &Shadeform{
-		SDKVersion: "0.1.5",
+		SDKVersion: "0.1.6",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:         "speakeasy-sdk/go 0.1.5 2.943.0 1.0.0 github.com/shadeform/shadeform-cli/internal/sdk",
-			SDKVersion:        "0.1.5",
+			UserAgent:         "speakeasy-sdk/go 0.1.6 2.943.0 1.0.0 github.com/shadeform/shadeform-cli/internal/sdk",
+			SDKVersion:        "0.1.6",
 			GenVersion:        "2.943.0",
 			OpenAPIDocVersion: "1.0.0",
 			ServerList:        ServerList,

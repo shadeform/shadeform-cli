@@ -201,6 +201,34 @@ func TestSSHKeysDownloadUserUploadedKey(t *testing.T) {
 	}
 }
 
+func TestSSHKeysDownloadAppearsInUsageSchemas(t *testing.T) {
+	srv := newSSHKeyServer(t, testPrivateKey)
+	for _, args := range [][]string{
+		{"--usage"},
+		{"ssh-keys", "--usage"},
+		{"sk", "--usage"},
+		{"ssh-keys", "download", "--usage"},
+	} {
+		stdout, stderr, err := runShade(t, srv, args...)
+		if err != nil {
+			t.Fatalf("%v failed: %v\n%s", args, err, stderr)
+		}
+		if strings.Count(stdout, `cmd "download"`) != 1 {
+			t.Fatalf("%v: expected exactly one download entry in schema, got %d:\n%s", args, strings.Count(stdout, `cmd "download"`), stdout)
+		}
+		if !strings.Contains(stdout, `flag "--stdout"`) {
+			t.Fatalf("%v: expected download flags in schema:\n%s", args, stdout)
+		}
+	}
+	// The root schema must nest download under ssh-keys, not another group.
+	stdout, _, _ := runShade(t, srv, "--usage")
+	sshStart := strings.Index(stdout, `cmd "ssh-keys"`)
+	sshEnd := sshStart + strings.Index(stdout[sshStart:], "\n}\n")
+	if !strings.Contains(stdout[sshStart:sshEnd], `  cmd "download"`) {
+		t.Fatalf("download not nested under ssh-keys in root schema:\n%s", stdout[sshStart:sshEnd])
+	}
+}
+
 func TestSSHKeysDownloadDryRunMakesNoRequest(t *testing.T) {
 	hit := false
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { hit = true }))

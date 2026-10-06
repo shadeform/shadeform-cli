@@ -19,6 +19,7 @@ Shadeform API: Shadeform is a single API and platform for deploying and managing
 <!-- $toc-max-depth=2 -->
 * [shade](#shade)
   * [CLI Installation](#cli-installation)
+  * [Quickstart](#quickstart)
   * [Shell Completion](#shell-completion)
   * [CLI Example Usage](#cli-example-usage)
   * [For AI agents](#for-ai-agents)

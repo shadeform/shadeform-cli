@@ -73,8 +73,8 @@ pipe it somewhere; nothing else in the CLI ever prints private key material.`,
 	cmd.Flags().Bool(downloadForceFlag, false, "Overwrite the output file if it already exists")
 	cmd.Flags().Bool(downloadStdoutFlag, false, "Print the private key to stdout instead of writing a file")
 	cmd.MarkFlagsMutuallyExclusive(downloadOutFlag, downloadStdoutFlag)
-	usage.MarkDynamic(cmd)
 	parent.AddCommand(cmd)
+	usage.RegisterCustomCommand(cmd, parent.Name())
 	return nil
 }
 

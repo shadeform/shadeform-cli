@@ -27,7 +27,7 @@ func initAuthCmd(parent *cobra.Command) error {
 		authCmd = &cobra.Command{
 			Use:   "auth",
 			Short: "Manage authentication credentials",
-			Long: `Manage authentication credentials for shadeform.
+			Long: `Manage authentication credentials for shade.
 
 Subcommands:
   login   - Interactively configure credentials
@@ -49,7 +49,7 @@ Subcommands:
 	addAuthSubcommand(&cobra.Command{
 		Use:   "login",
 		Short: "Interactively configure authentication credentials",
-		Long: `Interactively configure authentication credentials for shadeform.
+		Long: `Interactively configure authentication credentials for shade.
 Secret credentials are stored in the OS keychain when available,
 with a config file fallback.
 
@@ -68,7 +68,7 @@ Sources are shown as:
   [flag]    - Set via command line flag
   [env]     - Set via environment variable (SHADEFORM_*)
   [keyring] - Set via OS keychain (stored by login/configure command)
-  [config]  - Set via config file (~/.config/shadeform/config.yaml)
+  [config]  - Set via config file (~/.config/shade/config.yaml)
   [unset]   - Not configured
 
 Credential values are masked for security.`,

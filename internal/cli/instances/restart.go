@@ -24,7 +24,7 @@ func initRestartCmd(parent *cobra.Command) error {
 		Use:     "restart [id]",
 		Short:   "Restart an instance",
 		Long:    "Restart an instance. The status of the instance will stay as 'active' throughout, but you may have to wait a few minutes for the instance to be ready to use again.",
-		Example: "  shadeform instances restart --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade instances restart --id d290f1ee-6c54-4b01-90e6-d701748f0851",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runRestartCmd,
 		Annotations: map[string]string{

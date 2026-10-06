@@ -30,7 +30,7 @@ func initCreateCmd(parent *cobra.Command) error {
 		Use:     "create",
 		Short:   "Create a cluster",
 		Long:    "Create a new GPU cluster.",
-		Example: "  shadeform clusters create --name protestant-aquamarine-cluster --cloud denvr --region houston-usa-1 --cluster-type H100_sxm5x8 --num-instances 2",
+		Example: "  shade clusters create --name protestant-aquamarine-cluster --cloud denvr --region houston-usa-1 --cluster-type H100_sxm5x8 --num-instances 2",
 		Args:    cobra.NoArgs,
 		RunE:    runCreateCmd,
 		Annotations: map[string]string{

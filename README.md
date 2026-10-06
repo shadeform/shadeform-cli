@@ -1,14 +1,12 @@
-# shadeform
+# shade
 
-Command-line interface for the *Shadeform* API.
+`shade` is the command-line interface for the [Shadeform](https://www.shadeform.ai) API: deploy and manage cloud GPUs from your terminal.
 
 [![Built by Speakeasy](https://img.shields.io/badge/Built_by-SPEAKEASY-374151?style=for-the-badge&labelColor=f3f4f6)](https://www.speakeasy.com/?utm_source=github-com/shadeform/shadeform-cli&utm_campaign=cli)
 [![License: MIT](https://img.shields.io/badge/LICENSE_//_MIT-3b5bdb?style=for-the-badge&labelColor=eff6ff)](https://opensource.org/licenses/MIT)
 
-
-<br /><br />
-> [!IMPORTANT]
-> This CLI is not yet ready for production use. To complete setup please follow the steps outlined in your [workspace](https://app.speakeasy.com/org/shadeform-ivx/production). Delete this notice before publishing to a package manager.
+> [!NOTE]
+> `shade` is in public beta. Commands and output formats may change between minor versions; pin a release if you depend on it in scripts.
 
 <!-- Start Summary [summary] -->
 ## Summary
@@ -19,7 +17,7 @@ Shadeform API: Shadeform is a single API and platform for deploying and managing
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
 <!-- $toc-max-depth=2 -->
-* [shadeform](#shadeform)
+* [shade](#shade)
   * [CLI Installation](#cli-installation)
   * [Shell Completion](#shell-completion)
   * [CLI Example Usage](#cli-example-usage)
@@ -57,7 +55,7 @@ iwr -useb https://raw.githubusercontent.com/shadeform/shadeform-cli/main/scripts
 Alternatively, install directly via Go:
 
 ```bash
-go install github.com/shadeform/shadeform-cli/cmd/shadeform@latest
+go install github.com/shadeform/shadeform-cli/cmd/shade@latest
 ```
 
 ### Manual Download
@@ -74,35 +72,35 @@ Shell completions are available for Bash, Zsh, Fish, and PowerShell.
 
 ```bash
 # Add to ~/.bashrc:
-source <(shadeform completion bash)
+source <(shade completion bash)
 
 # Or install permanently:
-shadeform completion bash > /etc/bash_completion.d/shadeform
+shade completion bash > /etc/bash_completion.d/shade
 ```
 
 ### Zsh
 
 ```zsh
 # Add to ~/.zshrc:
-source <(shadeform completion zsh)
+source <(shade completion zsh)
 
 # Or install permanently:
-shadeform completion zsh > "${fpath[1]}/_shadeform"
+shade completion zsh > "${fpath[1]}/_shade"
 ```
 
 ### Fish
 
 ```fish
-shadeform completion fish | source
+shade completion fish | source
 
 # Or install permanently:
-shadeform completion fish > ~/.config/fish/completions/shadeform.fish
+shade completion fish > ~/.config/fish/completions/shade.fish
 ```
 
 ### PowerShell
 
 ```powershell
-shadeform completion powershell | Out-String | Invoke-Expression
+shade completion powershell | Out-String | Invoke-Expression
 ```
 <!-- End Shell Completion [completion] -->
 
@@ -112,8 +110,21 @@ shadeform completion powershell | Out-String | Invoke-Expression
 ### Example
 
 ```bash
-shadeform instances list --api-key test_api_key
+# Store your API key once (OS keychain, with a config-file fallback)
+shade configure
 
+# Or export it for the current shell / CI
+export SHADEFORM_API_KEY="your-api-key"
+
+# Find the cheapest available A6000
+shade instances list-types --shade-instance-type A6000 --available --sort price
+
+# Launch one, then poll it
+shade instances create --cloud hyperstack --region canada-1 --shade-instance-type A6000 --shade-cloud=true --name my-gpu
+shade instances get <id>
+
+# Clean up
+shade instances delete <id>
 ```
 <!-- End CLI Example Usage [usage] -->
 
@@ -124,20 +135,20 @@ This CLI is built to be driven by AI coding agents as well as people: everything
 
 | Run | You get |
 |-----|---------|
-| `shadeform --help`, `shadeform clusters list --help` | Commands by category, runnable examples, flags |
-| `shadeform --usage`, `shadeform clusters list --usage` | The command surface as machine-readable [KDL](https://kdl.dev): commands, aliases, flags, defaults, env vars, config keys |
-| `shadeform volumes create --schema` | The exact JSON Schema of the command's request body (all `$ref`s bundled) — build a valid `--body` from it |
-| `shadeform clusters list --dry-run` | The exact HTTP request (method, URL, headers, body), with no credentials or network call |
-| `shadeform clusters list --output-format json` (or `--jq`) | Machine-readable output |
+| `shade --help`, `shade clusters list --help` | Commands by category, runnable examples, flags |
+| `shade --usage`, `shade clusters list --usage` | The command surface as machine-readable [KDL](https://kdl.dev): commands, aliases, flags, defaults, env vars, config keys |
+| `shade volumes create --schema` | The exact JSON Schema of the command's request body (all `$ref`s bundled) — build a valid `--body` from it |
+| `shade clusters list --dry-run` | The exact HTTP request (method, URL, headers, body), with no credentials or network call |
+| `shade clusters list --output-format json` (or `--jq`) | Machine-readable output |
 
 ### Discover the command surface
 
 ```bash
 # Every command, flag, default, env var and config key, as KDL
-shadeform --usage
+shade --usage
 
 # One command's subtree only
-shadeform clusters list --usage
+shade clusters list --usage
 ```
 
 ### Read the exact request schema
@@ -146,7 +157,7 @@ shadeform clusters list --usage
 
 ```bash
 # JSON Schema (draft 2020-12) of the request body, with every $ref bundled under $defs
-shadeform volumes create --schema
+shade volumes create --schema
 ```
 
 ### Probe before you spend
@@ -155,10 +166,10 @@ Start quota-spending commands with `--dry-run`. It validates inputs, resolves th
 
 ```bash
 # Human preview: the [DRY-RUN] block is on stderr and stdout is empty
-shadeform clusters list --dry-run
+shade clusters list --dry-run
 
 # Machine preview: compact JSON on stdout and silent stderr
-shadeform clusters list --dry-run --output-format json
+shade clusters list --dry-run --output-format json
 ```
 
 The machine form writes one object per would-be request, one per line (NDJSON for multi-request commands), with exactly this shape:
@@ -175,13 +186,13 @@ Local mutation commands make no request under `--dry-run`: instead of a preview 
 
 ```bash
 # JSON on stdout
-shadeform clusters list --output-format json
+shade clusters list --output-format json
 
 # Filter or reshape with a jq expression (always emits JSON, overrides --output-format)
-shadeform clusters list --jq '.'
+shade clusters list --jq '.'
 
 # Print jq string results as plain text instead of JSON strings (like jq -r)
-shadeform clusters list --jq '.' --raw-output
+shade clusters list --jq '.' --raw-output
 ```
 
 `--output-format toon` emits [TOON](https://github.com/toon-format/spec), a compact line-oriented format that uses fewer tokens than JSON; it is the default in agent mode.
@@ -191,13 +202,13 @@ Required-input prompts and guided `configure` / `auth login` forms are enabled b
 
 ```bash
 # Prompt for missing command inputs
-shadeform clusters list --interactive
+shade clusters list --interactive
 
 # Open the guided configuration form
-shadeform configure --interactive
+shade configure --interactive
 
 # Explicitly launch the terminal command explorer
-shadeform explore
+shade explore
 ```
 
 ### Agent mode and structured errors
@@ -229,7 +240,7 @@ Authentication credentials can be configured in four ways (in order of priority)
 Pass credentials directly as flags to any command:
 
 ```bash
-shadeform --api-key "$SHADEFORM_API_KEY" clusters list
+shade --api-key "$SHADEFORM_API_KEY" clusters list
 ```
 
 ### 2. Environment variables
@@ -245,7 +256,7 @@ Set credentials via environment variables:
 Credentials are stored securely in your operating system's keychain when you run:
 
 ```bash
-shadeform configure
+shade configure
 ```
 
 Secret credentials (tokens, API keys, passwords) are automatically stored in:
@@ -260,10 +271,10 @@ If no keychain is available (e.g., in CI environments), credentials fall back to
 Run the interactive `configure` command to store non-secret settings:
 
 ```bash
-shadeform configure
+shade configure
 ```
 
-Configuration is stored in `~/.config/shadeform/config.yaml`.
+Configuration is stored in `~/.config/shade/config.yaml`.
 <!-- End Authentication [security] -->
 
 <!-- Start Commands [operations] -->
@@ -272,39 +283,39 @@ Configuration is stored in `~/.config/shadeform/config.yaml`.
 <details open>
 <summary>Available commands</summary>
 
-* [`instances`](docs/shadeform_instances.md) - Create, inspect, update, restart and delete GPU instances
-  * [`list`](docs/shadeform_instances_list.md) - List instances
-  * [`list-types`](docs/shadeform_instances_list-types.md) - List available instance types
-  * [`create`](docs/shadeform_instances_create.md) - Create an instance
-  * [`get`](docs/shadeform_instances_get.md) - Get an instance
-  * [`update`](docs/shadeform_instances_update.md) - Update an instance
-  * [`delete`](docs/shadeform_instances_delete.md) - Delete an instance
-  * [`restart`](docs/shadeform_instances_restart.md) - Restart an instance
-* [`clusters`](docs/shadeform_clusters.md) - Create, inspect and delete multi-node GPU clusters
-  * [`list`](docs/shadeform_clusters_list.md) - List clusters
-  * [`list-types`](docs/shadeform_clusters_list-types.md) - List available cluster types
-  * [`create`](docs/shadeform_clusters_create.md) - Create a cluster
-  * [`get`](docs/shadeform_clusters_get.md) - Get a cluster
-  * [`delete`](docs/shadeform_clusters_delete.md) - Delete a cluster
-* [`ssh-keys`](docs/shadeform_ssh-keys.md) - Manage SSH keys used to access instances
-  * [`list`](docs/shadeform_ssh-keys_list.md) - List SSH keys
-  * [`add`](docs/shadeform_ssh-keys_add.md) - Add an SSH key
-  * [`delete`](docs/shadeform_ssh-keys_delete.md) - Delete an SSH key
-  * [`get`](docs/shadeform_ssh-keys_get.md) - Get an SSH key
-  * [`set-default`](docs/shadeform_ssh-keys_set-default.md) - Set the default SSH key
-* [`volumes`](docs/shadeform_volumes.md) - Create, inspect and delete persistent storage volumes
-  * [`list`](docs/shadeform_volumes_list.md) - List volumes
-  * [`create`](docs/shadeform_volumes_create.md) - Create a volume
-  * [`delete`](docs/shadeform_volumes_delete.md) - Delete a volume
-  * [`get`](docs/shadeform_volumes_get.md) - Get a volume
-  * [`list-types`](docs/shadeform_volumes_list-types.md) - List available volume types
-* [`templates`](docs/shadeform_templates.md) - Save and reuse launch configurations as templates
-  * [`list`](docs/shadeform_templates_list.md) - List templates
-  * [`list-featured`](docs/shadeform_templates_list-featured.md) - List featured templates
-  * [`get`](docs/shadeform_templates_get.md) - Get a template
-  * [`save`](docs/shadeform_templates_save.md) - Save a template
-  * [`update`](docs/shadeform_templates_update.md) - Update a template
-  * [`delete`](docs/shadeform_templates_delete.md) - Delete a template
+* [`instances`](docs/shade_instances.md) - Create, inspect, update, restart and delete GPU instances
+  * [`list`](docs/shade_instances_list.md) - List instances
+  * [`list-types`](docs/shade_instances_list-types.md) - List available instance types
+  * [`create`](docs/shade_instances_create.md) - Create an instance
+  * [`get`](docs/shade_instances_get.md) - Get an instance
+  * [`update`](docs/shade_instances_update.md) - Update an instance
+  * [`delete`](docs/shade_instances_delete.md) - Delete an instance
+  * [`restart`](docs/shade_instances_restart.md) - Restart an instance
+* [`clusters`](docs/shade_clusters.md) - Create, inspect and delete multi-node GPU clusters
+  * [`list`](docs/shade_clusters_list.md) - List clusters
+  * [`list-types`](docs/shade_clusters_list-types.md) - List available cluster types
+  * [`create`](docs/shade_clusters_create.md) - Create a cluster
+  * [`get`](docs/shade_clusters_get.md) - Get a cluster
+  * [`delete`](docs/shade_clusters_delete.md) - Delete a cluster
+* [`ssh-keys`](docs/shade_ssh-keys.md) - Manage SSH keys used to access instances
+  * [`list`](docs/shade_ssh-keys_list.md) - List SSH keys
+  * [`add`](docs/shade_ssh-keys_add.md) - Add an SSH key
+  * [`delete`](docs/shade_ssh-keys_delete.md) - Delete an SSH key
+  * [`get`](docs/shade_ssh-keys_get.md) - Get an SSH key
+  * [`set-default`](docs/shade_ssh-keys_set-default.md) - Set the default SSH key
+* [`volumes`](docs/shade_volumes.md) - Create, inspect and delete persistent storage volumes
+  * [`list`](docs/shade_volumes_list.md) - List volumes
+  * [`create`](docs/shade_volumes_create.md) - Create a volume
+  * [`delete`](docs/shade_volumes_delete.md) - Delete a volume
+  * [`get`](docs/shade_volumes_get.md) - Get a volume
+  * [`list-types`](docs/shade_volumes_list-types.md) - List available volume types
+* [`templates`](docs/shade_templates.md) - Save and reuse launch configurations as templates
+  * [`list`](docs/shade_templates_list.md) - List templates
+  * [`list-featured`](docs/shade_templates_list-featured.md) - List featured templates
+  * [`get`](docs/shade_templates_get.md) - Get a template
+  * [`save`](docs/shade_templates_save.md) - Save a template
+  * [`update`](docs/shade_templates_update.md) - Update a template
+  * [`delete`](docs/shade_templates_delete.md) - Delete a template
 
 </details>
 <!-- End Commands [operations] -->
@@ -312,14 +323,14 @@ Configuration is stored in `~/.config/shadeform/config.yaml`.
 <!-- Start Request Body Input [stdinpiping] -->
 ## Request Body Input
 
-Commands that accept a request body take it three ways, with a clear priority chain. The examples use `shadeform volumes create`; every body-bearing command works the same way and prints its exact request schema with `--schema`.
+Commands that accept a request body take it three ways, with a clear priority chain. The examples use `shade volumes create`; every body-bearing command works the same way and prints its exact request schema with `--schema`.
 
 ### Individual flags (highest priority)
 
 Each top-level body field is a flag:
 
 ```bash
-shadeform volumes create --cloud 'hyperstack' --region 'canada-1' --size-in-gb 100 --name 'My storage volume'
+shade volumes create --cloud 'hyperstack' --region 'canada-1' --size-in-gb 100 --name 'My storage volume'
 ```
 
 ### `--body` flag
@@ -327,14 +338,14 @@ shadeform volumes create --cloud 'hyperstack' --region 'canada-1' --size-in-gb 1
 Provide the entire request body as a JSON string:
 
 ```bash
-shadeform volumes create --body '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}'
+shade volumes create --body '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}'
 ```
 
 Individual flags override `--body` values:
 
 ```bash
 # Sends {"cloud":"hyperstack","region":"canada-1","size_in_gb":101,"name":"My storage volume"}
-shadeform volumes create --body '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}' --size-in-gb 101
+shade volumes create --body '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}' --size-in-gb 101
 ```
 
 ### Stdin piping (lowest priority)
@@ -342,24 +353,24 @@ shadeform volumes create --body '{"cloud":"hyperstack","region":"canada-1","size
 Pipe JSON into any command that accepts a request body:
 
 ```bash
-echo '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}' | shadeform volumes create
+echo '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}' | shade volumes create
 ```
 
 Individual flags override stdin values:
 
 ```bash
 # Sends {"cloud":"hyperstack","region":"canada-1","size_in_gb":101,"name":"My storage volume"}
-echo '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}' | shadeform volumes create --size-in-gb 101
+echo '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}' | shade volumes create --size-in-gb 101
 ```
 
 This is useful for chaining commands, reading from files, or scripting:
 
 ```bash
 # Read body from a file
-shadeform volumes create < request.json
+shade volumes create < request.json
 
 # Pipe from another command
-curl -s https://example.com/request.json | shadeform volumes create
+curl -s https://example.com/request.json | shade volumes create
 ```
 
 ### Priority
@@ -381,7 +392,7 @@ When multiple input methods are used, the priority is:
 Use `--server-url` to override the server URL entirely, bypassing any named or indexed server selection:
 
 ```bash
-shadeform --server-url https://custom-api.example.com clusters list
+shade --server-url https://custom-api.example.com clusters list
 ```
 
 **Precedence**: `--server-url` > `--server` > default
@@ -404,16 +415,16 @@ Every command supports a `--output-format` flag that controls how the response i
 
 ```bash
 # Default pretty output
-shadeform clusters list
+shade clusters list
 
 # Machine-readable JSON
-shadeform clusters list --output-format json
+shade clusters list --output-format json
 
 # TOON for LLM-friendly compact output
-shadeform clusters list --output-format toon
+shade clusters list --output-format toon
 
 # Pipe JSON to jq without using --output-format
-shadeform clusters list --output-format json | jq '.'
+shade clusters list --output-format json | jq '.'
 ```
 
 ### jq filtering
@@ -422,10 +433,10 @@ Use `--jq` to filter or transform the response inline using a [jq](https://jqlan
 
 ```bash
 # Extract a single field
-shadeform clusters list --jq '.'
+shade clusters list --jq '.'
 
 # Reshape with any jq program; --raw-output prints string results as plain text (like jq -r)
-shadeform clusters list --jq '.' --raw-output
+shade clusters list --jq '.' --raw-output
 ```
 
 ### Color control
@@ -468,7 +479,7 @@ On success, the response data is printed to **stdout** as JSON. On failure, erro
 
 ```bash
 # Capture output and handle errors
-shadeform clusters list --output-format json > output.json 2> error.log
+shade clusters list --output-format json > output.json 2> error.log
 if [ $? -ne 0 ]; then
   echo "Error occurred, see error.log"
 fi
@@ -486,7 +497,7 @@ The CLI includes two diagnostic flags available on all commands:
 Preview what would be sent without making any network calls:
 
 ```bash
-shadeform clusters list --dry-run
+shade clusters list --dry-run
 ```
 
 In human output modes, stdout is empty and the `[DRY-RUN]` block goes to stderr. It includes:
@@ -509,7 +520,7 @@ Local mutation commands emit one `{"dry_run":true,"local":true,"command":"…","
 Log request and response diagnostics while running normally:
 
 ```bash
-shadeform clusters list --debug
+shade clusters list --debug
 ```
 
 Debug output goes to stderr and includes:

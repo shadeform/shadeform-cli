@@ -11,10 +11,10 @@ import (
 
 // Version is the current version of the CLI, defaulting to the version from gen.yaml.
 // It can be overridden at build time via ldflags targeting the main package,
-// which propagates the value here (see cmd/shadeform/main.go):
+// which propagates the value here (see cmd/shade/main.go):
 //
-//	go build -ldflags "-X main.version=x.y.z" ./cmd/shadeform
-var Version = "0.1.3"
+//	go build -ldflags "-X main.version=x.y.z" ./cmd/shade
+var Version = "0.1.4"
 
 // BuildTime is optionally set at build time via ldflags targeting the main package.
 var BuildTime string
@@ -24,12 +24,12 @@ func initVersionCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
 		Use:   "version",
 		Short: "Print the CLI version",
-		Long: `Print the current version of the shadeform CLI.
+		Long: `Print the current version of the shade CLI.
 
 The version defaults to the SDK version set during generation, but can be
 overridden at build time using Go linker flags:
 
-  go build -ldflags "-X main.version=x.y.z -X main.buildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)" ./cmd/shadeform`,
+  go build -ldflags "-X main.version=x.y.z -X main.buildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)" ./cmd/shade`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if usage.UsageRequested(cmd) {
@@ -50,13 +50,13 @@ func versionFlagRequested(cmd *cobra.Command) bool {
 
 func printVersion(cmd *cobra.Command) error {
 	if output.IsMachineMode(cmd) {
-		info := map[string]any{"name": "shadeform", "version": Version}
+		info := map[string]any{"name": "shade", "version": Version}
 		if BuildTime != "" {
 			info["build_time"] = BuildTime
 		}
 		return output.LocalResult(cmd, info)
 	}
-	if _, err := fmt.Fprintf(cmd.OutOrStdout(), "shadeform %s\n", Version); err != nil {
+	if _, err := fmt.Fprintf(cmd.OutOrStdout(), "shade %s\n", Version); err != nil {
 		return err
 	}
 	if BuildTime != "" {

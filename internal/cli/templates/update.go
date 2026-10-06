@@ -34,7 +34,7 @@ func initUpdateCmd(parent *cobra.Command) error {
 		Use:     "update [template-id]",
 		Short:   "Update a template",
 		Long:    "Update an existing template",
-		Example: "  shadeform templates update --template-id <id> --name 'My Template'",
+		Example: "  shade templates update --template-id <id> --name 'My Template'",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runUpdateCmd,
 		Annotations: map[string]string{

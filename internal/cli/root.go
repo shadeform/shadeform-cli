@@ -32,7 +32,7 @@ func NewRootCommand() (*cobra.Command, error) {
 	cobra.AddTemplateFunc("groupedFlagUsages", groupedFlagUsages)
 	cobra.AddTemplateFunc("groupedGlobalFlagUsages", groupedGlobalFlagUsages)
 	rootCmd := &cobra.Command{
-		Use:           "shadeform",
+		Use:           "shade",
 		Short:         "Shadeform API: Shadeform is a single API and platform for deploying and managing cloud GPUs",
 		Long:          "Shadeform API: Shadeform is a single API and platform for deploying and managing cloud GPUs.",
 		SilenceUsage:  true,
@@ -56,7 +56,7 @@ func NewRootCommand() (*cobra.Command, error) {
 			if err := flagutil.ValidateEnumFlag(cmd, "color", []string{"auto", "always", "never"}); err != nil {
 				return err
 			}
-			if err := config.Init("shadeform", "SHADEFORM"); err != nil {
+			if err := config.Init("shade", "SHADEFORM"); err != nil {
 				return err
 			}
 			output.InitAgentMode(cmd)

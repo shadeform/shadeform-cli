@@ -1,6 +1,6 @@
 #
-# shadeform CLI Installation Script for Windows
-# This script downloads and installs the latest version of the shadeform CLI
+# shade CLI Installation Script for Windows
+# This script downloads and installs the latest version of the shade CLI
 #
 # Usage:
 #   iwr -useb https://raw.githubusercontent.com/shadeform/shadeform-cli/main/scripts/install.ps1 | iex
@@ -8,7 +8,7 @@
 #   Invoke-WebRequest -Uri https://raw.githubusercontent.com/shadeform/shadeform-cli/main/scripts/install.ps1 -UseBasicParsing | Invoke-Expression
 #
 # Options:
-#   $env:SHADEFORM_INSTALL_DIR - Installation directory (default: $env:LOCALAPPDATA\Programs\shadeform)
+#   $env:SHADEFORM_INSTALL_DIR - Installation directory (default: $env:LOCALAPPDATA\Programs\shade)
 #   $env:SHADEFORM_VERSION     - Specific version to install (default: latest)
 #
 
@@ -17,8 +17,8 @@ param()
 
 # Configuration
 $Repo = "shadeform/shadeform-cli"
-$BinaryName = "shadeform.exe"
-$DefaultInstallDir = Join-Path $env:LOCALAPPDATA "Programs\shadeform"
+$BinaryName = "shade.exe"
+$DefaultInstallDir = Join-Path $env:LOCALAPPDATA "Programs\shade"
 $InstallDir = if ($env:SHADEFORM_INSTALL_DIR) { $env:SHADEFORM_INSTALL_DIR } else { $DefaultInstallDir }
 $Version = if ($env:SHADEFORM_VERSION) { $env:SHADEFORM_VERSION } else { "latest" }
 
@@ -54,7 +54,7 @@ function Get-Architecture {
 }
 
 function Install-CLI {
-    Write-ColorOutput "Installing shadeform CLI..." -Color Green
+    Write-ColorOutput "Installing shade CLI..." -Color Green
 
     # Detect architecture
     $arch = Get-Architecture
@@ -67,13 +67,13 @@ function Install-CLI {
     }
 
     # Construct download URL
-    $archiveName = "shadeform_Windows_$arch.zip"
+    $archiveName = "shade_Windows_$arch.zip"
     $downloadUrl = "https://github.com/$Repo/releases/download/$Version/$archiveName"
 
     Write-ColorOutput "Downloading from: $downloadUrl" -Color Cyan
 
     # Create temporary directory
-    $tempDir = Join-Path $env:TEMP "shadeform-install-$(New-Guid)"
+    $tempDir = Join-Path $env:TEMP "shade-install-$(New-Guid)"
     New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
 
     try {
@@ -109,7 +109,7 @@ function Install-CLI {
 
         Copy-Item -Path (Join-Path $tempDir $BinaryName) -Destination $binaryPath -Force
 
-        Write-ColorOutput "shadeform $Version has been installed to $binaryPath" -Color Green
+        Write-ColorOutput "shade $Version has been installed to $binaryPath" -Color Green
 
         # Add to PATH if not already there
         $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
@@ -124,7 +124,7 @@ function Install-CLI {
             Write-ColorOutput "Added to PATH. You may need to restart your terminal for changes to take effect." -Color Yellow
         }
 
-        Write-ColorOutput "Installation successful! Run 'shadeform --help' to get started." -Color Green
+        Write-ColorOutput "Installation successful! Run 'shade --help' to get started." -Color Green
         Write-ColorOutput "Note: You may need to restart your terminal or run 'refreshenv' for the PATH changes to take effect." -Color Yellow
     }
     finally {

@@ -17,7 +17,7 @@ func initListTypesCmd(parent *cobra.Command) error {
 		Use:     "list-types",
 		Short:   "List available cluster types",
 		Long:    "Return all the GPU cluster types with their corresponding availability and specs.",
-		Example: "  shadeform clusters list-types",
+		Example: "  shade clusters list-types",
 		Args:    cobra.NoArgs,
 		RunE:    runListTypesCmd,
 		Aliases: []string{"lt"},

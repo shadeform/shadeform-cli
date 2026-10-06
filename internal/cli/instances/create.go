@@ -39,7 +39,7 @@ func initCreateCmd(parent *cobra.Command) error {
 		Use:     "create",
 		Short:   "Create an instance",
 		Long:    "Create a new GPU instance. Our create API is designed to be asynchronous, so the response will be a CreateResponse object with a status of \"creating\". We then have a process that will pick it up and create it. You can poll the /instances/{id}/info endpoint to check the status of the instance.",
-		Example: "  shadeform instances create --cloud hyperstack --region canada-1 --shade-instance-type A6000 --shade-cloud=true --name cool-gpu-server",
+		Example: "  shade instances create --cloud hyperstack --region canada-1 --shade-instance-type A6000 --shade-cloud=true --name cool-gpu-server",
 		Args:    cobra.NoArgs,
 		RunE:    runCreateCmd,
 		Annotations: map[string]string{

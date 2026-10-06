@@ -28,7 +28,7 @@ func initUpdateCmd(parent *cobra.Command) error {
 		Use:     "update [id]",
 		Short:   "Update an instance",
 		Long:    "Update mutable details about the instance. Set a value to null to delete it. Omit a value or leave undefined to keep unchanged.",
-		Example: "  shadeform instances update --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade instances update --id d290f1ee-6c54-4b01-90e6-d701748f0851",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runUpdateCmd,
 		Annotations: map[string]string{

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# shadeform CLI Installation Script
-# This script downloads and installs the latest version of the shadeform CLI
+# shade CLI Installation Script
+# This script downloads and installs the latest version of the shade CLI
 # for Linux and macOS systems.
 #
 # Usage:
@@ -21,7 +21,7 @@ REPO="shadeform/shadeform-cli"
 DEFAULT_INSTALL_DIR="/usr/local/bin"
 USER_INSTALL_DIR="$HOME/.local/bin"
 VERSION="${SHADEFORM_VERSION:-latest}"
-BINARY_NAME="shadeform"
+BINARY_NAME="shade"
 
 # Colors for output
 RED='\033[0;31m'
@@ -198,7 +198,7 @@ install_cli() {
     # Make executable (not needed on Windows, but doesn't hurt)
     chmod +x "$target_binary" 2>/dev/null || true
 
-    log_info "shadeform ${VERSION} has been installed to $target_binary"
+    log_info "shade ${VERSION} has been installed to $target_binary"
 
     # Verify installation
     local cmd_to_check="$BINARY_NAME"
@@ -223,7 +223,7 @@ install_cli() {
 
 # Main execution
 main() {
-    log_info "Installing shadeform CLI..."
+    log_info "Installing shade CLI..."
     install_cli
 }
 

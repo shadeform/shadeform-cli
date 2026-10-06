@@ -24,7 +24,7 @@ func initGetCmd(parent *cobra.Command) error {
 		Use:     "get [id]",
 		Short:   "Get a cluster",
 		Long:    "Get details for the specified, non deleted, cluster in the url.",
-		Example: "  shadeform clusters get --id 8eda86fe-0f36-41ed-9837-0ccf8f6e0fcb",
+		Example: "  shade clusters get --id 8eda86fe-0f36-41ed-9837-0ccf8f6e0fcb",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runGetCmd,
 		Annotations: map[string]string{

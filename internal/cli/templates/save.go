@@ -33,7 +33,7 @@ func initSaveCmd(parent *cobra.Command) error {
 		Use:     "save",
 		Short:   "Save a template",
 		Long:    "Create a new template",
-		Example: "  shadeform templates save --name 'My Template'",
+		Example: "  shade templates save --name 'My Template'",
 		Args:    cobra.NoArgs,
 		RunE:    runSaveCmd,
 		Annotations: map[string]string{

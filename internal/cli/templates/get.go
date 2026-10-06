@@ -24,7 +24,7 @@ func initGetCmd(parent *cobra.Command) error {
 		Use:     "get [template-id]",
 		Short:   "Get a template",
 		Long:    "Get information about a specific template",
-		Example: "  shadeform templates get --template-id <id>",
+		Example: "  shade templates get --template-id <id>",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runGetCmd,
 		Annotations: map[string]string{

@@ -17,7 +17,7 @@ func initListCmd(parent *cobra.Command) error {
 		Use:     "list",
 		Short:   "List volumes",
 		Long:    "Get all storage volumes for the account.",
-		Example: "  shadeform volumes list",
+		Example: "  shade volumes list",
 		Args:    cobra.NoArgs,
 		RunE:    runListCmd,
 		Annotations: map[string]string{

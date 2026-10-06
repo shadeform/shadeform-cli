@@ -17,7 +17,7 @@ func initListTypesCmd(parent *cobra.Command) error {
 		Use:     "list-types",
 		Short:   "List available volume types",
 		Long:    "Get list of supported storage volumes.",
-		Example: "  shadeform volumes list-types",
+		Example: "  shade volumes list-types",
 		Args:    cobra.NoArgs,
 		RunE:    runListTypesCmd,
 		Aliases: []string{"lt"},

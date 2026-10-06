@@ -21,7 +21,7 @@ Sources are shown as:
   [flag]    - Set via command line flag
   [env]     - Set via environment variable (SHADEFORM_*)
   [keyring] - Set via OS keychain (stored by configure command)
-  [config]  - Set via config file (~/.config/shadeform/config.yaml)
+  [config]  - Set via config file (~/.config/shade/config.yaml)
   [unset]   - Not configured
 
 Credential values are masked for security.`,

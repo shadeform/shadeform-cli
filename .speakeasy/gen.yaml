@@ -31,12 +31,12 @@ generation:
     generateNewTests: true
     skipResponseBodyAssertions: false
 cli:
-  version: 0.1.3
+  version: 0.1.4
   additionalDependencies: {}
   agentEnvironmentDetection: true
   arrayFlagFormat: repeatable
   classifiedErrors: false
-  cliName: shadeform
+  cliName: shade
   defaultColor: auto
   defaultTimeout: ""
   distribution:

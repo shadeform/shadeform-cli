@@ -24,7 +24,7 @@ func initDeleteCmd(parent *cobra.Command) error {
 		Use:     "delete [id]",
 		Short:   "Delete an SSH key",
 		Long:    "Delete an ssh key. The Shadeform managed SSH Key, current default ssh key, and in use SSH Keys cannot be deleted.",
-		Example: "  shadeform ssh-keys delete --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade ssh-keys delete --id d290f1ee-6c54-4b01-90e6-d701748f0851",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runDeleteCmd,
 		Annotations: map[string]string{

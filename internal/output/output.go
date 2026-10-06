@@ -28,7 +28,7 @@ import (
 )
 
 // cliName is the CLI binary name, injected at generation time.
-const cliName = "shadeform"
+const cliName = "shade"
 
 type renderedError struct {
 	error

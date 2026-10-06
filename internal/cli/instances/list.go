@@ -17,7 +17,7 @@ func initListCmd(parent *cobra.Command) error {
 		Use:     "list",
 		Short:   "List instances",
 		Long:    "Get all non deleted instances. Note: instances in the \"deleting\" status will also show up here.",
-		Example: "  shadeform instances list",
+		Example: "  shade instances list",
 		Args:    cobra.NoArgs,
 		RunE:    runListCmd,
 		Annotations: map[string]string{

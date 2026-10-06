@@ -24,7 +24,7 @@ func initDeleteCmd(parent *cobra.Command) error {
 		Use:     "delete [id]",
 		Short:   "Delete an instance",
 		Long:    "This will move the instance to the 'deleting' status while the instance is being deleted. Once the instance has entered the 'deleting' status, the account will no longer be billed for the instance.",
-		Example: "  shadeform instances delete --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade instances delete --id d290f1ee-6c54-4b01-90e6-d701748f0851",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runDeleteCmd,
 		Annotations: map[string]string{

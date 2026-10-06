@@ -29,7 +29,7 @@ func initListTypesCmd(parent *cobra.Command) error {
 		Use:     "list-types",
 		Short:   "List available instance types",
 		Long:    "Return all the GPU instance types with their corresponding availability and specs.\n\nEvery `availability` entry carries a `rental_type` (`on_demand` or `spot`). Instance types that offer spot list each region twice, once per rental type, and the two entries can differ in `available`. If your integration keys on `region` or checks whether any region is available, filter to `rental_type: on_demand` first to keep the previous behavior. See the [Spot Instances guide](/guides/spotinstances) for details.",
-		Example: "  shadeform instances list-types",
+		Example: "  shade instances list-types",
 		Args:    cobra.NoArgs,
 		RunE:    runListTypesCmd,
 		Aliases: []string{"lt"},

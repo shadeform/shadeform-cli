@@ -17,7 +17,7 @@ func initListCmd(parent *cobra.Command) error {
 		Use:     "list",
 		Short:   "List clusters",
 		Long:    "Get all non deleted clusters.",
-		Example: "  shadeform clusters list",
+		Example: "  shade clusters list",
 		Args:    cobra.NoArgs,
 		RunE:    runListCmd,
 		Annotations: map[string]string{

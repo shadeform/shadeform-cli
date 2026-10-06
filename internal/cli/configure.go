@@ -23,7 +23,7 @@ func initConfigureCmd(parent *cobra.Command) error {
 		Use:   "configure",
 		Short: "Configure authentication credentials and preferences",
 		Long: `Interactively configure authentication credentials and preferences for the CLI.
-Settings are stored in ~/.config/shadeform/config.yaml.
+Settings are stored in ~/.config/shade/config.yaml.
 Secret credentials are stored in the OS keychain when available.
 
 You can also set values via environment variables with the SHADEFORM_ prefix

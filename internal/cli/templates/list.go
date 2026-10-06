@@ -17,7 +17,7 @@ func initListCmd(parent *cobra.Command) error {
 		Use:     "list",
 		Short:   "List templates",
 		Long:    "List all templates created by the user",
-		Example: "  shadeform templates list",
+		Example: "  shade templates list",
 		Args:    cobra.NoArgs,
 		RunE:    runListCmd,
 		Annotations: map[string]string{

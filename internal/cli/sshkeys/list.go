@@ -17,7 +17,7 @@ func initListCmd(parent *cobra.Command) error {
 		Use:     "list",
 		Short:   "List SSH keys",
 		Long:    "Get all SSH Keys for the account.",
-		Example: "  shadeform ssh-keys list",
+		Example: "  shade ssh-keys list",
 		Args:    cobra.NoArgs,
 		RunE:    runListCmd,
 		Annotations: map[string]string{

@@ -24,7 +24,7 @@ func initGetCmd(parent *cobra.Command) error {
 		Use:     "get [id]",
 		Short:   "Get an instance",
 		Long:    "Get details for the specified, non deleted, instance in the url.",
-		Example: "  shadeform instances get --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade instances get --id d290f1ee-6c54-4b01-90e6-d701748f0851",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runGetCmd,
 		Annotations: map[string]string{

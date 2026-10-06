@@ -24,7 +24,7 @@ func initDeleteCmd(parent *cobra.Command) error {
 		Use:     "delete [template-id]",
 		Short:   "Delete a template",
 		Long:    "Delete a template",
-		Example: "  shadeform templates delete --template-id <id>",
+		Example: "  shade templates delete --template-id <id>",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runDeleteCmd,
 		Annotations: map[string]string{

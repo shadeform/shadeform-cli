@@ -24,7 +24,7 @@ func initDeleteCmd(parent *cobra.Command) error {
 		Use:     "delete [id]",
 		Short:   "Delete a cluster",
 		Long:    "This will move the cluster to the 'deleting' status while the cluster is being deleted. Once the cluster has entered the 'deleting' status, the account will no longer be billed for the cluster.",
-		Example: "  shadeform clusters delete --id b1450ae8-2fa3-4ceb-a4f3-b834805418fc",
+		Example: "  shade clusters delete --id b1450ae8-2fa3-4ceb-a4f3-b834805418fc",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runDeleteCmd,
 		Annotations: map[string]string{

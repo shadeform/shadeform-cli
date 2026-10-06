@@ -24,7 +24,7 @@ func initSetDefaultCmd(parent *cobra.Command) error {
 		Use:     "set-default [id]",
 		Short:   "Set the default SSH key",
 		Long:    "Set the specified SSH Key as the default SSH Key used by Shadeform.",
-		Example: "  shadeform ssh-keys set-default --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade ssh-keys set-default --id d290f1ee-6c54-4b01-90e6-d701748f0851",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runSetDefaultCmd,
 		Aliases: []string{"sd"},

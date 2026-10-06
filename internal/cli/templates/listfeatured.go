@@ -17,7 +17,7 @@ func initListFeaturedCmd(parent *cobra.Command) error {
 		Use:     "list-featured",
 		Short:   "List featured templates",
 		Long:    "List featured templates",
-		Example: "  shadeform templates list-featured",
+		Example: "  shade templates list-featured",
 		Args:    cobra.NoArgs,
 		RunE:    runListFeaturedCmd,
 		Aliases: []string{"lf"},

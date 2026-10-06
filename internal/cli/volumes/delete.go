@@ -24,7 +24,7 @@ func initDeleteCmd(parent *cobra.Command) error {
 		Use:     "delete [id]",
 		Short:   "Delete a volume",
 		Long:    "Delete a storage volume.",
-		Example: "  shadeform volumes delete --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade volumes delete --id d290f1ee-6c54-4b01-90e6-d701748f0851",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runDeleteCmd,
 		Annotations: map[string]string{

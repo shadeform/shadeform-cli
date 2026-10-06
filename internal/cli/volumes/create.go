@@ -27,7 +27,7 @@ func initCreateCmd(parent *cobra.Command) error {
 		Use:     "create",
 		Short:   "Create a volume",
 		Long:    "Create a new storage volume",
-		Example: "  shadeform volumes create --cloud hyperstack --region canada-1 --size-in-gb 100 --name 'My storage volume'",
+		Example: "  shade volumes create --cloud hyperstack --region canada-1 --size-in-gb 100 --name 'My storage volume'",
 		Args:    cobra.NoArgs,
 		RunE:    runCreateCmd,
 		Annotations: map[string]string{

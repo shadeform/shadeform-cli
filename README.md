@@ -63,6 +63,33 @@ go install github.com/shadeform/shadeform-cli/cmd/shade@latest
 Download pre-built binaries for your platform from the [releases page](https://github.com/shadeform/shadeform-cli/releases).
 <!-- End CLI Installation [installation] -->
 
+## Quickstart
+
+Get an API key from the [Shadeform console](https://platform.shadeform.ai/settings/api), then:
+
+```bash
+# Store your API key once (OS keychain, with a config-file fallback)
+shade configure
+
+# Or export it for the current shell / CI
+export SHADEFORM_API_KEY="your-api-key"
+
+# Find the cheapest available A6000
+shade instances list-types --shade-instance-type A6000 --available --sort price
+
+# Launch one, then poll it
+shade instances create --cloud hyperstack --region canada-1 --shade-instance-type A6000 --shade-cloud=true --name my-gpu
+shade instances get <id>
+
+# Fetch the private key for a Shadeform-generated SSH key (written to ~/.ssh with mode 0600)
+shade ssh-keys download <ssh-key-id>
+
+# Clean up
+shade instances delete <id>
+```
+
+SSH private keys are never included in `shade ssh-keys list` or `shade ssh-keys get` output, in any format. `shade ssh-keys download` is the only command that retrieves them, and it writes to a file rather than your terminal unless you pass `--stdout`.
+
 <!-- Start Shell Completion [completion] -->
 ## Shell Completion
 
@@ -110,21 +137,8 @@ shade completion powershell | Out-String | Invoke-Expression
 ### Example
 
 ```bash
-# Store your API key once (OS keychain, with a config-file fallback)
-shade configure
+shade instances list --api-key test_api_key
 
-# Or export it for the current shell / CI
-export SHADEFORM_API_KEY="your-api-key"
-
-# Find the cheapest available A6000
-shade instances list-types --shade-instance-type A6000 --available --sort price
-
-# Launch one, then poll it
-shade instances create --cloud hyperstack --region canada-1 --shade-instance-type A6000 --shade-cloud=true --name my-gpu
-shade instances get <id>
-
-# Clean up
-shade instances delete <id>
 ```
 <!-- End CLI Example Usage [usage] -->
 

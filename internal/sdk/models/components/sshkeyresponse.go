@@ -4,11 +4,10 @@
 package components
 
 type SSHKeyResponse struct {
-	ID         string `json:"id"`
-	IsDefault  bool   `json:"is_default"`
-	Name       string `json:"name"`
-	PrivateKey string `json:"private_key"`
-	PublicKey  string `json:"public_key"`
+	ID        string `json:"id"`
+	IsDefault bool   `json:"is_default"`
+	Name      string `json:"name"`
+	PublicKey string `json:"public_key"`
 }
 
 func (s *SSHKeyResponse) GetID() string {
@@ -30,13 +29,6 @@ func (s *SSHKeyResponse) GetName() string {
 		return ""
 	}
 	return s.Name
-}
-
-func (s *SSHKeyResponse) GetPrivateKey() string {
-	if s == nil {
-		return ""
-	}
-	return s.PrivateKey
 }
 
 func (s *SSHKeyResponse) GetPublicKey() string {

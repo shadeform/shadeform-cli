@@ -3,22 +3,23 @@
 
 package components
 
-// AutoDelete - Set a date or spend threshold to automatically delete the instance
+import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
+)
+
 type AutoDelete struct {
-	// RFC3339 date string
-	DateThreshold *string `json:"date_threshold,omitzero"`
-	// Valid decimal representation of a dollar amount
-	SpendThreshold *string `json:"spend_threshold,omitzero"`
+	DateThreshold  optionalnullable.OptionalNullable[string] `json:"date_threshold,omitzero"`
+	SpendThreshold optionalnullable.OptionalNullable[string] `json:"spend_threshold,omitzero"`
 }
 
-func (a *AutoDelete) GetDateThreshold() *string {
+func (a *AutoDelete) GetDateThreshold() optionalnullable.OptionalNullable[string] {
 	if a == nil {
 		return nil
 	}
 	return a.DateThreshold
 }
 
-func (a *AutoDelete) GetSpendThreshold() *string {
+func (a *AutoDelete) GetSpendThreshold() optionalnullable.OptionalNullable[string] {
 	if a == nil {
 		return nil
 	}

@@ -31,19 +31,19 @@ func InitTemplatesRoot(parent *cobra.Command) error {
 		return err
 	}
 
-	if err := initGetCmd(TemplatesCmd); err != nil {
-		return err
-	}
-
 	if err := initSaveCmd(TemplatesCmd); err != nil {
 		return err
 	}
 
-	if err := initUpdateCmd(TemplatesCmd); err != nil {
+	if err := initDeleteCmd(TemplatesCmd); err != nil {
 		return err
 	}
 
-	if err := initDeleteCmd(TemplatesCmd); err != nil {
+	if err := initGetCmd(TemplatesCmd); err != nil {
+		return err
+	}
+
+	if err := initUpdateCmd(TemplatesCmd); err != nil {
 		return err
 	}
 

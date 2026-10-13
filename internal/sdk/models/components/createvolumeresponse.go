@@ -3,8 +3,8 @@
 
 package components
 
+// CreateVolumeResponse schema
 type CreateVolumeResponse struct {
-	// The ID of the storage volume.
 	ID string `json:"id"`
 }
 

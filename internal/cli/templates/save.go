@@ -16,16 +16,22 @@ import (
 )
 
 var saveCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "name", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "Name of the template [required]"},
-	{FlagName: "description", FieldPath: "Description", Kind: flagutil.FlagKindString, Optional: true, Description: "Description of the template"},
-	{FlagName: "public", Shorthand: "p", FieldPath: "Public", Kind: flagutil.FlagKindBool, Optional: true, Description: "Whether the template is publicly available"},
-	{FlagName: "launch-configuration", Shorthand: "l", FieldPath: "LaunchConfiguration", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"launch_configuration,omitempty"`, Description: "Defines automatic actions after the instance becomes active."},
-	{FlagName: "auto-delete", FieldPath: "AutoDelete", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"auto_delete,omitempty"`, Description: "Set a date or spend threshold to automatically delete the instance"},
-	{FlagName: "alert", FieldPath: "Alert", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"alert,omitempty"`, Description: "Set a date or spend threshold to receive an email alert"},
-	{FlagName: "volume-mount", Shorthand: "v", FieldPath: "VolumeMount", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"volume_mount,omitempty"`, Description: "Settings for mounting volumes onto file systems"},
-	{FlagName: "tags", Shorthand: "t", FieldPath: "Tags", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "Tags associated with the template"},
-	{FlagName: "envs", Shorthand: "e", FieldPath: "Envs", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"envs,omitempty"`, Description: "Environment variables for the template (JSON array)"},
-	{FlagName: "networking", FieldPath: "Networking", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"networking,omitempty"`, Description: "Network configuration including firewall rules"},
+	{FlagName: "alert", FieldPath: "Alert", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"alert"`, Description: "[required]"},
+	{FlagName: "author", FieldPath: "Author", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"author,omitempty"`, Description: "string value"},
+	{FlagName: "auto-delete", FieldPath: "AutoDelete", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"auto_delete"`, Description: "[required]"},
+	{FlagName: "description", FieldPath: "Description", Kind: flagutil.FlagKindString, Optional: true, Description: "[required]"},
+	{FlagName: "envs", Shorthand: "e", FieldPath: "Envs", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"envs"`, Description: "JSON array [required]"},
+	{FlagName: "featured", Shorthand: "f", FieldPath: "Featured", Kind: flagutil.FlagKindBool, Optional: true, Description: "[required]"},
+	{FlagName: "id", FieldPath: "ID", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"id"`, Description: "[required]"},
+	{FlagName: "is-account-owner", FieldPath: "IsAccountOwner", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"is_account_owner,omitempty"`, Description: "boolean flag"},
+	{FlagName: "launch-configuration", FieldPath: "LaunchConfiguration", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"launch_configuration"`, Description: "[required]"},
+	{FlagName: "logo", FieldPath: "Logo", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"logo,omitempty"`, Description: "string value"},
+	{FlagName: "metadata", Shorthand: "m", FieldPath: "Metadata", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "[required]"},
+	{FlagName: "name", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
+	{FlagName: "networking", FieldPath: "Networking", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"networking"`, Description: "[required]"},
+	{FlagName: "public", Shorthand: "p", FieldPath: "Public", Kind: flagutil.FlagKindBool, Required: true, Description: "[required]"},
+	{FlagName: "tags", Shorthand: "t", FieldPath: "Tags", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "[required]"},
+	{FlagName: "volume-mount", Shorthand: "v", FieldPath: "VolumeMount", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"volume_mount"`, Description: "[required]"},
 }
 
 // initSaveCmd initializes the save command.
@@ -34,19 +40,19 @@ func initSaveCmd(parent *cobra.Command) error {
 		Use:     "save",
 		Short:   "Save a template",
 		Long:    "Create a new template",
-		Example: "  shade templates save --name 'My Template'",
+		Example: "  shade templates save --alert '{}' --auto-delete '{}' --description 'yowza torn aboard excluding sunbathe questioningly although ugh dismal' --envs <value> --featured=true",
 		Args:    cobra.NoArgs,
 		RunE:    runSaveCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "TemplatesSave",
+			"speakeasy_operation": "saveTemplate",
 		},
 	}
 	flagutil.RegisterFlags(cmd, saveCmdMeta)
-	if err := flagutil.ValidateMeta[components.TemplateSaveRequest](saveCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[components.Template](saveCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for save: %w", err)
 	}
 	cmd.Flags().String("body", "", "Request body as JSON (alternative to individual flags). Can also be provided via stdin; @path reads a file, @- reads stdin to EOF. Use --schema to print the exact JSON Schema.")
-	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Kind: "json", BodyFlag: true})
+	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Required: false, Kind: "json", BodyFlag: true})
 	cmd.Annotations[flagutil.AnnotationWholeBodyFlag] = "body"
 	if err := flagutil.AnnotateBodyFields(cmd, saveCmdMeta, "", "body"); err != nil {
 		return fmt.Errorf("annotate body fields for save: %w", err)
@@ -63,9 +69,9 @@ func runSaveCmd(cmd *cobra.Command, args []string) error {
 		return usage.EmitSchema(cmd, cmd.OutOrStdout())
 	}
 	if requested, _ := cmd.Flags().GetBool("schema"); requested {
-		return usage.EmitBodySchema(cmd.OutOrStdout(), "TemplatesSave")
+		return usage.EmitBodySchema(cmd.OutOrStdout(), "saveTemplate")
 	}
-	request, err := flagutil.BuildRequest[components.TemplateSaveRequest](cmd, saveCmdMeta, "", "body")
+	request, err := flagutil.BuildRequest[components.Template](cmd, saveCmdMeta, "", "body")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -88,7 +94,10 @@ func runSaveCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Templates.Save(cmd.Context(), *request, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

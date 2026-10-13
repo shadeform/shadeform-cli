@@ -3,11 +3,11 @@
 
 package components
 
+// AddSSHKeyRequest - AddSshKeyRequest schema
 type AddSSHKeyRequest struct {
-	// The name of the SSH Key.
-	Name string `json:"name"`
-	// The public key.
-	PublicKey string `json:"public_key"`
+	Name       string `json:"name"`
+	PrivateKey string `json:"private_key"`
+	PublicKey  string `json:"public_key"`
 }
 
 func (a *AddSSHKeyRequest) GetName() string {
@@ -15,6 +15,13 @@ func (a *AddSSHKeyRequest) GetName() string {
 		return ""
 	}
 	return a.Name
+}
+
+func (a *AddSSHKeyRequest) GetPrivateKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.PrivateKey
 }
 
 func (a *AddSSHKeyRequest) GetPublicKey() string {

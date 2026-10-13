@@ -3,15 +3,12 @@
 
 package components
 
+// CreateVolumeRequest schema
 type CreateVolumeRequest struct {
-	// Specifies the underlying cloud provider. See this [explanation](/getting-started/concepts#cloud-cloud-provider) for more details.
-	Cloud string `json:"cloud"`
-	// Specifies the region.
-	Region string `json:"region"`
-	// Storage volume size in GB
-	SizeInGb int64 `json:"size_in_gb"`
-	// The name of the storage volume.
-	Name string `json:"name"`
+	Cloud    string `json:"cloud"`
+	Name     string `json:"name"`
+	Region   string `json:"region"`
+	SizeInGb int64  `json:"size_in_gb"`
 }
 
 func (c *CreateVolumeRequest) GetCloud() string {
@@ -19,6 +16,13 @@ func (c *CreateVolumeRequest) GetCloud() string {
 		return ""
 	}
 	return c.Cloud
+}
+
+func (c *CreateVolumeRequest) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
 }
 
 func (c *CreateVolumeRequest) GetRegion() string {
@@ -33,11 +37,4 @@ func (c *CreateVolumeRequest) GetSizeInGb() int64 {
 		return 0
 	}
 	return c.SizeInGb
-}
-
-func (c *CreateVolumeRequest) GetName() string {
-	if c == nil {
-		return ""
-	}
-	return c.Name
 }

@@ -3,7 +3,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0.0 and generator version 2.943.0
+// Generated from OpenAPI doc version 1.0.0 and generator version 2.948.4
 
 import (
 	"context"
@@ -19,8 +19,8 @@ import (
 
 // ServerList contains the list of servers available to the SDK
 var ServerList = []string{
-	// Shadeform Production
-	"https://api.shadeform.ai/v1",
+	// Shadeform production
+	"https://api.shadeform.ai",
 }
 
 // HTTPClient provides an interface for supplying the SDK with a custom HTTP client
@@ -49,19 +49,17 @@ func Float64(f float64) *float64 { return &f }
 // Pointer provides a helper function to return a pointer to a type
 func Pointer[T any](v T) *T { return &v }
 
-// Shadeform API: Shadeform is a single API and platform for deploying and managing cloud GPUs.
+// Shadeform API: The Shadeform API. This document describes a subset of the `/v1` surface and is expanding; a route that is absent here is not necessarily absent from the API.
 type Shadeform struct {
 	SDKVersion string
 	// Create, inspect, update, restart and delete GPU instances.
 	Instances *Instances
-	// Create, inspect and delete multi-node GPU clusters.
-	Clusters *Clusters
 	// Manage SSH keys used to access instances.
 	SSHKeys *SSHKeys
-	// Create, inspect and delete persistent storage volumes.
-	Volumes *Volumes
 	// Save and reuse launch configurations as templates.
 	Templates *Templates
+	// Create, inspect and delete persistent storage volumes.
+	Volumes *Volumes
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -137,11 +135,11 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *Shadeform {
 	sdk := &Shadeform{
-		SDKVersion: "0.1.6",
+		SDKVersion: "0.2.0",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:         "speakeasy-sdk/go 0.1.6 2.943.0 1.0.0 github.com/shadeform/shadeform-cli/internal/sdk",
-			SDKVersion:        "0.1.6",
-			GenVersion:        "2.943.0",
+			UserAgent:         "speakeasy-sdk/go 0.2.0 2.948.4 1.0.0 github.com/shadeform/shadeform-cli/internal/sdk",
+			SDKVersion:        "0.2.0",
+			GenVersion:        "2.948.4",
 			OpenAPIDocVersion: "1.0.0",
 			ServerList:        ServerList,
 		},
@@ -159,10 +157,9 @@ func New(opts ...SDKOption) *Shadeform {
 	sdk.sdkConfiguration = sdk.hooks.SDKInit(sdk.sdkConfiguration)
 
 	sdk.Instances = newInstances(sdk, sdk.sdkConfiguration, sdk.hooks)
-	sdk.Clusters = newClusters(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.SSHKeys = newSSHKeys(sdk, sdk.sdkConfiguration, sdk.hooks)
-	sdk.Volumes = newVolumes(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Templates = newTemplates(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Volumes = newVolumes(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }

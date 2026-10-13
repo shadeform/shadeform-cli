@@ -3,11 +3,8 @@
 
 package components
 
-// Env - Environment variables for the container image.
 type Env struct {
-	// Name of the environment variable
-	Name string `json:"name"`
-	// Value of the environment variable
+	Name  string `json:"name"`
 	Value string `json:"value"`
 }
 

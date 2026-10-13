@@ -3,15 +3,13 @@
 
 package components
 
-// ScriptConfiguration - May only be used if launch_configuration.type is 'script'. Configures a startup script to be run automatically after the instance is active. See this [tutorial]/guides/startupscript) for examples.
 type ScriptConfiguration struct {
-	// A startup script that is base64 encoded.
-	Base64Script string `json:"base64_script"`
+	Base64Script *string `json:"base64_script,omitzero"`
 }
 
-func (s *ScriptConfiguration) GetBase64Script() string {
+func (s *ScriptConfiguration) GetBase64Script() *string {
 	if s == nil {
-		return ""
+		return nil
 	}
 	return s.Base64Script
 }

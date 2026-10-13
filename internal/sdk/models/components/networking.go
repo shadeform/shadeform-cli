@@ -3,25 +3,8 @@
 
 package components
 
-import (
-	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
-)
-
-// Networking - Network configuration including firewall rules
 type Networking struct {
-	// List of UFW (Uncomplicated Firewall) rules
-	UfwRules []UfwRule `json:"ufw_rules,omitzero"`
-}
-
-func (n Networking) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(n, "", false)
-}
-
-func (n *Networking) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &n, "", false, nil); err != nil {
-		return err
-	}
-	return nil
+	UfwRules []UfwRule `json:"ufw_rules"`
 }
 
 func (n *Networking) GetUfwRules() []UfwRule {

@@ -34,7 +34,7 @@ func newSSHKeys(rootSDK *Shadeform, sdkConfig config.SDKConfiguration, hooks *ho
 
 // List SSH keys
 // Get all SSH Keys for the account.
-func (s *SSHKeys) List(ctx context.Context, opts ...operations.Option) (*operations.SSHKeysResponse, error) {
+func (s *SSHKeys) List(ctx context.Context, opts ...operations.Option) (*operations.ListSSHKeysResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -53,7 +53,7 @@ func (s *SSHKeys) List(ctx context.Context, opts ...operations.Option) (*operati
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := url.JoinPath(baseURL, "/sshkeys")
+	opURL, err := url.JoinPath(baseURL, "/v1/sshkeys")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -63,7 +63,7 @@ func (s *SSHKeys) List(ctx context.Context, opts ...operations.Option) (*operati
 		SDKConfiguration: s.sdkConfiguration,
 		BaseURL:          baseURL,
 		Context:          ctx,
-		OperationID:      "SshKeys",
+		OperationID:      "listSshKeys",
 		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
@@ -130,7 +130,7 @@ func (s *SSHKeys) List(ctx context.Context, opts ...operations.Option) (*operati
 		}
 	}
 
-	res := &operations.SSHKeysResponse{
+	res := &operations.ListSSHKeysResponse{
 		HTTPMeta: components.HTTPMetadata{
 			Request:  req,
 			Response: httpRes,
@@ -170,6 +170,8 @@ func (s *SSHKeys) List(ctx context.Context, opts ...operations.Option) (*operati
 			return nil, err
 		}
 		return nil, sdkerrors.NewSDKDefaultError("API error occurred", httpRes.StatusCode, string(rawBody), httpRes)
+	case httpRes.StatusCode == 500:
+		fallthrough
 	case httpRes.StatusCode >= 500 && httpRes.StatusCode < 600:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -190,7 +192,7 @@ func (s *SSHKeys) List(ctx context.Context, opts ...operations.Option) (*operati
 
 // Add an SSH key
 // Add a new SSH Key
-func (s *SSHKeys) Add(ctx context.Context, request components.AddSSHKeyRequest, opts ...operations.Option) (*operations.SSHKeysAddResponse, error) {
+func (s *SSHKeys) Add(ctx context.Context, request components.AddSSHKeyRequest, opts ...operations.Option) (*operations.AddSSHKeyResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -209,7 +211,7 @@ func (s *SSHKeys) Add(ctx context.Context, request components.AddSSHKeyRequest, 
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := url.JoinPath(baseURL, "/sshkeys/add")
+	opURL, err := url.JoinPath(baseURL, "/v1/sshkeys/add")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -219,7 +221,7 @@ func (s *SSHKeys) Add(ctx context.Context, request components.AddSSHKeyRequest, 
 		SDKConfiguration: s.sdkConfiguration,
 		BaseURL:          baseURL,
 		Context:          ctx,
-		OperationID:      "SshKeysAdd",
+		OperationID:      "addSshKey",
 		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
@@ -293,7 +295,7 @@ func (s *SSHKeys) Add(ctx context.Context, request components.AddSSHKeyRequest, 
 		}
 	}
 
-	res := &operations.SSHKeysAddResponse{
+	res := &operations.AddSSHKeyResponse{
 		HTTPMeta: components.HTTPMetadata{
 			Request:  req,
 			Response: httpRes,
@@ -327,6 +329,58 @@ func (s *SSHKeys) Add(ctx context.Context, request components.AddSSHKeyRequest, 
 			}
 			return nil, sdkerrors.NewSDKDefaultError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 409:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out sdkerrors.DefaultErrorResponse
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, sdkerrors.NewResponseValidationError("response did not match the declared error schema", httpRes.StatusCode, string(rawBody), httpRes, err)
+			}
+
+			out.HTTPMeta = components.HTTPMetadata{
+				Request:  req,
+				Response: httpRes,
+			}
+			return nil, &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, sdkerrors.NewSDKDefaultError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
+	case httpRes.StatusCode == 500:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/problem+json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out sdkerrors.HTTPError
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, sdkerrors.NewResponseValidationError("response did not match the declared error schema", httpRes.StatusCode, string(rawBody), httpRes, err)
+			}
+
+			out.HTTPMeta = components.HTTPMetadata{
+				Request:  req,
+				Response: httpRes,
+			}
+			return nil, &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, sdkerrors.NewSDKDefaultError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
+	case httpRes.StatusCode == 400:
+		fallthrough
 	case httpRes.StatusCode >= 400 && httpRes.StatusCode < 500:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -353,7 +407,7 @@ func (s *SSHKeys) Add(ctx context.Context, request components.AddSSHKeyRequest, 
 
 // Delete an SSH key
 // Delete an ssh key. The Shadeform managed SSH Key, current default ssh key, and in use SSH Keys cannot be deleted.
-func (s *SSHKeys) Delete(ctx context.Context, request operations.SSHKeysDeleteRequest, opts ...operations.Option) (*operations.SSHKeysDeleteResponse, error) {
+func (s *SSHKeys) Delete(ctx context.Context, request operations.DeleteSSHKeyRequest, opts ...operations.Option) (*operations.DeleteSSHKeyResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -372,7 +426,7 @@ func (s *SSHKeys) Delete(ctx context.Context, request operations.SSHKeysDeleteRe
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/sshkeys/{id}/delete", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/sshkeys/{ssh_key_id}/delete", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -382,7 +436,7 @@ func (s *SSHKeys) Delete(ctx context.Context, request operations.SSHKeysDeleteRe
 		SDKConfiguration: s.sdkConfiguration,
 		BaseURL:          baseURL,
 		Context:          ctx,
-		OperationID:      "SshKeysDelete",
+		OperationID:      "deleteSshKey",
 		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
@@ -392,17 +446,24 @@ func (s *SSHKeys) Delete(ctx context.Context, request operations.SSHKeysDeleteRe
 		timeout = s.sdkConfiguration.Timeout
 	}
 
+	var streamCancel context.CancelFunc
+
 	if timeout != nil {
 		var cancel context.CancelFunc
 		ctx, cancel = context.WithTimeout(ctx, *timeout)
-		defer cancel()
+		streamCancel = cancel
+		defer func() {
+			if streamCancel != nil {
+				streamCancel()
+			}
+		}()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", opURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
-	req.Header.Set("Accept", "*/*")
+	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
@@ -442,7 +503,7 @@ func (s *SSHKeys) Delete(ctx context.Context, request operations.SSHKeysDeleteRe
 		}
 	}
 
-	res := &operations.SSHKeysDeleteResponse{
+	res := &operations.DeleteSSHKeyResponse{
 		HTTPMeta: components.HTTPMetadata{
 			Request:  req,
 			Response: httpRes,
@@ -451,15 +512,68 @@ func (s *SSHKeys) Delete(ctx context.Context, request operations.SSHKeysDeleteRe
 
 	switch {
 	case httpRes.StatusCode == 200:
-		if o.SkipDeserialization == nil || !*o.SkipDeserialization {
-			utils.DrainBody(httpRes)
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			if o.SkipDeserialization != nil && *o.SkipDeserialization {
+				httpRes.Body = utils.BodyWithCancel(httpRes.Body, streamCancel)
+				streamCancel = nil
+			} else {
+				rawBody, err := utils.ConsumeRawBody(httpRes)
+				if err != nil {
+					return nil, err
+				}
+
+				var out any
+				if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+					return nil, err
+				}
+
+				res.DeleteSSHKeyResponse = out
+			}
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, sdkerrors.NewSDKDefaultError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 409:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out sdkerrors.DefaultErrorResponse
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, sdkerrors.NewResponseValidationError("response did not match the declared error schema", httpRes.StatusCode, string(rawBody), httpRes, err)
+			}
+
+			out.HTTPMeta = components.HTTPMetadata{
+				Request:  req,
+				Response: httpRes,
+			}
+			return nil, &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, sdkerrors.NewSDKDefaultError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 404:
+		fallthrough
 	case httpRes.StatusCode >= 400 && httpRes.StatusCode < 500:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
 		return nil, sdkerrors.NewSDKDefaultError("API error occurred", httpRes.StatusCode, string(rawBody), httpRes)
+	case httpRes.StatusCode == 500:
+		fallthrough
 	case httpRes.StatusCode >= 500 && httpRes.StatusCode < 600:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -480,7 +594,7 @@ func (s *SSHKeys) Delete(ctx context.Context, request operations.SSHKeysDeleteRe
 
 // Get an SSH key
 // Get details for the specified SSH Key in the url.
-func (s *SSHKeys) Get(ctx context.Context, request operations.SSHKeysInfoRequest, opts ...operations.Option) (*operations.SSHKeysInfoResponse, error) {
+func (s *SSHKeys) Get(ctx context.Context, request operations.GetSSHKeyRequest, opts ...operations.Option) (*operations.GetSSHKeyResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -499,7 +613,7 @@ func (s *SSHKeys) Get(ctx context.Context, request operations.SSHKeysInfoRequest
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/sshkeys/{id}/info", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/sshkeys/{ssh_key_id}/info", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -509,7 +623,7 @@ func (s *SSHKeys) Get(ctx context.Context, request operations.SSHKeysInfoRequest
 		SDKConfiguration: s.sdkConfiguration,
 		BaseURL:          baseURL,
 		Context:          ctx,
-		OperationID:      "SshKeysInfo",
+		OperationID:      "getSshKey",
 		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
@@ -576,7 +690,7 @@ func (s *SSHKeys) Get(ctx context.Context, request operations.SSHKeysInfoRequest
 		}
 	}
 
-	res := &operations.SSHKeysInfoResponse{
+	res := &operations.GetSSHKeyResponse{
 		HTTPMeta: components.HTTPMetadata{
 			Request:  req,
 			Response: httpRes,
@@ -596,12 +710,12 @@ func (s *SSHKeys) Get(ctx context.Context, request operations.SSHKeysInfoRequest
 					return nil, err
 				}
 
-				var out components.SSHKey
+				var out components.SSHKeyResponse
 				if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 					return nil, err
 				}
 
-				res.SSHKey = &out
+				res.SSHKeyResponse = &out
 			}
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
@@ -610,12 +724,18 @@ func (s *SSHKeys) Get(ctx context.Context, request operations.SSHKeysInfoRequest
 			}
 			return nil, sdkerrors.NewSDKDefaultError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 404:
+		fallthrough
 	case httpRes.StatusCode >= 400 && httpRes.StatusCode < 500:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
 		return nil, sdkerrors.NewSDKDefaultError("API error occurred", httpRes.StatusCode, string(rawBody), httpRes)
+	case httpRes.StatusCode == 500:
+		fallthrough
 	case httpRes.StatusCode >= 500 && httpRes.StatusCode < 600:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -636,7 +756,7 @@ func (s *SSHKeys) Get(ctx context.Context, request operations.SSHKeysInfoRequest
 
 // SetDefault - Set the default SSH key
 // Set the specified SSH Key as the default SSH Key used by Shadeform.
-func (s *SSHKeys) SetDefault(ctx context.Context, request operations.SSHKeysSetDefaultRequest, opts ...operations.Option) (*operations.SSHKeysSetDefaultResponse, error) {
+func (s *SSHKeys) SetDefault(ctx context.Context, request operations.SetDefaultSSHKeyRequest, opts ...operations.Option) (*operations.SetDefaultSSHKeyResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionTimeout,
@@ -655,7 +775,7 @@ func (s *SSHKeys) SetDefault(ctx context.Context, request operations.SSHKeysSetD
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/sshkeys/{id}/setdefault", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/v1/sshkeys/{ssh_key_id}/setdefault", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -665,7 +785,7 @@ func (s *SSHKeys) SetDefault(ctx context.Context, request operations.SSHKeysSetD
 		SDKConfiguration: s.sdkConfiguration,
 		BaseURL:          baseURL,
 		Context:          ctx,
-		OperationID:      "SshKeysSetDefault",
+		OperationID:      "setDefaultSshKey",
 		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
@@ -675,17 +795,24 @@ func (s *SSHKeys) SetDefault(ctx context.Context, request operations.SSHKeysSetD
 		timeout = s.sdkConfiguration.Timeout
 	}
 
+	var streamCancel context.CancelFunc
+
 	if timeout != nil {
 		var cancel context.CancelFunc
 		ctx, cancel = context.WithTimeout(ctx, *timeout)
-		defer cancel()
+		streamCancel = cancel
+		defer func() {
+			if streamCancel != nil {
+				streamCancel()
+			}
+		}()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", opURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
-	req.Header.Set("Accept", "*/*")
+	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
@@ -725,7 +852,7 @@ func (s *SSHKeys) SetDefault(ctx context.Context, request operations.SSHKeysSetD
 		}
 	}
 
-	res := &operations.SSHKeysSetDefaultResponse{
+	res := &operations.SetDefaultSSHKeyResponse{
 		HTTPMeta: components.HTTPMetadata{
 			Request:  req,
 			Response: httpRes,
@@ -734,15 +861,43 @@ func (s *SSHKeys) SetDefault(ctx context.Context, request operations.SSHKeysSetD
 
 	switch {
 	case httpRes.StatusCode == 200:
-		if o.SkipDeserialization == nil || !*o.SkipDeserialization {
-			utils.DrainBody(httpRes)
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			if o.SkipDeserialization != nil && *o.SkipDeserialization {
+				httpRes.Body = utils.BodyWithCancel(httpRes.Body, streamCancel)
+				streamCancel = nil
+			} else {
+				rawBody, err := utils.ConsumeRawBody(httpRes)
+				if err != nil {
+					return nil, err
+				}
+
+				var out any
+				if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+					return nil, err
+				}
+
+				res.SetDefaultSSHKeyResponse = out
+			}
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, sdkerrors.NewSDKDefaultError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 400:
+		fallthrough
+	case httpRes.StatusCode == 404:
+		fallthrough
 	case httpRes.StatusCode >= 400 && httpRes.StatusCode < 500:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
 		return nil, sdkerrors.NewSDKDefaultError("API error occurred", httpRes.StatusCode, string(rawBody), httpRes)
+	case httpRes.StatusCode == 500:
+		fallthrough
 	case httpRes.StatusCode >= 500 && httpRes.StatusCode < 600:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

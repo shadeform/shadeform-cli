@@ -16,31 +16,31 @@ import (
 )
 
 var deleteCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "id", Shorthand: "i", FieldPath: "ID", Kind: flagutil.FlagKindString, Required: true, Description: "The ssh key id [required]"},
+	{FlagName: "ssh-key-id", Shorthand: "s", FieldPath: "SSHKeyID", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
 }
 
 // initDeleteCmd initializes the delete command.
 func initDeleteCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
-		Use:     "delete [id]",
+		Use:     "delete [ssh-key-id]",
 		Short:   "Delete an SSH key",
 		Long:    "Delete an ssh key. The Shadeform managed SSH Key, current default ssh key, and in use SSH Keys cannot be deleted.",
-		Example: "  shade ssh-keys delete --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade ssh-keys delete --ssh-key-id <id>",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runDeleteCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "SshKeysDelete",
+			"speakeasy_operation": "deleteSshKey",
 		},
 	}
 	flagutil.RegisterFlags(cmd, deleteCmdMeta)
-	if err := flagutil.ValidateMeta[operations.SSHKeysDeleteRequest](deleteCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.DeleteSSHKeyRequest](deleteCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for delete: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "id", "The ssh key id (or pass it as the [id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "ssh-key-id", "string value (or pass it as the [ssh-key-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "id", Summary: "The ssh key id", Required: true, SatisfiedBy: []string{"id"}},
+		{Name: "ssh-key-id", Summary: "string value", Required: true, SatisfiedBy: []string{"ssh-key-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for delete: %w", err)
 	}
@@ -56,7 +56,7 @@ func runDeleteCmd(cmd *cobra.Command, args []string) error {
 	if err := flagutil.ResolvePositionalFlag(cmd, args); err != nil {
 		return err
 	}
-	req, err := flagutil.BuildRequest[operations.SSHKeysDeleteRequest](cmd, deleteCmdMeta, "", "")
+	req, err := flagutil.BuildRequest[operations.DeleteSSHKeyRequest](cmd, deleteCmdMeta, "", "")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -79,7 +79,10 @@ func runDeleteCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.SSHKeys.Delete(cmd.Context(), *req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

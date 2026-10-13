@@ -16,7 +16,7 @@ import (
 )
 
 var getCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "template-id", Shorthand: "t", FieldPath: "TemplateID", Kind: flagutil.FlagKindString, Required: true, Description: "The template ID [required]"},
+	{FlagName: "template-id", Shorthand: "t", FieldPath: "TemplateID", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
 }
 
 // initGetCmd initializes the get command.
@@ -29,18 +29,18 @@ func initGetCmd(parent *cobra.Command) error {
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runGetCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "TemplatesInfo",
+			"speakeasy_operation": "getTemplate",
 		},
 	}
 	flagutil.RegisterFlags(cmd, getCmdMeta)
-	if err := flagutil.ValidateMeta[operations.TemplatesInfoRequest](getCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.GetTemplateRequest](getCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for get: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "template-id", "The template ID (or pass it as the [template-id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "template-id", "string value (or pass it as the [template-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "template-id", Summary: "The template ID", Required: true, SatisfiedBy: []string{"template-id"}},
+		{Name: "template-id", Summary: "string value", Required: true, SatisfiedBy: []string{"template-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for get: %w", err)
 	}
@@ -56,7 +56,7 @@ func runGetCmd(cmd *cobra.Command, args []string) error {
 	if err := flagutil.ResolvePositionalFlag(cmd, args); err != nil {
 		return err
 	}
-	req, err := flagutil.BuildRequest[operations.TemplatesInfoRequest](cmd, getCmdMeta, "", "")
+	req, err := flagutil.BuildRequest[operations.GetTemplateRequest](cmd, getCmdMeta, "", "")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -79,7 +79,10 @@ func runGetCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Templates.Get(cmd.Context(), *req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

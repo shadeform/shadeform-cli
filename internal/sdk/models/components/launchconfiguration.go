@@ -7,37 +7,15 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
 )
 
-// Type - Specifies the type of launch configuration. See [Launch Configuration](/getting-started/concepts#launch-configuration) for more details.
-type Type string
-
-const (
-	TypeDocker Type = "docker"
-	TypeScript Type = "script"
-)
-
-func (e Type) ToPointer() *Type {
-	return &e
-}
-
-// IsExact returns true if the value matches a known enum value, false otherwise.
-func (e *Type) IsExact() bool {
-	if e != nil {
-		switch *e {
-		case "docker", "script":
-			return true
-		}
-	}
-	return false
-}
-
-// LaunchConfiguration - Defines automatic actions after the instance becomes active.
 type LaunchConfiguration struct {
-	// Specifies the type of launch configuration. See [Launch Configuration](/getting-started/concepts#launch-configuration) for more details.
-	Type Type `json:"type"`
-	// May only be used if launch_configuration.type is 'docker'. Use docker_configuration to automatically pull and run a docker image. See this [tutorial](/guides/dockercontainers) for examples.
+	Args                *string              `json:"args,omitzero"`
+	Base64Script        *string              `json:"base64_script,omitzero"`
+	ContainerStatus     *string              `json:"container_status,omitzero"`
 	DockerConfiguration *DockerConfiguration `json:"docker_configuration,omitzero"`
-	// May only be used if launch_configuration.type is 'script'. Configures a startup script to be run automatically after the instance is active. See this [tutorial]/guides/startupscript) for examples.
+	Image               *string              `json:"image,omitzero"`
+	ModelConfiguration  *ModelConfiguration  `json:"model_configuration,omitzero"`
 	ScriptConfiguration *ScriptConfiguration `json:"script_configuration,omitzero"`
+	Type                *string              `json:"type,omitzero"`
 }
 
 func (l LaunchConfiguration) MarshalJSON() ([]byte, error) {
@@ -51,11 +29,25 @@ func (l *LaunchConfiguration) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (l *LaunchConfiguration) GetType() Type {
+func (l *LaunchConfiguration) GetArgs() *string {
 	if l == nil {
-		return Type("")
+		return nil
 	}
-	return l.Type
+	return l.Args
+}
+
+func (l *LaunchConfiguration) GetBase64Script() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Base64Script
+}
+
+func (l *LaunchConfiguration) GetContainerStatus() *string {
+	if l == nil {
+		return nil
+	}
+	return l.ContainerStatus
 }
 
 func (l *LaunchConfiguration) GetDockerConfiguration() *DockerConfiguration {
@@ -65,9 +57,30 @@ func (l *LaunchConfiguration) GetDockerConfiguration() *DockerConfiguration {
 	return l.DockerConfiguration
 }
 
+func (l *LaunchConfiguration) GetImage() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Image
+}
+
+func (l *LaunchConfiguration) GetModelConfiguration() *ModelConfiguration {
+	if l == nil {
+		return nil
+	}
+	return l.ModelConfiguration
+}
+
 func (l *LaunchConfiguration) GetScriptConfiguration() *ScriptConfiguration {
 	if l == nil {
 		return nil
 	}
 	return l.ScriptConfiguration
+}
+
+func (l *LaunchConfiguration) GetType() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Type
 }

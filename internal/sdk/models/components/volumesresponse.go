@@ -3,13 +3,14 @@
 
 package components
 
+// VolumesResponse schema
 type VolumesResponse struct {
 	Volumes []Volume `json:"volumes"`
 }
 
 func (v *VolumesResponse) GetVolumes() []Volume {
 	if v == nil {
-		return []Volume{}
+		return nil
 	}
 	return v.Volumes
 }

@@ -16,31 +16,31 @@ import (
 )
 
 var getCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "id", Shorthand: "i", FieldPath: "ID", Kind: flagutil.FlagKindString, Required: true, Description: "The volume id. [required]"},
+	{FlagName: "volume-id", Shorthand: "v", FieldPath: "VolumeID", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
 }
 
 // initGetCmd initializes the get command.
 func initGetCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
-		Use:     "get [id]",
+		Use:     "get [volume-id]",
 		Short:   "Get a volume",
 		Long:    "Get details for the specified storage volume.",
-		Example: "  shade volumes get --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade volumes get --volume-id <id>",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runGetCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "VolumesInfo",
+			"speakeasy_operation": "getVolume",
 		},
 	}
 	flagutil.RegisterFlags(cmd, getCmdMeta)
-	if err := flagutil.ValidateMeta[operations.VolumesInfoRequest](getCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.GetVolumeRequest](getCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for get: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "id", "The volume id. (or pass it as the [id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "volume-id", "string value (or pass it as the [volume-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "id", Summary: "The volume id.", Required: true, SatisfiedBy: []string{"id"}},
+		{Name: "volume-id", Summary: "string value", Required: true, SatisfiedBy: []string{"volume-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for get: %w", err)
 	}
@@ -56,7 +56,7 @@ func runGetCmd(cmd *cobra.Command, args []string) error {
 	if err := flagutil.ResolvePositionalFlag(cmd, args); err != nil {
 		return err
 	}
-	req, err := flagutil.BuildRequest[operations.VolumesInfoRequest](cmd, getCmdMeta, "", "")
+	req, err := flagutil.BuildRequest[operations.GetVolumeRequest](cmd, getCmdMeta, "", "")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -79,7 +79,10 @@ func runGetCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Volumes.Get(cmd.Context(), *req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

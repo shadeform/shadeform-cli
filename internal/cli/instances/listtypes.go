@@ -15,31 +15,32 @@ import (
 )
 
 var listTypesCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "cloud", Shorthand: "c", FieldPath: "Cloud", Kind: flagutil.FlagKindString, Optional: true, Description: "Filter the instance type results by cloud."},
-	{FlagName: "region", Shorthand: "r", FieldPath: "Region", Kind: flagutil.FlagKindString, Optional: true, Description: "Filter the instance type results by region."},
-	{FlagName: "num-gpus", Shorthand: "n", FieldPath: "NumGpus", Kind: flagutil.FlagKindString, Optional: true, Description: "Filter the instance type results by the number of gpus."},
-	{FlagName: "gpu-type", Shorthand: "g", FieldPath: "GpuType", Kind: flagutil.FlagKindString, Optional: true, Description: "Filter the instance type results by gpu type."},
-	{FlagName: "shade-instance-type", FieldPath: "ShadeInstanceType", Kind: flagutil.FlagKindString, Optional: true, Description: "Filter the instance type results by the shade instance type."},
-	{FlagName: "available", Shorthand: "a", FieldPath: "Available", Kind: flagutil.FlagKindBool, Optional: true, Description: "Filter the instance type results by availability. Applies to individual availability entries, so an instance type whose region is available only as spot is still returned with just its spot entry; filter by 'rental_type' client-side if you only want on-demand."},
-	{FlagName: "sort", FieldPath: "Sort", Kind: flagutil.FlagKindEnum, Optional: true, EnumValues: []string{"price"}, Description: "Sort the order of the instance type results. (options: price)"},
+	{FlagName: "cloud", Shorthand: "c", FieldPath: "Cloud", Kind: flagutil.FlagKindString, Optional: true, Description: "Only return instance types on this cloud (case-insensitive)."},
+	{FlagName: "region", Shorthand: "r", FieldPath: "Region", Kind: flagutil.FlagKindString, Optional: true, Description: "Only return availability entries in this Shade region (case-insensitive). Instance types left with no matching region are dropped from the response entirely."},
+	{FlagName: "num-gpus", Shorthand: "n", FieldPath: "NumGpus", Kind: flagutil.FlagKindInt64, Optional: true, Description: "A non-zero value returns only instance types with exactly that GPU count. 0 disables the filter, and so does omitting the parameter - the two are indistinguishable, so this filter cannot select instance types with no GPUs."},
+	{FlagName: "gpu-type", Shorthand: "g", FieldPath: "GpuType", Kind: flagutil.FlagKindString, Optional: true, Description: "Only return instance types with this GPU type (case-insensitive)."},
+	{FlagName: "shade-instance-type", FieldPath: "ShadeInstanceType", Kind: flagutil.FlagKindString, Optional: true, Description: "Only return this Shade instance type (case-insensitive)."},
+	{FlagName: "available", Shorthand: "a", FieldPath: "Available", Kind: flagutil.FlagKindString, Optional: true, Description: "\"true\" keeps only available entries, \"false\" only unavailable ones. Any other value is ignored."},
+	{FlagName: "sort", FieldPath: "Sort", Kind: flagutil.FlagKindString, Optional: true, Description: "Ordering, not filtering: \"price\" sorts ascending by on-demand hourly price, removing nothing. Any other value is ignored."},
+	{FlagName: "shade-cloud", FieldPath: "ShadeCloud", Kind: flagutil.FlagKindString, Optional: true, Description: "\"true\" excludes the hyperscalers (AWS, Azure). Any other value is ignored."},
 }
 
 // initListTypesCmd initializes the list-types command.
 func initListTypesCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
 		Use:     "list-types",
-		Short:   "List available instance types",
+		Short:   "List instance types",
 		Long:    "Return all the GPU instance types with their corresponding availability and specs.\n\nEvery `availability` entry carries a `rental_type` (`on_demand` or `spot`). Instance types that offer spot list each region twice, once per rental type, and the two entries can differ in `available`. If your integration keys on `region` or checks whether any region is available, filter to `rental_type: on_demand` first to keep the previous behavior. See the [Spot Instances guide](/guides/spotinstances) for details.",
 		Example: "  shade instances list-types",
 		Args:    cobra.NoArgs,
 		RunE:    runListTypesCmd,
 		Aliases: []string{"lt"},
 		Annotations: map[string]string{
-			"speakeasy_operation": "InstancesTypes",
+			"speakeasy_operation": "listInstanceTypes",
 		},
 	}
 	flagutil.RegisterFlags(cmd, listTypesCmdMeta)
-	if err := flagutil.ValidateMeta[operations.InstancesTypesRequest](listTypesCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.ListInstanceTypesRequest](listTypesCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for list-types: %w", err)
 	}
 	parent.AddCommand(cmd)
@@ -51,7 +52,7 @@ func runListTypesCmd(cmd *cobra.Command, args []string) error {
 	if usage.UsageRequested(cmd) {
 		return usage.EmitSchema(cmd, cmd.OutOrStdout())
 	}
-	req, err := flagutil.BuildRequest[operations.InstancesTypesRequest](cmd, listTypesCmdMeta, "", "")
+	req, err := flagutil.BuildRequest[operations.ListInstanceTypesRequest](cmd, listTypesCmdMeta, "", "")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -59,6 +60,7 @@ func runListTypesCmd(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	flagutil.RecordCredentialsMissing(cmd, false, "")
 	sdkOpts, err := output.PrepareCallOpts(cmd)
 	if err != nil {
 		return err
@@ -74,7 +76,10 @@ func runListTypesCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Instances.ListTypes(cmd.Context(), req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

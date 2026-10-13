@@ -23,11 +23,13 @@ Sources are shown as:
   [env]     - Set via environment variable (SHADEFORM_*)
   [keyring] - Set via OS keychain (stored by configure command)
   [config]  - Set via config file (~/.config/shade/config.yaml)
+  [default] - Built-in global parameter flag default
   [unset]   - Not configured
 
 Credential values are masked for security.`,
-		Args: cobra.NoArgs,
-		RunE: runWhoamiCmd,
+		Annotations: map[string]string{"speakeasy_settings_command": "true"},
+		Args:        cobra.NoArgs,
+		RunE:        runWhoamiCmd,
 	}
 	parent.AddCommand(cmd)
 	return nil
@@ -46,7 +48,7 @@ func runWhoamiCmd(cmd *cobra.Command, args []string) error {
 		}
 		credentials := map[string]any{}
 		{
-			value, source := config.ResolveSecurityCredential(cmd, "api-key")
+			value, source := config.ResolveRequestSecurityCredential(cmd, "api-key")
 			credentials["api-key"] = map[string]any{"source": source, "value": maskSecret(value)}
 		}
 		info["credentials"] = credentials
@@ -63,9 +65,9 @@ func runWhoamiCmd(cmd *cobra.Command, args []string) error {
 	fmt.Fprintln(out)
 	fmt.Fprintln(out, "Credentials:")
 
-	// API Key
+	// An API key issued from the Shadeform dashboard. Routes that accept a key also accept an Auth0 bearer token in `Authorization`, which this document does not describe.
 	{
-		value, source := config.ResolveSecurityCredential(cmd, "api-key")
+		value, source := config.ResolveRequestSecurityCredential(cmd, "api-key")
 		fmt.Fprintf(out, "  --%-25s [%-7s] %s\n", "api-key", source, maskSecret(value))
 	}
 

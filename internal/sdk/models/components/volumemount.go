@@ -3,10 +3,9 @@
 
 package components
 
-// VolumeMount - Settings for mounting volumes onto file systems
 type VolumeMount struct {
-	// Set to true to automatically mount unmounted disks to a default filesystem.
-	Auto *bool `json:"auto,omitzero"`
+	Auto    *bool            `json:"auto"`
+	Mapping []VolumeMountMap `json:"mapping"`
 }
 
 func (v *VolumeMount) GetAuto() *bool {
@@ -14,4 +13,11 @@ func (v *VolumeMount) GetAuto() *bool {
 		return nil
 	}
 	return v.Auto
+}
+
+func (v *VolumeMount) GetMapping() []VolumeMountMap {
+	if v == nil {
+		return nil
+	}
+	return v.Mapping
 }

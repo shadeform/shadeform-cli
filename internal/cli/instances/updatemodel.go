@@ -17,8 +17,8 @@ import (
 
 var updateModelCmdMeta = []flagutil.FlagMeta{
 	{FlagName: "instance-id", Shorthand: "i", FieldPath: "InstanceID", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "api-key", Shorthand: "a", FieldPath: "Body.APIKey", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "model-properties", Shorthand: "m", FieldPath: "Body.ModelProperties", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"model_properties,omitempty"`, Description: "JSON object"},
+	{FlagName: "model-api-key", FieldPath: "Body.ModelAPIKey", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
+	{FlagName: "model-properties", FieldPath: "Body.ModelProperties", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"model_properties,omitempty"`, Description: "JSON object"},
 }
 
 // initUpdateModelCmd initializes the update-model command.
@@ -27,7 +27,7 @@ func initUpdateModelCmd(parent *cobra.Command) error {
 		Use:     "update-model [instance-id]",
 		Short:   "Update an instance's model configuration",
 		Long:    "Queues a new model configuration for an instance launched to serve a model. The agent on the instance applies it, so a 200 means the change was accepted and returns the id of the queued entry. Only instances launched with a model configuration accept this.",
-		Example: "  shade instances update-model --instance-id <id> --api-key <value>",
+		Example: "  shade instances update-model --instance-id <id> --model-api-key <value>",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runUpdateModelCmd,
 		Aliases: []string{"um"},

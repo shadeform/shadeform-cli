@@ -8,7 +8,7 @@ import (
 )
 
 type ModelConfiguration struct {
-	APIKey          string           `json:"api_key"`
+	ModelAPIKey     string           `json:"api_key"`
 	ModelProperties *ModelProperties `json:"model_properties,omitzero"`
 }
 
@@ -23,11 +23,11 @@ func (m *ModelConfiguration) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (m *ModelConfiguration) GetAPIKey() string {
+func (m *ModelConfiguration) GetModelAPIKey() string {
 	if m == nil {
 		return ""
 	}
-	return m.APIKey
+	return m.ModelAPIKey
 }
 
 func (m *ModelConfiguration) GetModelProperties() *ModelProperties {

@@ -16,16 +16,22 @@ import (
 )
 
 var saveCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "name", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "Name of the template [required]"},
-	{FlagName: "description", FieldPath: "Description", Kind: flagutil.FlagKindString, Optional: true, Description: "Description of the template"},
-	{FlagName: "public", Shorthand: "p", FieldPath: "Public", Kind: flagutil.FlagKindBool, Optional: true, Description: "Whether the template is publicly available"},
-	{FlagName: "launch-configuration", Shorthand: "l", FieldPath: "LaunchConfiguration", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"launch_configuration,omitempty"`, Description: "Defines automatic actions after the instance becomes active."},
-	{FlagName: "auto-delete", FieldPath: "AutoDelete", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"auto_delete,omitempty"`, Description: "Set a date or spend threshold to automatically delete the instance"},
-	{FlagName: "alert", FieldPath: "Alert", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"alert,omitempty"`, Description: "Set a date or spend threshold to receive an email alert"},
-	{FlagName: "volume-mount", Shorthand: "v", FieldPath: "VolumeMount", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"volume_mount,omitempty"`, Description: "Settings for mounting volumes onto file systems"},
-	{FlagName: "tags", Shorthand: "t", FieldPath: "Tags", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "Tags associated with the template"},
-	{FlagName: "envs", Shorthand: "e", FieldPath: "Envs", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"envs,omitempty"`, Description: "Environment variables for the template (JSON array)"},
-	{FlagName: "networking", FieldPath: "Networking", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"networking,omitempty"`, Description: "Network configuration including firewall rules"},
+	{FlagName: "alert", FieldPath: "Alert", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"alert,omitempty"`, Description: "Send an email alert when a date or a spend threshold is reached."},
+	{FlagName: "author", FieldPath: "Author", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"author,omitempty"`, Description: "Who published the template. Up to 50 characters."},
+	{FlagName: "auto-delete", FieldPath: "AutoDelete", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"auto_delete,omitempty"`, Description: "Delete the instance automatically when a date or a spend threshold is reached."},
+	{FlagName: "description", FieldPath: "Description", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"description,omitempty"`, Description: "What the template launches and when to use it. Up to 10000 characters."},
+	{FlagName: "envs", Shorthand: "e", FieldPath: "Envs", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"envs,omitempty"`, Description: "Environment variables to set on the instance for every shell session. Up to 20. (JSON array)"},
+	{FlagName: "featured", Shorthand: "f", FieldPath: "Featured", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"featured,omitempty"`, Description: "True for templates Shadeform curates and lists under GET /v1/templates/featured. Read-only."},
+	{FlagName: "id", FieldPath: "ID", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"id,omitempty"`, Description: "The ID of the template, assigned by Shadeform. Ignored on save."},
+	{FlagName: "is-account-owner", FieldPath: "IsAccountOwner", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"is_account_owner,omitempty"`, Description: "True when the template belongs to the requesting account. Read-only."},
+	{FlagName: "launch-configuration", FieldPath: "LaunchConfiguration", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"launch_configuration,omitempty"`, Description: "What to run automatically once the instance is active: a docker container or a startup script. See https://docs.shadeform.ai/getting-started/concepts#launch-configuration."},
+	{FlagName: "logo", FieldPath: "Logo", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"logo,omitempty"`, Description: "URL of a logo shown with the template. Up to 200 characters."},
+	{FlagName: "metadata", Shorthand: "m", FieldPath: "Metadata", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"metadata,omitempty"`, Description: "Free-form labels attached to the template, such as the model or framework it runs. (JSON array)"},
+	{FlagName: "name", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "The name of the template. Alphanumeric characters, spaces, underscores and dashes, up to 100 characters. [required]"},
+	{FlagName: "networking", FieldPath: "Networking", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"networking,omitempty"`, Description: "Network configuration, currently UFW firewall rules applied at boot."},
+	{FlagName: "public", Shorthand: "p", FieldPath: "Public", Kind: flagutil.FlagKindBool, Required: true, Description: "True makes the template visible to every Shadeform account; false keeps it private to yours. [required]"},
+	{FlagName: "tags", Shorthand: "t", FieldPath: "Tags", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"tags,omitempty"`, Description: "Custom, searchable tags. Up to 200 characters each. (JSON array)"},
+	{FlagName: "volume-mount", Shorthand: "v", FieldPath: "VolumeMount", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"volume_mount,omitempty"`, Description: "How attached storage volumes are mounted onto the instance's file system."},
 }
 
 // initSaveCmd initializes the save command.
@@ -34,19 +40,19 @@ func initSaveCmd(parent *cobra.Command) error {
 		Use:     "save",
 		Short:   "Save a template",
 		Long:    "Create a new template",
-		Example: "  shade templates save --name 'My Template'",
+		Example: "  shade templates save --name <value> --public=false",
 		Args:    cobra.NoArgs,
 		RunE:    runSaveCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "TemplatesSave",
+			"speakeasy_operation": "saveTemplate",
 		},
 	}
 	flagutil.RegisterFlags(cmd, saveCmdMeta)
-	if err := flagutil.ValidateMeta[components.TemplateSaveRequest](saveCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[components.Template](saveCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for save: %w", err)
 	}
 	cmd.Flags().String("body", "", "Request body as JSON (alternative to individual flags). Can also be provided via stdin; @path reads a file, @- reads stdin to EOF. Use --schema to print the exact JSON Schema.")
-	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Kind: "json", BodyFlag: true})
+	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Required: false, Kind: "json", BodyFlag: true})
 	cmd.Annotations[flagutil.AnnotationWholeBodyFlag] = "body"
 	if err := flagutil.AnnotateBodyFields(cmd, saveCmdMeta, "", "body"); err != nil {
 		return fmt.Errorf("annotate body fields for save: %w", err)
@@ -63,9 +69,9 @@ func runSaveCmd(cmd *cobra.Command, args []string) error {
 		return usage.EmitSchema(cmd, cmd.OutOrStdout())
 	}
 	if requested, _ := cmd.Flags().GetBool("schema"); requested {
-		return usage.EmitBodySchema(cmd.OutOrStdout(), "TemplatesSave")
+		return usage.EmitBodySchema(cmd.OutOrStdout(), "saveTemplate")
 	}
-	request, err := flagutil.BuildRequest[components.TemplateSaveRequest](cmd, saveCmdMeta, "", "body")
+	request, err := flagutil.BuildRequest[components.Template](cmd, saveCmdMeta, "", "body")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -88,7 +94,10 @@ func runSaveCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Templates.Save(cmd.Context(), *request, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

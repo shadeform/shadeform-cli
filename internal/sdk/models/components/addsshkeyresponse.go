@@ -3,8 +3,9 @@
 
 package components
 
+// AddSSHKeyResponse - AddSshKeyResponse schema
 type AddSSHKeyResponse struct {
-	// The ID of the SSH Key.
+	// The ID of the new SSH key.
 	ID string `json:"id"`
 }
 

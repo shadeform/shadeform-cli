@@ -22,7 +22,7 @@ func initListCmd(parent *cobra.Command) error {
 		Args:    cobra.NoArgs,
 		RunE:    runListCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "Templates",
+			"speakeasy_operation": "listTemplates",
 		},
 	}
 	parent.AddCommand(cmd)
@@ -53,7 +53,10 @@ func runListCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Templates.List(cmd.Context(), sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

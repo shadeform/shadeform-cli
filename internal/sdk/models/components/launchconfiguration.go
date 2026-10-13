@@ -7,37 +7,24 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
 )
 
-// Type - Specifies the type of launch configuration. See [Launch Configuration](/getting-started/concepts#launch-configuration) for more details.
-type Type string
-
-const (
-	TypeDocker Type = "docker"
-	TypeScript Type = "script"
-)
-
-func (e Type) ToPointer() *Type {
-	return &e
-}
-
-// IsExact returns true if the value matches a known enum value, false otherwise.
-func (e *Type) IsExact() bool {
-	if e != nil {
-		switch *e {
-		case "docker", "script":
-			return true
-		}
-	}
-	return false
-}
-
-// LaunchConfiguration - Defines automatic actions after the instance becomes active.
+// LaunchConfiguration - What to run automatically once the instance is active: a docker container or a startup script. See https://docs.shadeform.ai/getting-started/concepts#launch-configuration.
 type LaunchConfiguration struct {
-	// Specifies the type of launch configuration. See [Launch Configuration](/getting-started/concepts#launch-configuration) for more details.
-	Type Type `json:"type"`
-	// May only be used if launch_configuration.type is 'docker'. Use docker_configuration to automatically pull and run a docker image. See this [tutorial](/guides/dockercontainers) for examples.
+	// Deprecated. Use docker_configuration.args.
+	Args *string `json:"args,omitzero"`
+	// Deprecated. Use script_configuration.base64_script.
+	Base64Script *string `json:"base64_script,omitzero"`
+	// Read-only. The status of the launched container as last reported by the instance.
+	ContainerStatus *string `json:"container_status,omitzero"`
+	// The container to pull and run at startup. Only read when type is docker. See https://docs.shadeform.ai/guides/dockercontainers.
 	DockerConfiguration *DockerConfiguration `json:"docker_configuration,omitzero"`
-	// May only be used if launch_configuration.type is 'script'. Configures a startup script to be run automatically after the instance is active. See this [tutorial]/guides/startupscript) for examples.
+	// Deprecated. Use docker_configuration.image.
+	Image *string `json:"image,omitzero"`
+	// The model to serve with vLLM and the API key its inference endpoint requires from callers. On a launch configuration this is the legacy vLLM launch type; prefer docker_configuration.
+	ModelConfiguration *ModelConfiguration `json:"model_configuration,omitzero"`
+	// The startup script to run once the instance is active. Only read when type is script. See https://docs.shadeform.ai/guides/startupscript.
 	ScriptConfiguration *ScriptConfiguration `json:"script_configuration,omitzero"`
+	// The kind of launch configuration: docker runs a container, script runs a startup script. Determines which of docker_configuration and script_configuration is read.
+	Type *string `json:"type,omitzero"`
 }
 
 func (l LaunchConfiguration) MarshalJSON() ([]byte, error) {
@@ -51,11 +38,25 @@ func (l *LaunchConfiguration) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (l *LaunchConfiguration) GetType() Type {
+func (l *LaunchConfiguration) GetArgs() *string {
 	if l == nil {
-		return Type("")
+		return nil
 	}
-	return l.Type
+	return l.Args
+}
+
+func (l *LaunchConfiguration) GetBase64Script() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Base64Script
+}
+
+func (l *LaunchConfiguration) GetContainerStatus() *string {
+	if l == nil {
+		return nil
+	}
+	return l.ContainerStatus
 }
 
 func (l *LaunchConfiguration) GetDockerConfiguration() *DockerConfiguration {
@@ -65,9 +66,30 @@ func (l *LaunchConfiguration) GetDockerConfiguration() *DockerConfiguration {
 	return l.DockerConfiguration
 }
 
+func (l *LaunchConfiguration) GetImage() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Image
+}
+
+func (l *LaunchConfiguration) GetModelConfiguration() *ModelConfiguration {
+	if l == nil {
+		return nil
+	}
+	return l.ModelConfiguration
+}
+
 func (l *LaunchConfiguration) GetScriptConfiguration() *ScriptConfiguration {
 	if l == nil {
 		return nil
 	}
 	return l.ScriptConfiguration
+}
+
+func (l *LaunchConfiguration) GetType() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Type
 }

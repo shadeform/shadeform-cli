@@ -16,7 +16,7 @@ import (
 )
 
 var deleteCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "template-id", Shorthand: "t", FieldPath: "TemplateID", Kind: flagutil.FlagKindString, Required: true, Description: "The template ID [required]"},
+	{FlagName: "template-id", Shorthand: "t", FieldPath: "TemplateID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the template, from the id field of GET /v1/templates. [required]"},
 }
 
 // initDeleteCmd initializes the delete command.
@@ -29,18 +29,18 @@ func initDeleteCmd(parent *cobra.Command) error {
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runDeleteCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "TemplatesDelete",
+			"speakeasy_operation": "deleteTemplate",
 		},
 	}
 	flagutil.RegisterFlags(cmd, deleteCmdMeta)
-	if err := flagutil.ValidateMeta[operations.TemplatesDeleteRequest](deleteCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.DeleteTemplateRequest](deleteCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for delete: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "template-id", "The template ID (or pass it as the [template-id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "template-id", "The ID of the template, from the id field of GET /v1/templates. (or pass it as the [template-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "template-id", Summary: "The template ID", Required: true, SatisfiedBy: []string{"template-id"}},
+		{Name: "template-id", Summary: "The ID of the template, from the id field of GET /v1/templates.", Required: true, SatisfiedBy: []string{"template-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for delete: %w", err)
 	}
@@ -56,7 +56,7 @@ func runDeleteCmd(cmd *cobra.Command, args []string) error {
 	if err := flagutil.ResolvePositionalFlag(cmd, args); err != nil {
 		return err
 	}
-	req, err := flagutil.BuildRequest[operations.TemplatesDeleteRequest](cmd, deleteCmdMeta, "", "")
+	req, err := flagutil.BuildRequest[operations.DeleteTemplateRequest](cmd, deleteCmdMeta, "", "")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -79,7 +79,10 @@ func runDeleteCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Templates.Delete(cmd.Context(), *req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

@@ -16,31 +16,31 @@ import (
 )
 
 var deleteCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "id", Shorthand: "i", FieldPath: "ID", Kind: flagutil.FlagKindString, Required: true, Description: "The instance id [required]"},
+	{FlagName: "instance-id", Shorthand: "i", FieldPath: "InstanceID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the instance, from the id field of GET /v1/instances or the create response. [required]"},
 }
 
 // initDeleteCmd initializes the delete command.
 func initDeleteCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
-		Use:     "delete [id]",
+		Use:     "delete [instance-id]",
 		Short:   "Delete an instance",
 		Long:    "This will move the instance to the 'deleting' status while the instance is being deleted. Once the instance has entered the 'deleting' status, the account will no longer be billed for the instance.",
-		Example: "  shade instances delete --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade instances delete --instance-id <id>",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runDeleteCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "InstancesDelete",
+			"speakeasy_operation": "deleteInstance",
 		},
 	}
 	flagutil.RegisterFlags(cmd, deleteCmdMeta)
-	if err := flagutil.ValidateMeta[operations.InstancesDeleteRequest](deleteCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.DeleteInstanceRequest](deleteCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for delete: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "id", "The instance id (or pass it as the [id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "instance-id", "The ID of the instance, from the id field of GET /v1/instances or the create response. (or pass it as the [instance-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "id", Summary: "The instance id", Required: true, SatisfiedBy: []string{"id"}},
+		{Name: "instance-id", Summary: "The ID of the instance, from the id field of GET /v1/instances or the create response.", Required: true, SatisfiedBy: []string{"instance-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for delete: %w", err)
 	}
@@ -56,7 +56,7 @@ func runDeleteCmd(cmd *cobra.Command, args []string) error {
 	if err := flagutil.ResolvePositionalFlag(cmd, args); err != nil {
 		return err
 	}
-	req, err := flagutil.BuildRequest[operations.InstancesDeleteRequest](cmd, deleteCmdMeta, "", "")
+	req, err := flagutil.BuildRequest[operations.DeleteInstanceRequest](cmd, deleteCmdMeta, "", "")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -79,7 +79,10 @@ func runDeleteCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Instances.Delete(cmd.Context(), *req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

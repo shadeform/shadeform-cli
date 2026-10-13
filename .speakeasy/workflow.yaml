@@ -3,7 +3,7 @@ speakeasyVersion: latest
 sources:
     Shadeform API:
         inputs:
-            - location: https://docs.shadeform.ai/openapi.yaml
+            - location: https://api.shadeform.ai/v1/openapi.json
         overlays:
             - location: .speakeasy/overlay.yaml
         output: .speakeasy/out.openapi.yaml

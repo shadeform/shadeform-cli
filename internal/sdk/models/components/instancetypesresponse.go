@@ -3,14 +3,14 @@
 
 package components
 
-// InstanceTypesResponse - Response of /instances/types
+// InstanceTypesResponse schema
 type InstanceTypesResponse struct {
 	InstanceTypes []InstanceType `json:"instance_types"`
 }
 
 func (i *InstanceTypesResponse) GetInstanceTypes() []InstanceType {
 	if i == nil {
-		return []InstanceType{}
+		return nil
 	}
 	return i.InstanceTypes
 }

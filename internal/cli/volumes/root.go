@@ -31,15 +31,15 @@ func InitVolumesRoot(parent *cobra.Command) error {
 		return err
 	}
 
+	if err := initListTypesCmd(VolumesCmd); err != nil {
+		return err
+	}
+
 	if err := initDeleteCmd(VolumesCmd); err != nil {
 		return err
 	}
 
 	if err := initGetCmd(VolumesCmd); err != nil {
-		return err
-	}
-
-	if err := initListTypesCmd(VolumesCmd); err != nil {
 		return err
 	}
 

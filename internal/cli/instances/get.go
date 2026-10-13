@@ -16,31 +16,31 @@ import (
 )
 
 var getCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "id", Shorthand: "i", FieldPath: "ID", Kind: flagutil.FlagKindString, Required: true, Description: "The instance id [required]"},
+	{FlagName: "instance-id", Shorthand: "i", FieldPath: "InstanceID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the instance, from the id field of GET /v1/instances or the create response. [required]"},
 }
 
 // initGetCmd initializes the get command.
 func initGetCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
-		Use:     "get [id]",
+		Use:     "get [instance-id]",
 		Short:   "Get an instance",
 		Long:    "Get details for the specified, non deleted, instance in the url.",
-		Example: "  shade instances get --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade instances get --instance-id <id>",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runGetCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "InstancesInfo",
+			"speakeasy_operation": "getInstance",
 		},
 	}
 	flagutil.RegisterFlags(cmd, getCmdMeta)
-	if err := flagutil.ValidateMeta[operations.InstancesInfoRequest](getCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.GetInstanceRequest](getCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for get: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "id", "The instance id (or pass it as the [id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "instance-id", "The ID of the instance, from the id field of GET /v1/instances or the create response. (or pass it as the [instance-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "id", Summary: "The instance id", Required: true, SatisfiedBy: []string{"id"}},
+		{Name: "instance-id", Summary: "The ID of the instance, from the id field of GET /v1/instances or the create response.", Required: true, SatisfiedBy: []string{"instance-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for get: %w", err)
 	}
@@ -56,7 +56,7 @@ func runGetCmd(cmd *cobra.Command, args []string) error {
 	if err := flagutil.ResolvePositionalFlag(cmd, args); err != nil {
 		return err
 	}
-	req, err := flagutil.BuildRequest[operations.InstancesInfoRequest](cmd, getCmdMeta, "", "")
+	req, err := flagutil.BuildRequest[operations.GetInstanceRequest](cmd, getCmdMeta, "", "")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -79,7 +79,10 @@ func runGetCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Instances.Get(cmd.Context(), *req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

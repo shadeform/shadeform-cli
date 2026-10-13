@@ -16,22 +16,24 @@ import (
 )
 
 var createCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "cloud", Shorthand: "c", FieldPath: "Cloud", Kind: flagutil.FlagKindString, Required: true, Description: "Specifies the underlying cloud provider. See this [explanation](/getting-started/concepts#cloud-cloud-provider) for more details. [required]"},
-	{FlagName: "region", FieldPath: "Region", Kind: flagutil.FlagKindString, Required: true, Description: "Specifies the region. [required]"},
-	{FlagName: "shade-instance-type", FieldPath: "ShadeInstanceType", Kind: flagutil.FlagKindString, Required: true, Description: "The Shadeform standardized instance type. See this [explanation](/getting-started/concepts#shade-instance-type-and-cloud-instance-type) for more details. [required]"},
-	{FlagName: "shade-cloud", FieldPath: "ShadeCloud", Kind: flagutil.FlagKindBool, Required: true, Description: "Specifies if the instance is launched in [Shade Cloud](/getting-started/concepts#shade-cloud) or in a linked cloud account. [required]"},
-	{FlagName: "name", Shorthand: "n", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "The name of the instance [required]"},
-	{FlagName: "rental-type", FieldPath: "RentalType", Kind: flagutil.FlagKindEnum, Optional: true, HasDefault: true, DefaultStr: "on_demand", EnumValues: []string{"on_demand", "spot"}, Description: "How the instance is rented. Defaults to on_demand. Spot instances run at a discounted hourly price but are interruptible: Shadeform may reclaim the capacity at any time, at which point the instance is terminated. Spot requires an instance type that supports it (see the availability entries tagged rental_type spot in the instance types response) and shade_cloud set to true. (options: on_demand, spot)"},
-	{FlagName: "os", FieldPath: "Os", Kind: flagutil.FlagKindString, Optional: true, Description: "The operating system of the instance."},
-	{FlagName: "template-id", FieldPath: "TemplateID", Kind: flagutil.FlagKindString, Optional: true, Description: "The ID of the template to use for this instance"},
-	{FlagName: "launch-configuration", Shorthand: "l", FieldPath: "LaunchConfiguration", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"launch_configuration,omitempty"`, Description: "Defines automatic actions after the instance becomes active."},
-	{FlagName: "volume-ids", FieldPath: "VolumeIds", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "List of volume IDs to be mounted. Currently only supports 1 volume at a time."},
-	{FlagName: "ssh-key-id", FieldPath: "SSHKeyID", Kind: flagutil.FlagKindString, Optional: true, Description: "The ID of the SSH Key."},
-	{FlagName: "auto-delete", FieldPath: "AutoDelete", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"auto_delete,omitempty"`, Description: "Set a date or spend threshold to automatically delete the instance"},
-	{FlagName: "alert", FieldPath: "Alert", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"alert,omitempty"`, Description: "Set a date or spend threshold to receive an email alert"},
-	{FlagName: "volume-mount", FieldPath: "VolumeMount", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"volume_mount,omitempty"`, Description: "Settings for mounting volumes onto file systems"},
-	{FlagName: "tags", FieldPath: "Tags", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "Add custom, searchable tags to instances."},
-	{FlagName: "envs", Shorthand: "e", FieldPath: "Envs", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"envs,omitempty"`, Description: "List of environment variable name and values to automatically add to the instance (JSON array)"},
+	{FlagName: "alert", FieldPath: "Alert", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"alert,omitempty"`, Description: "Send an email alert when a date or a spend threshold is reached."},
+	{FlagName: "auto-delete", FieldPath: "AutoDelete", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"auto_delete,omitempty"`, Description: "Delete the instance automatically when a date or a spend threshold is reached."},
+	{FlagName: "cloud", Shorthand: "c", FieldPath: "Cloud", Kind: flagutil.FlagKindString, Required: true, Description: "The underlying cloud provider, as listed by GET /v1/instances/types. See https://docs.shadeform.ai/getting-started/concepts#cloud-cloud-provider. [required]"},
+	{FlagName: "enable-metrics", FieldPath: "EnableMetrics", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"enable_metrics,omitempty"`, Description: "Enable GPU and system metrics collection on the instance where the instance type supports it."},
+	{FlagName: "envs", FieldPath: "Envs", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"envs,omitempty"`, Description: "Environment variables to set on the instance for every shell session. Up to 20. (JSON array)"},
+	{FlagName: "launch-configuration", Shorthand: "l", FieldPath: "LaunchConfiguration", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"launch_configuration,omitempty"`, Description: "What to run automatically once the instance is active: a docker container or a startup script. See https://docs.shadeform.ai/getting-started/concepts#launch-configuration."},
+	{FlagName: "name", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "The name of the instance. Alphanumeric characters, underscores and dashes, up to 50 characters. [required]"},
+	{FlagName: "networking", FieldPath: "Networking", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"networking,omitempty"`, Description: "Network configuration, currently UFW firewall rules applied at boot."},
+	{FlagName: "os", FieldPath: "Os", Kind: flagutil.FlagKindString, Optional: true, Description: "The operating system image, from the os_options of the instance type. Defaults to the instance type's default image."},
+	{FlagName: "region", FieldPath: "Region", Kind: flagutil.FlagKindString, Required: true, Description: "The region of the cloud provider, as listed in the availability entries of GET /v1/instances/types. [required]"},
+	{FlagName: "rental-type", FieldPath: "RentalType", Kind: flagutil.FlagKindString, Optional: true, Description: "How the instance is rented: on_demand (default) or spot. Spot instances run at the discounted spot hourly price but are interruptible: Shadeform may reclaim the capacity at any time, at which point the instance is terminated with status_details set to preempted. See https://docs.shadeform.ai/guides/spotinstances."},
+	{FlagName: "shade-cloud", FieldPath: "ShadeCloud", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"shade_cloud,omitempty"`, Description: "True launches the instance in Shade Cloud, billed through Shadeform; false launches it in your linked cloud account. Required for AWS and Azure, where only linked accounts are supported. See https://docs.shadeform.ai/getting-started/concepts#shade-cloud."},
+	{FlagName: "shade-instance-type", FieldPath: "ShadeInstanceType", Kind: flagutil.FlagKindString, Required: true, Description: "The Shadeform standardized instance type, as listed by GET /v1/instances/types. See https://docs.shadeform.ai/getting-started/concepts#shade-instance-type-and-cloud-instance-type. [required]"},
+	{FlagName: "ssh-key-id", FieldPath: "SSHKeyID", Kind: flagutil.FlagKindString, Optional: true, Description: "The ID of the SSH key to install, from GET /v1/sshkeys. Defaults to the account's default key."},
+	{FlagName: "tags", FieldPath: "Tags", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"tags,omitempty"`, Description: "Custom, searchable tags. Up to 200 characters each. (JSON array)"},
+	{FlagName: "template-id", FieldPath: "TemplateID", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"template_id,omitempty"`, Description: "The ID of a template whose launch configuration, auto-delete, alert, volume mount, tags, environment variables and networking are applied to the instance. Fields set directly on this request take precedence."},
+	{FlagName: "volume-ids", FieldPath: "VolumeIds", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"volume_ids,omitempty"`, Description: "IDs of storage volumes to attach at launch. Currently at most one volume. (JSON array)"},
+	{FlagName: "volume-mount", FieldPath: "VolumeMount", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"volume_mount,omitempty"`, Description: "How attached storage volumes are mounted onto the instance's file system."},
 }
 
 // initCreateCmd initializes the create command.
@@ -40,19 +42,19 @@ func initCreateCmd(parent *cobra.Command) error {
 		Use:     "create",
 		Short:   "Create an instance",
 		Long:    "Create a new GPU instance. Our create API is designed to be asynchronous, so the response will be a CreateResponse object with a status of \"creating\". We then have a process that will pick it up and create it. You can poll the /instances/{id}/info endpoint to check the status of the instance.",
-		Example: "  shade instances create --cloud hyperstack --region canada-1 --shade-instance-type A6000 --shade-cloud=true --name cool-gpu-server",
+		Example: "  shade instances create --cloud <value> --name <value> --region <value> --shade-instance-type <value>",
 		Args:    cobra.NoArgs,
 		RunE:    runCreateCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "InstancesCreate",
+			"speakeasy_operation": "createInstance",
 		},
 	}
 	flagutil.RegisterFlags(cmd, createCmdMeta)
-	if err := flagutil.ValidateMeta[components.CreateRequest](createCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[components.CreateInstanceRequest](createCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for create: %w", err)
 	}
 	cmd.Flags().String("body", "", "Request body as JSON (alternative to individual flags). Can also be provided via stdin; @path reads a file, @- reads stdin to EOF. Use --schema to print the exact JSON Schema.")
-	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Kind: "json", BodyFlag: true})
+	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Required: false, Kind: "json", BodyFlag: true})
 	cmd.Annotations[flagutil.AnnotationWholeBodyFlag] = "body"
 	if err := flagutil.AnnotateBodyFields(cmd, createCmdMeta, "", "body"); err != nil {
 		return fmt.Errorf("annotate body fields for create: %w", err)
@@ -69,9 +71,9 @@ func runCreateCmd(cmd *cobra.Command, args []string) error {
 		return usage.EmitSchema(cmd, cmd.OutOrStdout())
 	}
 	if requested, _ := cmd.Flags().GetBool("schema"); requested {
-		return usage.EmitBodySchema(cmd.OutOrStdout(), "InstancesCreate")
+		return usage.EmitBodySchema(cmd.OutOrStdout(), "createInstance")
 	}
-	request, err := flagutil.BuildRequest[components.CreateRequest](cmd, createCmdMeta, "", "body")
+	request, err := flagutil.BuildRequest[components.CreateInstanceRequest](cmd, createCmdMeta, "", "body")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -94,7 +96,10 @@ func runCreateCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Instances.Create(cmd.Context(), *request, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

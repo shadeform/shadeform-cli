@@ -4,13 +4,22 @@
 package instances
 
 import (
+	"fmt"
 	"github.com/shadeform/shadeform-cli/internal/client"
+	"github.com/shadeform/shadeform-cli/internal/flagutil"
 	"github.com/shadeform/shadeform-cli/internal/output"
 	"github.com/shadeform/shadeform-cli/internal/sdk"
 	"github.com/shadeform/shadeform-cli/internal/sdk/models/operations"
 	"github.com/shadeform/shadeform-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
+
+var listCmdMeta = []flagutil.FlagMeta{
+	{FlagName: "status", FieldPath: "Status", Kind: flagutil.FlagKindString, Optional: true, Description: "Only instances in this status. 'deleted' selects the deletion history instead of the live list."},
+	{FlagName: "search", FieldPath: "Search", Kind: flagutil.FlagKindString, Optional: true, Description: "Match instances whose name, id or address contains this text."},
+	{FlagName: "limit", Shorthand: "l", FieldPath: "Limit", Kind: flagutil.FlagKindInt64, Optional: true, Description: "Page size. Between 1 and 100; defaults to 50 when either pagination parameter is given."},
+	{FlagName: "offset", FieldPath: "Offset", Kind: flagutil.FlagKindInt64, Optional: true, Description: "How many instances to skip. Requires a non-negative integer."},
+}
 
 // initListCmd initializes the list command.
 func initListCmd(parent *cobra.Command) error {
@@ -22,8 +31,12 @@ func initListCmd(parent *cobra.Command) error {
 		Args:    cobra.NoArgs,
 		RunE:    runListCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "Instances",
+			"speakeasy_operation": "listInstances",
 		},
+	}
+	flagutil.RegisterFlags(cmd, listCmdMeta)
+	if err := flagutil.ValidateMeta[operations.ListInstancesRequest](listCmdMeta); err != nil {
+		return fmt.Errorf("invalid metadata for list: %w", err)
 	}
 	parent.AddCommand(cmd)
 	return nil
@@ -33,6 +46,10 @@ func initListCmd(parent *cobra.Command) error {
 func runListCmd(cmd *cobra.Command, args []string) error {
 	if usage.UsageRequested(cmd) {
 		return usage.EmitSchema(cmd, cmd.OutOrStdout())
+	}
+	req, err := flagutil.BuildRequest[operations.ListInstancesRequest](cmd, listCmdMeta, "", "")
+	if err != nil {
+		return flagutil.WithCLIValidation(err)
 	}
 	s, err := client.NewClient(cmd)
 	if err != nil {
@@ -53,7 +70,10 @@ func runListCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
-	res, err := s.Instances.List(cmd.Context(), sdkOpts...)
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
+	res, err := s.Instances.List(cmd.Context(), req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

@@ -3,22 +3,26 @@
 
 package components
 
-// Alert - Set a date or spend threshold to receive an email alert
+import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
+)
+
+// Alert - Send an email alert when a date or a spend threshold is reached.
 type Alert struct {
-	// RFC3339 date string
-	DateThreshold *string `json:"date_threshold,omitzero"`
-	// Valid decimal representation of a dollar amount
-	SpendThreshold *string `json:"spend_threshold,omitzero"`
+	// Send an email alert at this time. RFC 3339 timestamp.
+	DateThreshold optionalnullable.OptionalNullable[string] `json:"date_threshold,omitzero"`
+	// Send an email alert once the instance's spend reaches this amount. Decimal dollar amount as a string.
+	SpendThreshold optionalnullable.OptionalNullable[string] `json:"spend_threshold,omitzero"`
 }
 
-func (a *Alert) GetDateThreshold() *string {
+func (a *Alert) GetDateThreshold() optionalnullable.OptionalNullable[string] {
 	if a == nil {
 		return nil
 	}
 	return a.DateThreshold
 }
 
-func (a *Alert) GetSpendThreshold() *string {
+func (a *Alert) GetSpendThreshold() optionalnullable.OptionalNullable[string] {
 	if a == nil {
 		return nil
 	}

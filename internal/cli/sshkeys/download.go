@@ -25,7 +25,7 @@ import (
 // command has the field stripped by the RedactPrivateKeyHook.
 
 var downloadCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "id", Shorthand: "i", FieldPath: "ID", Kind: flagutil.FlagKindString, Required: true, Description: "The ssh key id [required]"},
+	{FlagName: "ssh-key-id", Shorthand: "s", FieldPath: "SSHKeyID", Kind: flagutil.FlagKindString, Required: true, Description: "The ssh key id [required]"},
 }
 
 const (
@@ -37,7 +37,7 @@ const (
 
 func initDownloadCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
-		Use:   "download [id]",
+		Use:   "download [ssh-key-id]",
 		Short: "Download the private key of a Shadeform-managed SSH key",
 		Long: `Download the private key of a Shadeform-managed SSH key to a file.
 
@@ -54,18 +54,18 @@ pipe it somewhere; nothing else in the CLI ever prints private key material.`,
 		Args: flagutil.PositionalFlagArgs,
 		RunE: runDownloadCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "SshKeysInfo",
+			"speakeasy_operation": "getSshKey",
 		},
 	}
 	flagutil.RegisterFlags(cmd, downloadCmdMeta)
-	if err := flagutil.ValidateMeta[operations.SSHKeysInfoRequest](downloadCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.GetSSHKeyRequest](downloadCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for download: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "id", "The ssh key id (or pass it as the [id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "ssh-key-id", "The ssh key id (or pass it as the [ssh-key-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "id", Summary: "The ssh key id", Required: true, SatisfiedBy: []string{"id"}},
+		{Name: "ssh-key-id", Summary: "The ssh key id", Required: true, SatisfiedBy: []string{"ssh-key-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for download: %w", err)
 	}
@@ -78,9 +78,10 @@ pipe it somewhere; nothing else in the CLI ever prints private key material.`,
 	return nil
 }
 
-// sshKeyWithSecret is the shape the info endpoint actually returns; the
-// generated components.SSHKey omits private_key because the public OpenAPI
-// document does not declare it.
+// sshKeyWithSecret is the shape the info endpoint returns. It is decoded here
+// rather than through the generated response type so this command does not
+// depend on whether the published document declares private_key, and so the
+// RedactPrivateKeyHook's opt-in stays the only path to the field.
 type sshKeyWithSecret struct {
 	ID         string `json:"id"`
 	Name       string `json:"name"`
@@ -96,7 +97,7 @@ func runDownloadCmd(cmd *cobra.Command, args []string) error {
 	if err := flagutil.ResolvePositionalFlag(cmd, args); err != nil {
 		return err
 	}
-	req, err := flagutil.BuildRequest[operations.SSHKeysInfoRequest](cmd, downloadCmdMeta, "", "")
+	req, err := flagutil.BuildRequest[operations.GetSSHKeyRequest](cmd, downloadCmdMeta, "", "")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -123,7 +124,7 @@ func runDownloadCmd(cmd *cobra.Command, args []string) error {
 	if err := output.ValidateGlobalServerIndex(cmd, len(sdk.ServerList)); err != nil {
 		return err
 	}
-	// The typed response drops private_key, so always read the raw body.
+	// Read the raw body: the reveal opt-in lets private_key through the hook, and decoding here keeps the field out of the typed response path.
 	sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 
 	ctx := reveal.WithPrivateKey(cmd.Context())
@@ -180,7 +181,7 @@ func runDownloadCmd(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func decodeSSHKey(res *operations.SSHKeysInfoResponse) (*sshKeyWithSecret, error) {
+func decodeSSHKey(res *operations.GetSSHKeyResponse) (*sshKeyWithSecret, error) {
 	if res == nil || res.HTTPMeta.Response == nil || res.HTTPMeta.Response.Body == nil {
 		return nil, output.WithCLIReason(errors.New("empty response from the SSH key endpoint"), output.ReasonCLIProtocol)
 	}

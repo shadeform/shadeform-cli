@@ -4,24 +4,26 @@
 package components
 
 import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
 	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
 )
 
-// DockerConfiguration - May only be used if launch_configuration.type is 'docker'. Use docker_configuration to automatically pull and run a docker image. See this [tutorial](/guides/dockercontainers) for examples.
+// DockerConfiguration - The container to pull and run at startup. Only read when type is docker. See https://docs.shadeform.ai/guides/dockercontainers.
 type DockerConfiguration struct {
-	// Specifies the docker image to be pulled and run on the instance at startup.
-	Image string `json:"image"`
-	// Specifies the container arguments passed into the image at runtime.
+	// Arguments passed to the container at runtime, as one string.
 	Args *string `json:"args,omitzero"`
-	// Describes the amount of shared memory allocated for the container. Equivalent to using the --shm-size flag in the docker cli. If shared_memory_in_gb is not specified, then the container will use the host namespace which is the equivalent of --ipc=host.
-	SharedMemoryInGb *int64 `json:"shared_memory_in_gb,omitzero"`
-	// List of environment variable name-value pairs that will be passed to the docker container.
-	Envs []Env `json:"envs,omitzero"`
-	// List of port mappings between the host instance and the docker container. Equivalent of -p flag for docker run command.
-	PortMappings []PortMappings `json:"port_mappings,omitzero"`
-	// List of volume mounts between the host instance and the docker container. Equivalent of -v flag for docker run command.
-	VolumeMounts        []VolumeMounts       `json:"volume_mounts,omitzero"`
+	// Environment variables passed to the container, the equivalent of docker run -e.
+	Envs optionalnullable.OptionalNullable[[]Env] `json:"envs,omitzero"`
+	// The docker image to pull and run on the instance at startup.
+	Image *string `json:"image,omitzero"`
+	// Ports published from the container on the instance, the equivalent of docker run -p.
+	PortMappings optionalnullable.OptionalNullable[[]PortMapping] `json:"port_mappings,omitzero"`
+	// Credentials for a private docker registry, used for the pull.
 	RegistryCredentials *RegistryCredentials `json:"registry_credentials,omitzero"`
+	// Shared memory for the container in GB, the equivalent of docker run --shm-size. When omitted the container shares the host's IPC namespace and gets the host's shared memory.
+	SharedMemoryInGb *int64 `json:"shared_memory_in_gb,omitzero"`
+	// Bind mounts from the instance into the container, the equivalent of docker run -v.
+	VolumeMounts optionalnullable.OptionalNullable[[]DockerVolumeMount] `json:"volume_mounts,omitzero"`
 }
 
 func (d DockerConfiguration) MarshalJSON() ([]byte, error) {
@@ -35,18 +37,39 @@ func (d *DockerConfiguration) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (d *DockerConfiguration) GetImage() string {
-	if d == nil {
-		return ""
-	}
-	return d.Image
-}
-
 func (d *DockerConfiguration) GetArgs() *string {
 	if d == nil {
 		return nil
 	}
 	return d.Args
+}
+
+func (d *DockerConfiguration) GetEnvs() optionalnullable.OptionalNullable[[]Env] {
+	if d == nil {
+		return nil
+	}
+	return d.Envs
+}
+
+func (d *DockerConfiguration) GetImage() *string {
+	if d == nil {
+		return nil
+	}
+	return d.Image
+}
+
+func (d *DockerConfiguration) GetPortMappings() optionalnullable.OptionalNullable[[]PortMapping] {
+	if d == nil {
+		return nil
+	}
+	return d.PortMappings
+}
+
+func (d *DockerConfiguration) GetRegistryCredentials() *RegistryCredentials {
+	if d == nil {
+		return nil
+	}
+	return d.RegistryCredentials
 }
 
 func (d *DockerConfiguration) GetSharedMemoryInGb() *int64 {
@@ -56,30 +79,9 @@ func (d *DockerConfiguration) GetSharedMemoryInGb() *int64 {
 	return d.SharedMemoryInGb
 }
 
-func (d *DockerConfiguration) GetEnvs() []Env {
-	if d == nil {
-		return nil
-	}
-	return d.Envs
-}
-
-func (d *DockerConfiguration) GetPortMappings() []PortMappings {
-	if d == nil {
-		return nil
-	}
-	return d.PortMappings
-}
-
-func (d *DockerConfiguration) GetVolumeMounts() []VolumeMounts {
+func (d *DockerConfiguration) GetVolumeMounts() optionalnullable.OptionalNullable[[]DockerVolumeMount] {
 	if d == nil {
 		return nil
 	}
 	return d.VolumeMounts
-}
-
-func (d *DockerConfiguration) GetRegistryCredentials() *RegistryCredentials {
-	if d == nil {
-		return nil
-	}
-	return d.RegistryCredentials
 }

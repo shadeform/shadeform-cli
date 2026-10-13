@@ -27,19 +27,11 @@ func InitInstancesRoot(parent *cobra.Command) error {
 		return err
 	}
 
-	if err := initListTypesCmd(InstancesCmd); err != nil {
-		return err
-	}
-
 	if err := initCreateCmd(InstancesCmd); err != nil {
 		return err
 	}
 
-	if err := initGetCmd(InstancesCmd); err != nil {
-		return err
-	}
-
-	if err := initUpdateCmd(InstancesCmd); err != nil {
+	if err := initListTypesCmd(InstancesCmd); err != nil {
 		return err
 	}
 
@@ -47,7 +39,19 @@ func InitInstancesRoot(parent *cobra.Command) error {
 		return err
 	}
 
+	if err := initGetCmd(InstancesCmd); err != nil {
+		return err
+	}
+
 	if err := initRestartCmd(InstancesCmd); err != nil {
+		return err
+	}
+
+	if err := initUpdateCmd(InstancesCmd); err != nil {
+		return err
+	}
+
+	if err := initUpdateModelCmd(InstancesCmd); err != nil {
 		return err
 	}
 

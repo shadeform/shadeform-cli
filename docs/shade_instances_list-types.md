@@ -1,6 +1,6 @@
 ## shade instances list-types
 
-List available instance types
+List instance types
 
 ### Synopsis
 
@@ -21,21 +21,22 @@ shade instances list-types [flags]
 ### Options
 
 ```
-  -a, --available                    Filter the instance type results by availability. Applies to individual availability entries, so an instance type whose region is available only as spot is still returned with just its spot entry; filter by 'rental_type' client-side if you only want on-demand.
-  -c, --cloud string                 Filter the instance type results by cloud.
-  -g, --gpu-type string              Filter the instance type results by gpu type.
+  -a, --available string             "true" keeps only available entries, "false" only unavailable ones. Any other value is ignored.
+  -c, --cloud string                 Only return instance types on this cloud (case-insensitive).
+  -g, --gpu-type string              Only return instance types with this GPU type (case-insensitive).
   -h, --help                         help for list-types
-  -n, --num-gpus string              Filter the instance type results by the number of gpus.
-  -r, --region string                Filter the instance type results by region.
-      --shade-instance-type string   Filter the instance type results by the shade instance type.
-      --sort string                  Sort the order of the instance type results. (options: price)
+  -n, --num-gpus int                 A non-zero value returns only instance types with exactly that GPU count. 0 disables the filter, and so does omitting the parameter - the two are indistinguishable, so this filter cannot select instance types with no GPUs.
+  -r, --region string                Only return availability entries in this Shade region (case-insensitive). Instance types left with no matching region are dropped from the response entirely.
+      --shade-cloud string           "true" excludes the hyperscalers (AWS, Azure). Any other value is ignored.
+      --shade-instance-type string   Only return this Shade instance type (case-insensitive).
+      --sort string                  Ordering, not filtering: "price" sorts ascending by on-demand hourly price, removing nothing. Any other value is ignored.
 ```
 
 ### Options inherited from parent commands
 
 ```
       --agent-mode             Enable structured errors and default TOON output for AI coding agents. Automatically enabled when a known agent environment is detected (CLAUDECODE, CURSOR_AGENT, etc.). Use --agent-mode=false to disable.
-      --api-key string         API Key
+      --api-key string         API key issued from the Shadeform dashboard (Settings → API Keys).
       --color string           Control colored output: auto (color when output is a TTY), always, or never. Respects NO_COLOR and FORCE_COLOR env vars. (default "auto")
   -d, --debug                  Log request and response diagnostics to stderr
       --dry-run                Preview API requests without sending them (no network, no OS keychain). Human preview on stderr; with -o json or --jq, one JSON object per request on stdout. Local mutation commands (auth login, auth logout and configure) make no request: they skip prompts and writes and report a no-op (stderr, or one JSON object on stdout in the machine form)
@@ -44,6 +45,7 @@ shade instances list-types [flags]
       --interactive            Prompt for missing inputs and open guided configure/auth forms (forms fall back to line prompts on stdin off-TTY) (default true)
   -q, --jq string              Filter and transform output using a jq expression (e.g., '.name', '.items[] | .id')
       --no-interactive         Disable all interactive features (auto-prompting, explorer auto-launch, TUI forms)
+      --no-keyring             Never read or write the OS keychain; store secrets in the config file instead (env: SHADEFORM_NO_KEYRING)
   -o, --output-format string   Specify the output format. Options: pretty, json, yaml, table, toon. (default "pretty")
       --raw-output             Write --jq string results as raw text instead of JSON strings (like jq -r); non-string results stay JSON
       --server string          Select a server by index (for indexed servers) or name (for named servers)

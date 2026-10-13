@@ -7,25 +7,18 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
 )
 
-// UfwRule - Uncomplicated Firewall rule configuration
+// UfwRule - UFW (Uncomplicated Firewall) rules applied when the instance boots.
 type UfwRule struct {
-	// The UFW rule action
-	Rule *string `json:"rule,omitzero"`
-	// Source IP address or CIDR range
+	// Source IP address or CIDR range the rule applies to. Defaults to any.
 	FromIP optionalnullable.OptionalNullable[string] `json:"from_ip,omitzero"`
-	// Destination IP address or CIDR range
-	ToIP optionalnullable.OptionalNullable[string] `json:"to_ip,omitzero"`
-	// Port number or range (e.g. '80' or '8000:8999')
+	// Port number or range, for example 80 or 8000:8999.
 	Port optionalnullable.OptionalNullable[string] `json:"port,omitzero"`
-	// Protocol (e.g. tcp, udp)
+	// Protocol: tcp or udp. Defaults to both.
 	Proto optionalnullable.OptionalNullable[string] `json:"proto,omitzero"`
-}
-
-func (u *UfwRule) GetRule() *string {
-	if u == nil {
-		return nil
-	}
-	return u.Rule
+	// The UFW action: allow, deny, reject or limit.
+	Rule string `json:"rule"`
+	// Destination IP address or CIDR range the rule applies to. Defaults to any.
+	ToIP optionalnullable.OptionalNullable[string] `json:"to_ip,omitzero"`
 }
 
 func (u *UfwRule) GetFromIP() optionalnullable.OptionalNullable[string] {
@@ -33,13 +26,6 @@ func (u *UfwRule) GetFromIP() optionalnullable.OptionalNullable[string] {
 		return nil
 	}
 	return u.FromIP
-}
-
-func (u *UfwRule) GetToIP() optionalnullable.OptionalNullable[string] {
-	if u == nil {
-		return nil
-	}
-	return u.ToIP
 }
 
 func (u *UfwRule) GetPort() optionalnullable.OptionalNullable[string] {
@@ -54,4 +40,18 @@ func (u *UfwRule) GetProto() optionalnullable.OptionalNullable[string] {
 		return nil
 	}
 	return u.Proto
+}
+
+func (u *UfwRule) GetRule() string {
+	if u == nil {
+		return ""
+	}
+	return u.Rule
+}
+
+func (u *UfwRule) GetToIP() optionalnullable.OptionalNullable[string] {
+	if u == nil {
+		return nil
+	}
+	return u.ToIP
 }

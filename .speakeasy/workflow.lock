@@ -1,9 +1,9 @@
-speakeasyVersion: 1.800.1
+speakeasyVersion: 1.802.0
 sources:
     Shadeform API:
         sourceNamespace: shadeform-api
-        sourceRevisionDigest: sha256:dbaf2845a76e54d4d4c19041f8e50cd5c65716a7df002d5e4f612882da5a122c
-        sourceBlobDigest: sha256:c3e57752ac30dac55ac20c82feabb949a91f17fb6f93d1454fbbce76257bd537
+        sourceRevisionDigest: sha256:be817fad2e67d3c8be025305916e588070aa5778b3d34957768de757919f6196
+        sourceBlobDigest: sha256:02a81cad5eaf1b52af9acf91b03fc63ded88f62e969e52e5a4c2a00e10d0b16a
         tags:
             - latest
             - 1.0.0
@@ -11,15 +11,15 @@ targets:
     shadeform:
         source: Shadeform API
         sourceNamespace: shadeform-api
-        sourceRevisionDigest: sha256:dbaf2845a76e54d4d4c19041f8e50cd5c65716a7df002d5e4f612882da5a122c
-        sourceBlobDigest: sha256:c3e57752ac30dac55ac20c82feabb949a91f17fb6f93d1454fbbce76257bd537
+        sourceRevisionDigest: sha256:be817fad2e67d3c8be025305916e588070aa5778b3d34957768de757919f6196
+        sourceBlobDigest: sha256:02a81cad5eaf1b52af9acf91b03fc63ded88f62e969e52e5a4c2a00e10d0b16a
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
     sources:
         Shadeform API:
             inputs:
-                - location: https://docs.shadeform.ai/openapi.yaml
+                - location: https://api.shadeform.ai/v1/openapi.json
             overlays:
                 - location: .speakeasy/overlay.yaml
             output: .speakeasy/out.openapi.yaml

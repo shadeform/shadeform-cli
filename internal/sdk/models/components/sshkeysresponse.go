@@ -3,13 +3,14 @@
 
 package components
 
+// SSHKeysResponse - SshKeysResponse schema
 type SSHKeysResponse struct {
-	SSHKeys []SSHKey `json:"ssh_keys"`
+	SSHKeys []SSHKeyResponse `json:"ssh_keys"`
 }
 
-func (s *SSHKeysResponse) GetSSHKeys() []SSHKey {
+func (s *SSHKeysResponse) GetSSHKeys() []SSHKeyResponse {
 	if s == nil {
-		return []SSHKey{}
+		return nil
 	}
 	return s.SSHKeys
 }

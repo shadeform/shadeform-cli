@@ -4,33 +4,26 @@
 package components
 
 type Volume struct {
-	// The ID of the storage volume.
-	ID string `json:"id"`
-	// Specifies the underlying cloud provider. See this [explanation](/getting-started/concepts#cloud-cloud-provider) for more details.
+	// The cloud provider the volume lives in.
 	Cloud string `json:"cloud"`
-	// The unique identifier of the storage volume issued by the underlying cloud provider.
+	// The ID the cloud provider assigned to the volume.
 	CloudAssignedID string `json:"cloud_assigned_id"`
-	// Specifies the region.
-	Region string `json:"region"`
-	// The name of the storage volume.
-	Name string `json:"name"`
-	// Denotes whether the volume is fixed in size or elastically scaling.
-	FixedSize bool `json:"fixed_size"`
-	// Storage volume size in GB
-	SizeInGb int64 `json:"size_in_gb"`
-	// The cost incurred by the instance. This only the cost via Shadeform. If the instance is deployed in your own cloud account, then all billing is through your cloud provider.
+	// The cost incurred by the volume so far through Shadeform, as a decimal dollar string.
 	CostEstimate string `json:"cost_estimate"`
-	// Denotes whether the volume supports multiple instances mounting to it at the same time.
+	// True when the volume has a fixed size; false when it grows with use.
+	FixedSize bool `json:"fixed_size"`
+	// The ID of the volume.
+	ID string `json:"id"`
+	// IDs of the instances currently mounting the volume.
+	MountedBy []string `json:"mounted_by"`
+	// The name of the volume.
+	Name string `json:"name"`
+	// The region the volume lives in.
+	Region string `json:"region"`
+	// The size of the volume in GB.
+	SizeInGb int64 `json:"size_in_gb"`
+	// True when several instances can mount the volume at the same time.
 	SupportsMultiMount bool `json:"supports_multi_mount"`
-	// The ID of the instance that is currently mounting the volume.
-	MountedBy string `json:"mounted_by"`
-}
-
-func (v *Volume) GetID() string {
-	if v == nil {
-		return ""
-	}
-	return v.ID
 }
 
 func (v *Volume) GetCloud() string {
@@ -47,18 +40,11 @@ func (v *Volume) GetCloudAssignedID() string {
 	return v.CloudAssignedID
 }
 
-func (v *Volume) GetRegion() string {
+func (v *Volume) GetCostEstimate() string {
 	if v == nil {
 		return ""
 	}
-	return v.Region
-}
-
-func (v *Volume) GetName() string {
-	if v == nil {
-		return ""
-	}
-	return v.Name
+	return v.CostEstimate
 }
 
 func (v *Volume) GetFixedSize() bool {
@@ -68,6 +54,34 @@ func (v *Volume) GetFixedSize() bool {
 	return v.FixedSize
 }
 
+func (v *Volume) GetID() string {
+	if v == nil {
+		return ""
+	}
+	return v.ID
+}
+
+func (v *Volume) GetMountedBy() []string {
+	if v == nil {
+		return nil
+	}
+	return v.MountedBy
+}
+
+func (v *Volume) GetName() string {
+	if v == nil {
+		return ""
+	}
+	return v.Name
+}
+
+func (v *Volume) GetRegion() string {
+	if v == nil {
+		return ""
+	}
+	return v.Region
+}
+
 func (v *Volume) GetSizeInGb() int64 {
 	if v == nil {
 		return 0
@@ -75,23 +89,9 @@ func (v *Volume) GetSizeInGb() int64 {
 	return v.SizeInGb
 }
 
-func (v *Volume) GetCostEstimate() string {
-	if v == nil {
-		return ""
-	}
-	return v.CostEstimate
-}
-
 func (v *Volume) GetSupportsMultiMount() bool {
 	if v == nil {
 		return false
 	}
 	return v.SupportsMultiMount
-}
-
-func (v *Volume) GetMountedBy() string {
-	if v == nil {
-		return ""
-	}
-	return v.MountedBy
 }

@@ -16,31 +16,31 @@ import (
 )
 
 var deleteCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "id", Shorthand: "i", FieldPath: "ID", Kind: flagutil.FlagKindString, Required: true, Description: "The volume id. [required]"},
+	{FlagName: "volume-id", Shorthand: "v", FieldPath: "VolumeID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the volume, from the id field of GET /v1/volumes. [required]"},
 }
 
 // initDeleteCmd initializes the delete command.
 func initDeleteCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
-		Use:     "delete [id]",
+		Use:     "delete [volume-id]",
 		Short:   "Delete a volume",
 		Long:    "Delete a storage volume.",
-		Example: "  shade volumes delete --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade volumes delete --volume-id <id>",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runDeleteCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "VolumesDelete",
+			"speakeasy_operation": "deleteVolume",
 		},
 	}
 	flagutil.RegisterFlags(cmd, deleteCmdMeta)
-	if err := flagutil.ValidateMeta[operations.VolumesDeleteRequest](deleteCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.DeleteVolumeRequest](deleteCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for delete: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "id", "The volume id. (or pass it as the [id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "volume-id", "The ID of the volume, from the id field of GET /v1/volumes. (or pass it as the [volume-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "id", Summary: "The volume id.", Required: true, SatisfiedBy: []string{"id"}},
+		{Name: "volume-id", Summary: "The ID of the volume, from the id field of GET /v1/volumes.", Required: true, SatisfiedBy: []string{"volume-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for delete: %w", err)
 	}
@@ -56,7 +56,7 @@ func runDeleteCmd(cmd *cobra.Command, args []string) error {
 	if err := flagutil.ResolvePositionalFlag(cmd, args); err != nil {
 		return err
 	}
-	req, err := flagutil.BuildRequest[operations.VolumesDeleteRequest](cmd, deleteCmdMeta, "", "")
+	req, err := flagutil.BuildRequest[operations.DeleteVolumeRequest](cmd, deleteCmdMeta, "", "")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -79,7 +79,10 @@ func runDeleteCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Volumes.Delete(cmd.Context(), *req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

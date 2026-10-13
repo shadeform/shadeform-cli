@@ -16,32 +16,32 @@ import (
 )
 
 var setDefaultCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "id", Shorthand: "i", FieldPath: "ID", Kind: flagutil.FlagKindString, Required: true, Description: "The ssh key id [required]"},
+	{FlagName: "ssh-key-id", Shorthand: "s", FieldPath: "SSHKeyID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the SSH key, from the id field of GET /v1/sshkeys. [required]"},
 }
 
 // initSetDefaultCmd initializes the set-default command.
 func initSetDefaultCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
-		Use:     "set-default [id]",
+		Use:     "set-default [ssh-key-id]",
 		Short:   "Set the default SSH key",
 		Long:    "Set the specified SSH Key as the default SSH Key used by Shadeform.",
-		Example: "  shade ssh-keys set-default --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade ssh-keys set-default --ssh-key-id <id>",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runSetDefaultCmd,
 		Aliases: []string{"sd"},
 		Annotations: map[string]string{
-			"speakeasy_operation": "SshKeysSetDefault",
+			"speakeasy_operation": "setDefaultSshKey",
 		},
 	}
 	flagutil.RegisterFlags(cmd, setDefaultCmdMeta)
-	if err := flagutil.ValidateMeta[operations.SSHKeysSetDefaultRequest](setDefaultCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.SetDefaultSSHKeyRequest](setDefaultCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for set-default: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "id", "The ssh key id (or pass it as the [id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "ssh-key-id", "The ID of the SSH key, from the id field of GET /v1/sshkeys. (or pass it as the [ssh-key-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "id", Summary: "The ssh key id", Required: true, SatisfiedBy: []string{"id"}},
+		{Name: "ssh-key-id", Summary: "The ID of the SSH key, from the id field of GET /v1/sshkeys.", Required: true, SatisfiedBy: []string{"ssh-key-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for set-default: %w", err)
 	}
@@ -57,7 +57,7 @@ func runSetDefaultCmd(cmd *cobra.Command, args []string) error {
 	if err := flagutil.ResolvePositionalFlag(cmd, args); err != nil {
 		return err
 	}
-	req, err := flagutil.BuildRequest[operations.SSHKeysSetDefaultRequest](cmd, setDefaultCmdMeta, "", "")
+	req, err := flagutil.BuildRequest[operations.SetDefaultSSHKeyRequest](cmd, setDefaultCmdMeta, "", "")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -80,7 +80,10 @@ func runSetDefaultCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.SSHKeys.SetDefault(cmd.Context(), *req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

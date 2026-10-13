@@ -1,306 +1,334 @@
 overlay: 1.0.0
 info:
   title: Shadeform Speakeasy overlay
-  version: 1.0.0
+  version: 2.0.0
   description: >-
-    Adds Speakeasy-specific metadata (tags, method names, MCP scopes) to the
-    published Shadeform OpenAPI document without modifying the upstream spec.
+    Adds Speakeasy and Gram metadata (tags, method names, MCP scopes, hosted tool
+    names) to the OpenAPI document that shade-service generates at
+    https://api.shadeform.ai/v1/openapi.json, without modifying the upstream
+    document. Targets use the document's own paths (/v1 prefix, {instance_id}
+    style parameters). Keep this file identical in shadeform-go, shadeform-cli
+    and shadeform-mcp. Clusters are not in the upstream document yet; add their
+    actions back when shade-service publishes them.
 actions:
+  - target: $.tags
+    description: >-
+      Drop the upstream tag list (Instances, SSH keys, ...) so the lowercase
+      names below are the only tags; overlay updates append to arrays rather
+      than replace them.
+    remove: true
+  - target: $.paths[*][*].tags
+    description: Drop the upstream tag on every operation for the same reason.
+    remove: true
   - target: $
     description: Group operations into SDK namespaces / CLI command groups
     update:
       tags:
         - name: instances
           description: Create, inspect, update, restart and delete GPU instances.
-        - name: clusters
-          description: Create, inspect and delete multi-node GPU clusters.
         - name: ssh-keys
           description: Manage SSH keys used to access instances.
         - name: volumes
           description: Create, inspect and delete persistent storage volumes.
         - name: templates
           description: Save and reuse launch configurations as templates.
+  - target: $.info
+    description: >-
+      The upstream info.description addresses readers of the document itself.
+      Generated clients surface it as the CLI/README/server blurb, so replace
+      it with a product description.
+    update:
+      description: Shadeform is a single API and platform for deploying and managing cloud GPUs.
   - target: $.components.securitySchemes.ApiKeyAuth
-    description: Name the credential apiKey so env vars/flags become SHADEFORM_API_KEY / --api-key
+    description: >-
+      Name the credential apiKey so env vars/flags become SHADEFORM_API_KEY /
+      --api-key. The upstream description mentions a bearer-token path this
+      document does not describe, and its backticked `Authorization` becomes
+      the flag's value placeholder in cobra help, so keep the text short.
     update:
       x-speakeasy-name-override: apiKey
-  - target: $.paths['/instances'].get
+      description: API key issued from the Shadeform dashboard (Settings → API Keys).
+  - target: $.paths[*][*].parameters[?(@.in == 'header' && @.name == 'Accept')]
+    description: >-
+      The upstream generator declares an Accept header on every operation for
+      content negotiation. Generated clients always send application/json, so
+      drop it rather than expose it as a flag or tool argument.
+    remove: true
+  - target: $.components.schemas.SshKeyResponse.properties.private_key
+    description: >-
+      The API returns private_key for Shadeform-managed keys. Keep it out of
+      the generated models so list/get results never carry private keys into
+      agent context, logs or shell history; the CLI's ssh-keys download
+      command reads the raw body for the one place it is wanted.
+    remove: true
+  - target: $.components.schemas.ModelConfiguration.properties.api_key
+    description: >-
+      ModelConfiguration.api_key is the inference provider's key, not the
+      Shadeform credential. Without an override it generates a --api-key body
+      flag that shadows the global --api-key auth flag on `instances
+      update-model`, and an MCP argument named like the server credential.
+      The wire field stays api_key.
     update:
-      summary: List instances
+      x-speakeasy-name-override: modelApiKey
+  - target: $.paths['/v1/instances'].get
+    update:
       tags:
         - instances
       x-speakeasy-name-override: list
+      x-gram:
+        name: instances-list
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/instances/types'].get
+  - target: $.paths['/v1/instances/types'].get
     update:
-      summary: List available instance types
       tags:
         - instances
       x-speakeasy-name-override: listTypes
+      x-gram:
+        name: instances-list-types
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/instances/create'].post
+  - target: $.paths['/v1/instances/create'].post
     update:
-      summary: Create an instance
       tags:
         - instances
       x-speakeasy-name-override: create
+      x-gram:
+        name: instances-create
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/instances/{id}/info'].get
+  - target: $.paths['/v1/instances/{instance_id}/info'].get
     update:
-      summary: Get an instance
       tags:
         - instances
       x-speakeasy-name-override: get
+      x-gram:
+        name: instances-get
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/instances/{id}/update'].post
+  - target: $.paths['/v1/instances/{instance_id}/update'].post
     update:
-      summary: Update an instance
       tags:
         - instances
       x-speakeasy-name-override: update
+      x-gram:
+        name: instances-update
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/instances/{id}/delete'].post
+  - target: $.paths['/v1/instances/{instance_id}/updatemodel'].post
     update:
-      summary: Delete an instance
+      tags:
+        - instances
+      x-speakeasy-name-override: updateModel
+      x-gram:
+        name: instances-update-model
+      x-speakeasy-mcp:
+        scopes:
+          - write
+  - target: $.paths['/v1/instances/{instance_id}/delete'].post
+    update:
       tags:
         - instances
       x-speakeasy-name-override: delete
+      x-gram:
+        name: instances-delete
+        description: >-
+          Delete an instance. This will move the instance to the 'deleting' status
+          while the instance is being deleted. Once the instance has entered the
+          'deleting' status, the account will no longer be billed for the instance.
+          This action is irreversible and destroys any data on the instance's local
+          disk. Before calling this tool, restate the instance name and id to the user
+          and wait for their explicit confirmation. Never delete an instance the user
+          did not name.
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/instances/{id}/restart'].post
+  - target: $.paths['/v1/instances/{instance_id}/restart'].post
     update:
-      summary: Restart an instance
       tags:
         - instances
       x-speakeasy-name-override: restart
+      x-gram:
+        name: instances-restart
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/clusters'].get
+  - target: $.paths['/v1/sshkeys'].get
     update:
-      summary: List clusters
-      tags:
-        - clusters
-      x-speakeasy-name-override: list
-      x-speakeasy-mcp:
-        scopes:
-          - read
-  - target: $.paths['/clusters/types'].get
-    update:
-      summary: List available cluster types
-      tags:
-        - clusters
-      x-speakeasy-name-override: listTypes
-      x-speakeasy-mcp:
-        scopes:
-          - read
-  - target: $.paths['/clusters/create'].post
-    update:
-      summary: Create a cluster
-      tags:
-        - clusters
-      x-speakeasy-name-override: create
-      x-speakeasy-mcp:
-        scopes:
-          - write
-  - target: $.paths['/clusters/{id}/info'].get
-    update:
-      summary: Get a cluster
-      tags:
-        - clusters
-      x-speakeasy-name-override: get
-      x-speakeasy-mcp:
-        scopes:
-          - read
-  - target: $.paths['/clusters/{id}/delete'].post
-    update:
-      summary: Delete a cluster
-      tags:
-        - clusters
-      x-speakeasy-name-override: delete
-      x-speakeasy-mcp:
-        scopes:
-          - write
-  - target: $.paths['/sshkeys'].get
-    update:
-      summary: List SSH keys
       tags:
         - ssh-keys
       x-speakeasy-name-override: list
+      x-gram:
+        name: ssh-keys-list
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/sshkeys/add'].post
+  - target: $.paths['/v1/sshkeys/add'].post
     update:
-      summary: Add an SSH key
       tags:
         - ssh-keys
       x-speakeasy-name-override: add
+      x-gram:
+        name: ssh-keys-add
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/sshkeys/{id}/delete'].post
+  - target: $.paths['/v1/sshkeys/{ssh_key_id}/delete'].post
     update:
-      summary: Delete an SSH key
       tags:
         - ssh-keys
       x-speakeasy-name-override: delete
+      x-gram:
+        name: ssh-keys-delete
+        description: >-
+          Delete an SSH key. The Shadeform managed SSH key, the current default SSH
+          key, and SSH keys in use by instances cannot be deleted. This action is
+          irreversible. Before calling this tool, restate the key name and id to the
+          user and wait for their explicit confirmation.
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/sshkeys/{id}/info'].get
+  - target: $.paths['/v1/sshkeys/{ssh_key_id}/info'].get
     update:
-      summary: Get an SSH key
       tags:
         - ssh-keys
       x-speakeasy-name-override: get
+      x-gram:
+        name: ssh-keys-get
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/sshkeys/{id}/setdefault'].post
+  - target: $.paths['/v1/sshkeys/{ssh_key_id}/setdefault'].post
     update:
-      summary: Set the default SSH key
       tags:
         - ssh-keys
       x-speakeasy-name-override: setDefault
+      x-gram:
+        name: ssh-keys-set-default
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/volumes'].get
+  - target: $.paths['/v1/volumes'].get
     update:
-      summary: List volumes
       tags:
         - volumes
       x-speakeasy-name-override: list
+      x-gram:
+        name: volumes-list
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/volumes/create'].post
+  - target: $.paths['/v1/volumes/create'].post
     update:
-      summary: Create a volume
       tags:
         - volumes
       x-speakeasy-name-override: create
+      x-gram:
+        name: volumes-create
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/volumes/{id}/delete'].post
+  - target: $.paths['/v1/volumes/{volume_id}/delete'].post
     update:
-      summary: Delete a volume
       tags:
         - volumes
       x-speakeasy-name-override: delete
+      x-gram:
+        name: volumes-delete
+        description: >-
+          Delete a storage volume. This action is irreversible and destroys all data
+          stored on the volume. Before calling this tool, restate the volume name and
+          id to the user and wait for their explicit confirmation. Never delete a
+          volume the user did not name.
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/volumes/{id}/info'].get
+  - target: $.paths['/v1/volumes/{volume_id}/info'].get
     update:
-      summary: Get a volume
       tags:
         - volumes
       x-speakeasy-name-override: get
+      x-gram:
+        name: volumes-get
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/volumes/types'].get
+  - target: $.paths['/v1/volumes/types'].get
     update:
-      summary: List available volume types
       tags:
         - volumes
       x-speakeasy-name-override: listTypes
+      x-gram:
+        name: volumes-list-types
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/templates'].get
+  - target: $.paths['/v1/templates'].get
     update:
-      summary: List templates
       tags:
         - templates
       x-speakeasy-name-override: list
+      x-gram:
+        name: templates-list
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/templates/featured'].get
+  - target: $.paths['/v1/templates/featured'].get
     update:
-      summary: List featured templates
       tags:
         - templates
       x-speakeasy-name-override: listFeatured
+      x-gram:
+        name: templates-list-featured
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/templates/{template_id}/info'].get
+  - target: $.paths['/v1/templates/{template_id}/info'].get
     update:
-      summary: Get a template
       tags:
         - templates
       x-speakeasy-name-override: get
+      x-gram:
+        name: templates-get
       x-speakeasy-mcp:
         scopes:
           - read
-  - target: $.paths['/templates/save'].post
+  - target: $.paths['/v1/templates/save'].post
     update:
-      summary: Save a template
       tags:
         - templates
       x-speakeasy-name-override: save
+      x-gram:
+        name: templates-save
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/templates/{template_id}/update'].post
+  - target: $.paths['/v1/templates/{template_id}/update'].put
     update:
-      summary: Update a template
       tags:
         - templates
       x-speakeasy-name-override: update
+      x-gram:
+        name: templates-update
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/templates/{template_id}/delete'].post
+  - target: $.paths['/v1/templates/{template_id}/delete'].post
     update:
-      summary: Delete a template
       tags:
         - templates
       x-speakeasy-name-override: delete
+      x-gram:
+        name: templates-delete
+        description: >-
+          Delete a template. This action is irreversible. Before calling this tool,
+          restate the template name and id to the user and wait for their explicit
+          confirmation.
       x-speakeasy-mcp:
         scopes:
           - write
-  - target: $.paths['/instances/create'].post.requestBody
-    description: Request body is mandatory for this operation
-    update:
-      required: true
-  - target: $.paths['/instances/{id}/update'].post.requestBody
-    description: Request body is mandatory for this operation
-    update:
-      required: true
-  - target: $.paths['/clusters/create'].post.requestBody
-    description: Request body is mandatory for this operation
-    update:
-      required: true
-  - target: $.paths['/sshkeys/add'].post.requestBody
-    description: Request body is mandatory for this operation
-    update:
-      required: true
-  - target: $.paths['/volumes/create'].post.requestBody
-    description: Request body is mandatory for this operation
-    update:
-      required: true
-  - target: $.paths['/templates/save'].post.requestBody
-    description: Request body is mandatory for this operation
-    update:
-      required: true
-  - target: $.paths['/templates/{template_id}/update'].post.requestBody
-    description: Request body is mandatory for this operation
-    update:
-      required: true

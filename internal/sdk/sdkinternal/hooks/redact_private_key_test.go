@@ -43,7 +43,7 @@ const listBody = `{"ssh_keys":[{"id":"a","name":"managed","public_key":"ssh-ed25
 const infoBody = `{"id":"a","name":"managed","public_key":"ssh-ed25519 AAA","private_key":"-----BEGIN OPENSSH PRIVATE KEY-----\nabc\n-----END OPENSSH PRIVATE KEY-----","is_default":true}`
 
 func TestRedactsListResponse(t *testing.T) {
-	parsed, raw, res := runHook(t, context.Background(), "SshKeys", listBody)
+	parsed, raw, res := runHook(t, context.Background(), "listSshKeys", listBody)
 	if strings.Contains(string(raw), "private_key") {
 		t.Fatalf("private_key still present in list body: %s", raw)
 	}
@@ -61,7 +61,7 @@ func TestRedactsListResponse(t *testing.T) {
 }
 
 func TestRedactsInfoResponse(t *testing.T) {
-	parsed, raw, _ := runHook(t, context.Background(), "SshKeysInfo", infoBody)
+	parsed, raw, _ := runHook(t, context.Background(), "getSshKey", infoBody)
 	if strings.Contains(string(raw), "private_key") {
 		t.Fatalf("private_key still present in info body: %s", raw)
 	}
@@ -71,7 +71,7 @@ func TestRedactsInfoResponse(t *testing.T) {
 }
 
 func TestRevealOptInKeepsPrivateKey(t *testing.T) {
-	_, raw, _ := runHook(t, reveal.WithPrivateKey(context.Background()), "SshKeysInfo", infoBody)
+	_, raw, _ := runHook(t, reveal.WithPrivateKey(context.Background()), "getSshKey", infoBody)
 	if !strings.Contains(string(raw), "BEGIN OPENSSH PRIVATE KEY") {
 		t.Fatalf("opt-in context should keep private_key: %s", raw)
 	}
@@ -90,7 +90,7 @@ func TestNonJSONPassesThrough(t *testing.T) {
 		Header: http.Header{"Content-Type": []string{"text/plain"}},
 		Body:   io.NopCloser(strings.NewReader("private_key=stays")),
 	}
-	out, err := (RedactPrivateKeyHook{}).AfterSuccess(AfterSuccessContext{HookContext: HookContext{Context: context.Background(), OperationID: "SshKeys"}}, res)
+	out, err := (RedactPrivateKeyHook{}).AfterSuccess(AfterSuccessContext{HookContext: HookContext{Context: context.Background(), OperationID: "listSshKeys"}}, res)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -102,7 +102,7 @@ func TestNonJSONPassesThrough(t *testing.T) {
 
 func TestBodyWithoutPrivateKeyIsByteIdentical(t *testing.T) {
 	body := `{"ssh_keys":[{"id":"a","name":"n","public_key":"p","is_default":false}]}`
-	_, raw, _ := runHook(t, context.Background(), "SshKeys", body)
+	_, raw, _ := runHook(t, context.Background(), "listSshKeys", body)
 	if string(raw) != body {
 		t.Fatalf("body without private_key should be untouched, got %s", raw)
 	}

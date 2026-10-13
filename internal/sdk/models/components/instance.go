@@ -4,150 +4,78 @@
 package components
 
 import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
 	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
 	"time"
 )
 
-type InstanceConfiguration struct {
-	// The amount of memory for the instance in gigabytes. Note that this is not VRAM which is determined by GPU type and the number of GPUs.
-	MemoryInGb int64 `json:"memory_in_gb"`
-	// The amount of storage for the instance. If this storage is too low for the instance type, please email support@shadeform.ai as the storage may be adjustable.
-	StorageInGb int64 `json:"storage_in_gb"`
-	// The number of vCPUs for the instance.
-	Vcpus int64 `json:"vcpus"`
-	// The number of GPUs for the instance.
-	NumGpus int64 `json:"num_gpus"`
-	// The type of GPU for the instance.
-	GpuType string `json:"gpu_type"`
-	// The type of GPU interconnect.
-	Interconnect string `json:"interconnect"`
-	// If the instance has NVLink
-	Nvlink *bool `json:"nvlink,omitzero"`
-	// The video memory per GPU for the instance in gigabytes.
-	VramPerGpuInGb int64 `json:"vram_per_gpu_in_gb"`
-	// The manufacturer of the gpu
-	GpuManufacturer string `json:"gpu_manufacturer"`
-	// The operating system of the instance.
-	Os string `json:"os"`
-}
-
-func (i *InstanceConfiguration) GetMemoryInGb() int64 {
-	if i == nil {
-		return 0
-	}
-	return i.MemoryInGb
-}
-
-func (i *InstanceConfiguration) GetStorageInGb() int64 {
-	if i == nil {
-		return 0
-	}
-	return i.StorageInGb
-}
-
-func (i *InstanceConfiguration) GetVcpus() int64 {
-	if i == nil {
-		return 0
-	}
-	return i.Vcpus
-}
-
-func (i *InstanceConfiguration) GetNumGpus() int64 {
-	if i == nil {
-		return 0
-	}
-	return i.NumGpus
-}
-
-func (i *InstanceConfiguration) GetGpuType() string {
-	if i == nil {
-		return ""
-	}
-	return i.GpuType
-}
-
-func (i *InstanceConfiguration) GetInterconnect() string {
-	if i == nil {
-		return ""
-	}
-	return i.Interconnect
-}
-
-func (i *InstanceConfiguration) GetNvlink() *bool {
-	if i == nil {
-		return nil
-	}
-	return i.Nvlink
-}
-
-func (i *InstanceConfiguration) GetVramPerGpuInGb() int64 {
-	if i == nil {
-		return 0
-	}
-	return i.VramPerGpuInGb
-}
-
-func (i *InstanceConfiguration) GetGpuManufacturer() string {
-	if i == nil {
-		return ""
-	}
-	return i.GpuManufacturer
-}
-
-func (i *InstanceConfiguration) GetOs() string {
-	if i == nil {
-		return ""
-	}
-	return i.Os
-}
-
 type Instance struct {
-	// The unique identifier for the instance. Used in the instances for the /instances/{id}/info and /instances/{id}/delete APIs.
-	ID string `json:"id"`
-	// Specifies the underlying cloud provider. See this [explanation](/getting-started/concepts#cloud-cloud-provider) for more details.
+	AccountID optionalnullable.OptionalNullable[string] `json:"account_id,omitzero"`
+	// When the instance became active, in UTC. Null until then.
+	ActiveAt *time.Time `json:"active_at"`
+	// Send an email alert when a date or a spend threshold is reached.
+	Alert *Alert `json:"alert,omitzero"`
+	// Delete the instance automatically when a date or a spend threshold is reached.
+	AutoDelete *AutoDelete `json:"auto_delete,omitzero"`
+	// The expected time from create to active.
+	BootTime BootTime `json:"boot_time"`
+	// The underlying cloud provider.
 	Cloud string `json:"cloud"`
-	// Specifies the region.
-	Region string `json:"region"`
-	// The Shadeform standardized instance type. See this [explanation](/getting-started/concepts#shade-instance-type-and-cloud-instance-type) for more details.
-	ShadeInstanceType string `json:"shade_instance_type"`
-	// The instance type for the underlying cloud provider. See this [explanation](/getting-started/concepts#shade-instance-type-and-cloud-instance-type) for more details.
-	CloudInstanceType string `json:"cloud_instance_type"`
-	// The unique identifier of the instance issued by the underlying cloud provider.
+	// The ID the cloud provider assigned to the instance.
 	CloudAssignedID string `json:"cloud_assigned_id"`
-	// Specifies if the instance is launched in [Shade Cloud](/getting-started/concepts#shade-cloud) or in a linked cloud account.
-	ShadeCloud bool `json:"shade_cloud"`
-	// The name of the instance
-	Name          string                `json:"name"`
+	// The cloud provider's own name for the instance type.
+	CloudInstanceType string                                    `json:"cloud_instance_type"`
+	ClusterID         optionalnullable.OptionalNullable[string] `json:"cluster_id,omitzero"`
+	CommitmentID      optionalnullable.OptionalNullable[string] `json:"commitment_id,omitzero"`
+	// The hardware of the instance type.
 	Configuration InstanceConfiguration `json:"configuration"`
-	// The public IP address of the instance. In select cases, it may also be the DNS.
-	IP string `json:"ip"`
-	// The SSH user used to SSH into the instance.
-	SSHUser string `json:"ssh_user"`
-	// The SSH port of the instance. In most cases, this will be port 22 but for some clouds, this may be a different port.
-	SSHPort int64 `json:"ssh_port"`
-	// The status of the instance.
-	Status Status `json:"status"`
-	// Additional context for the status. A spot instance that was reclaimed by Shadeform (rather than deleted by you) carries the value "preempted" once terminated.
-	StatusDetails *string `json:"status_details,omitzero"`
-	// The cost incurred by the instance. This only the cost via Shadeform. If the instance is deployed in your own cloud account, then all billing is through your cloud provider.
-	CostEstimate string `json:"cost_estimate"`
-	// The hourly price of the instance in cents.
-	HourlyPrice *int64 `json:"hourly_price,omitzero"`
-	// How the instance is rented and on what terms.
-	RentalTerms *RentalTerms `json:"rental_terms,omitzero"`
-	// Defines automatic actions after the instance becomes active.
-	LaunchConfiguration *LaunchConfiguration `json:"launch_configuration,omitzero"`
-	// Add custom, searchable tags to instances.
-	Tags []string `json:"tags,omitzero"`
-	// List of port mappings on an instance that a Cloud Provider might have automatically set up.
-	PortMappings []InstancePortMappings `json:"port_mappings,omitzero"`
-	// The timestamp of when the instance was active in UTC.
-	ActiveAt *time.Time `json:"active_at,omitzero"`
-	// The timestamp of when the instance was created in UTC.
+	// The cost incurred so far through Shadeform, as a decimal dollar string. Instances in your own cloud account are billed by that provider instead.
+	CostEstimate *string `json:"cost_estimate"`
+	// When the instance was created, in UTC.
 	CreatedAt time.Time `json:"created_at"`
-	// The timestamp of when the instance was deleted in UTC.
-	DeletedAt time.Time `json:"deleted_at"`
-	BootTime  *BootTime `json:"boot_time,omitzero"`
+	// When the instance was deleted, in UTC. Null while it exists.
+	DeletedAt *time.Time                                  `json:"deleted_at"`
+	Details   *InstanceDetails                            `json:"details,omitzero"`
+	Email     optionalnullable.OptionalNullable[string]   `json:"email,omitzero"`
+	Envs      optionalnullable.OptionalNullable[[]EnvVar] `json:"envs,omitzero"`
+	// The on-demand hourly price in cents.
+	HourlyPrice int64 `json:"hourly_price"`
+	// The ID of the instance, used in the /v1/instances/{instance_id}/... routes.
+	ID               string                                    `json:"id"`
+	InternalHostname optionalnullable.OptionalNullable[string] `json:"internal_hostname,omitzero"`
+	// The public IP address of the instance, or in some clouds its DNS name. Null until the instance is active.
+	IP *string `json:"ip"`
+	// What to run automatically once the instance is active: a docker container or a startup script. See https://docs.shadeform.ai/getting-started/concepts#launch-configuration.
+	LaunchConfiguration *LaunchConfiguration `json:"launch_configuration,omitzero"`
+	ModelName           *string              `json:"model_name,omitzero"`
+	// The name of the instance.
+	Name         string                                           `json:"name"`
+	PortForwards optionalnullable.OptionalNullable[[]PortForward] `json:"port_forwards,omitzero"`
+	PrivateIP    optionalnullable.OptionalNullable[string]        `json:"private_ip,omitzero"`
+	// The region of the cloud provider.
+	Region string `json:"region"`
+	// How the instance is rented and on what terms.
+	RentalTerms        RentalTerms                              `json:"rental_terms"`
+	RunningTimeSeconds optionalnullable.OptionalNullable[int64] `json:"running_time_seconds,omitzero"`
+	// True when the instance runs in Shade Cloud, false when it runs in your linked cloud account.
+	ShadeCloud bool `json:"shade_cloud"`
+	// The Shadeform standardized instance type.
+	ShadeInstanceType string `json:"shade_instance_type"`
+	// The ID of the SSH key installed on the instance.
+	SSHKeyID string `json:"ssh_key_id"`
+	// The SSH port. Usually 22; some clouds use another port.
+	SSHPort *int64 `json:"ssh_port"`
+	// The user to SSH in as.
+	SSHUser *string `json:"ssh_user"`
+	// The lifecycle status: pending, active, deleting, deleted or an error state.
+	Status string `json:"status"`
+	// More detail on the status. A spot instance Shadeform reclaimed carries preempted once terminated.
+	StatusDetails string                                      `json:"status_details"`
+	Tags          optionalnullable.OptionalNullable[[]string] `json:"tags,omitzero"`
+	TemplateID    optionalnullable.OptionalNullable[string]   `json:"template_id,omitzero"`
+	TotalSpend    optionalnullable.OptionalNullable[string]   `json:"total_spend,omitzero"`
+	// IDs of the storage volumes attached to the instance.
+	VolumeIds optionalnullable.OptionalNullable[[]string] `json:"volume_ids,omitzero"`
 }
 
 func (i Instance) MarshalJSON() ([]byte, error) {
@@ -161,144 +89,11 @@ func (i *Instance) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (i *Instance) GetID() string {
-	if i == nil {
-		return ""
-	}
-	return i.ID
-}
-
-func (i *Instance) GetCloud() string {
-	if i == nil {
-		return ""
-	}
-	return i.Cloud
-}
-
-func (i *Instance) GetRegion() string {
-	if i == nil {
-		return ""
-	}
-	return i.Region
-}
-
-func (i *Instance) GetShadeInstanceType() string {
-	if i == nil {
-		return ""
-	}
-	return i.ShadeInstanceType
-}
-
-func (i *Instance) GetCloudInstanceType() string {
-	if i == nil {
-		return ""
-	}
-	return i.CloudInstanceType
-}
-
-func (i *Instance) GetCloudAssignedID() string {
-	if i == nil {
-		return ""
-	}
-	return i.CloudAssignedID
-}
-
-func (i *Instance) GetShadeCloud() bool {
-	if i == nil {
-		return false
-	}
-	return i.ShadeCloud
-}
-
-func (i *Instance) GetName() string {
-	if i == nil {
-		return ""
-	}
-	return i.Name
-}
-
-func (i *Instance) GetConfiguration() InstanceConfiguration {
-	if i == nil {
-		return InstanceConfiguration{}
-	}
-	return i.Configuration
-}
-
-func (i *Instance) GetIP() string {
-	if i == nil {
-		return ""
-	}
-	return i.IP
-}
-
-func (i *Instance) GetSSHUser() string {
-	if i == nil {
-		return ""
-	}
-	return i.SSHUser
-}
-
-func (i *Instance) GetSSHPort() int64 {
-	if i == nil {
-		return 0
-	}
-	return i.SSHPort
-}
-
-func (i *Instance) GetStatus() Status {
-	if i == nil {
-		return Status("")
-	}
-	return i.Status
-}
-
-func (i *Instance) GetStatusDetails() *string {
+func (i *Instance) GetAccountID() optionalnullable.OptionalNullable[string] {
 	if i == nil {
 		return nil
 	}
-	return i.StatusDetails
-}
-
-func (i *Instance) GetCostEstimate() string {
-	if i == nil {
-		return ""
-	}
-	return i.CostEstimate
-}
-
-func (i *Instance) GetHourlyPrice() *int64 {
-	if i == nil {
-		return nil
-	}
-	return i.HourlyPrice
-}
-
-func (i *Instance) GetRentalTerms() *RentalTerms {
-	if i == nil {
-		return nil
-	}
-	return i.RentalTerms
-}
-
-func (i *Instance) GetLaunchConfiguration() *LaunchConfiguration {
-	if i == nil {
-		return nil
-	}
-	return i.LaunchConfiguration
-}
-
-func (i *Instance) GetTags() []string {
-	if i == nil {
-		return nil
-	}
-	return i.Tags
-}
-
-func (i *Instance) GetPortMappings() []InstancePortMappings {
-	if i == nil {
-		return nil
-	}
-	return i.PortMappings
+	return i.AccountID
 }
 
 func (i *Instance) GetActiveAt() *time.Time {
@@ -308,6 +103,76 @@ func (i *Instance) GetActiveAt() *time.Time {
 	return i.ActiveAt
 }
 
+func (i *Instance) GetAlert() *Alert {
+	if i == nil {
+		return nil
+	}
+	return i.Alert
+}
+
+func (i *Instance) GetAutoDelete() *AutoDelete {
+	if i == nil {
+		return nil
+	}
+	return i.AutoDelete
+}
+
+func (i *Instance) GetBootTime() BootTime {
+	if i == nil {
+		return BootTime{}
+	}
+	return i.BootTime
+}
+
+func (i *Instance) GetCloud() string {
+	if i == nil {
+		return ""
+	}
+	return i.Cloud
+}
+
+func (i *Instance) GetCloudAssignedID() string {
+	if i == nil {
+		return ""
+	}
+	return i.CloudAssignedID
+}
+
+func (i *Instance) GetCloudInstanceType() string {
+	if i == nil {
+		return ""
+	}
+	return i.CloudInstanceType
+}
+
+func (i *Instance) GetClusterID() optionalnullable.OptionalNullable[string] {
+	if i == nil {
+		return nil
+	}
+	return i.ClusterID
+}
+
+func (i *Instance) GetCommitmentID() optionalnullable.OptionalNullable[string] {
+	if i == nil {
+		return nil
+	}
+	return i.CommitmentID
+}
+
+func (i *Instance) GetConfiguration() InstanceConfiguration {
+	if i == nil {
+		return InstanceConfiguration{}
+	}
+	return i.Configuration
+}
+
+func (i *Instance) GetCostEstimate() *string {
+	if i == nil {
+		return nil
+	}
+	return i.CostEstimate
+}
+
 func (i *Instance) GetCreatedAt() time.Time {
 	if i == nil {
 		return time.Time{}
@@ -315,16 +180,191 @@ func (i *Instance) GetCreatedAt() time.Time {
 	return i.CreatedAt
 }
 
-func (i *Instance) GetDeletedAt() time.Time {
+func (i *Instance) GetDeletedAt() *time.Time {
 	if i == nil {
-		return time.Time{}
+		return nil
 	}
 	return i.DeletedAt
 }
 
-func (i *Instance) GetBootTime() *BootTime {
+func (i *Instance) GetDetails() *InstanceDetails {
 	if i == nil {
 		return nil
 	}
-	return i.BootTime
+	return i.Details
+}
+
+func (i *Instance) GetEmail() optionalnullable.OptionalNullable[string] {
+	if i == nil {
+		return nil
+	}
+	return i.Email
+}
+
+func (i *Instance) GetEnvs() optionalnullable.OptionalNullable[[]EnvVar] {
+	if i == nil {
+		return nil
+	}
+	return i.Envs
+}
+
+func (i *Instance) GetHourlyPrice() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.HourlyPrice
+}
+
+func (i *Instance) GetID() string {
+	if i == nil {
+		return ""
+	}
+	return i.ID
+}
+
+func (i *Instance) GetInternalHostname() optionalnullable.OptionalNullable[string] {
+	if i == nil {
+		return nil
+	}
+	return i.InternalHostname
+}
+
+func (i *Instance) GetIP() *string {
+	if i == nil {
+		return nil
+	}
+	return i.IP
+}
+
+func (i *Instance) GetLaunchConfiguration() *LaunchConfiguration {
+	if i == nil {
+		return nil
+	}
+	return i.LaunchConfiguration
+}
+
+func (i *Instance) GetModelName() *string {
+	if i == nil {
+		return nil
+	}
+	return i.ModelName
+}
+
+func (i *Instance) GetName() string {
+	if i == nil {
+		return ""
+	}
+	return i.Name
+}
+
+func (i *Instance) GetPortForwards() optionalnullable.OptionalNullable[[]PortForward] {
+	if i == nil {
+		return nil
+	}
+	return i.PortForwards
+}
+
+func (i *Instance) GetPrivateIP() optionalnullable.OptionalNullable[string] {
+	if i == nil {
+		return nil
+	}
+	return i.PrivateIP
+}
+
+func (i *Instance) GetRegion() string {
+	if i == nil {
+		return ""
+	}
+	return i.Region
+}
+
+func (i *Instance) GetRentalTerms() RentalTerms {
+	if i == nil {
+		return RentalTerms{}
+	}
+	return i.RentalTerms
+}
+
+func (i *Instance) GetRunningTimeSeconds() optionalnullable.OptionalNullable[int64] {
+	if i == nil {
+		return nil
+	}
+	return i.RunningTimeSeconds
+}
+
+func (i *Instance) GetShadeCloud() bool {
+	if i == nil {
+		return false
+	}
+	return i.ShadeCloud
+}
+
+func (i *Instance) GetShadeInstanceType() string {
+	if i == nil {
+		return ""
+	}
+	return i.ShadeInstanceType
+}
+
+func (i *Instance) GetSSHKeyID() string {
+	if i == nil {
+		return ""
+	}
+	return i.SSHKeyID
+}
+
+func (i *Instance) GetSSHPort() *int64 {
+	if i == nil {
+		return nil
+	}
+	return i.SSHPort
+}
+
+func (i *Instance) GetSSHUser() *string {
+	if i == nil {
+		return nil
+	}
+	return i.SSHUser
+}
+
+func (i *Instance) GetStatus() string {
+	if i == nil {
+		return ""
+	}
+	return i.Status
+}
+
+func (i *Instance) GetStatusDetails() string {
+	if i == nil {
+		return ""
+	}
+	return i.StatusDetails
+}
+
+func (i *Instance) GetTags() optionalnullable.OptionalNullable[[]string] {
+	if i == nil {
+		return nil
+	}
+	return i.Tags
+}
+
+func (i *Instance) GetTemplateID() optionalnullable.OptionalNullable[string] {
+	if i == nil {
+		return nil
+	}
+	return i.TemplateID
+}
+
+func (i *Instance) GetTotalSpend() optionalnullable.OptionalNullable[string] {
+	if i == nil {
+		return nil
+	}
+	return i.TotalSpend
+}
+
+func (i *Instance) GetVolumeIds() optionalnullable.OptionalNullable[[]string] {
+	if i == nil {
+		return nil
+	}
+	return i.VolumeIds
 }

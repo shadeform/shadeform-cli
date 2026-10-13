@@ -3,11 +3,11 @@
 
 package components
 
-// Env - Environment variables for the container image.
+// Env - Environment variables passed to the container, the equivalent of docker run -e.
 type Env struct {
-	// Name of the environment variable
+	// The name of the environment variable.
 	Name string `json:"name"`
-	// Value of the environment variable
+	// The value of the environment variable.
 	Value string `json:"value"`
 }
 

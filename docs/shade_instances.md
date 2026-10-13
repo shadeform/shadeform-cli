@@ -20,7 +20,7 @@ shade instances [flags]
 
 ```
       --agent-mode             Enable structured errors and default TOON output for AI coding agents. Automatically enabled when a known agent environment is detected (CLAUDECODE, CURSOR_AGENT, etc.). Use --agent-mode=false to disable.
-      --api-key string         API Key
+      --api-key string         API key issued from the Shadeform dashboard (Settings → API Keys).
       --color string           Control colored output: auto (color when output is a TTY), always, or never. Respects NO_COLOR and FORCE_COLOR env vars. (default "auto")
   -d, --debug                  Log request and response diagnostics to stderr
       --dry-run                Preview API requests without sending them (no network, no OS keychain). Human preview on stderr; with -o json or --jq, one JSON object per request on stdout. Local mutation commands (auth login, auth logout and configure) make no request: they skip prompts and writes and report a no-op (stderr, or one JSON object on stdout in the machine form)
@@ -29,6 +29,7 @@ shade instances [flags]
       --interactive            Prompt for missing inputs and open guided configure/auth forms (forms fall back to line prompts on stdin off-TTY) (default true)
   -q, --jq string              Filter and transform output using a jq expression (e.g., '.name', '.items[] | .id')
       --no-interactive         Disable all interactive features (auto-prompting, explorer auto-launch, TUI forms)
+      --no-keyring             Never read or write the OS keychain; store secrets in the config file instead (env: SHADEFORM_NO_KEYRING)
   -o, --output-format string   Specify the output format. Options: pretty, json, yaml, table, toon. (default "pretty")
       --raw-output             Write --jq string results as raw text instead of JSON strings (like jq -r); non-string results stay JSON
       --server string          Select a server by index (for indexed servers) or name (for named servers)
@@ -44,8 +45,9 @@ shade instances [flags]
 * [shade instances delete](shade_instances_delete.md)	 - Delete an instance
 * [shade instances get](shade_instances_get.md)	 - Get an instance
 * [shade instances list](shade_instances_list.md)	 - List instances
-* [shade instances list-types](shade_instances_list-types.md)	 - List available instance types
+* [shade instances list-types](shade_instances_list-types.md)	 - List instance types
 * [shade instances restart](shade_instances_restart.md)	 - Restart an instance
 * [shade instances update](shade_instances_update.md)	 - Update an instance
+* [shade instances update-model](shade_instances_update-model.md)	 - Update an instance's model configuration
 
 Exit codes: 0 ok · 1 runtime · 2 usage · 3 authentication/authorization

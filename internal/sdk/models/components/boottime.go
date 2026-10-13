@@ -3,23 +3,22 @@
 
 package components
 
+// BootTime - The expected time from create to active.
 type BootTime struct {
-	// boot time minimum estimate
-	MinBootInSec *int64 `json:"min_boot_in_sec,omitzero"`
-	// boot time maximum estimate
-	MaxBootInSec *int64 `json:"max_boot_in_sec,omitzero"`
+	MaxBootInSec int64 `json:"max_boot_in_sec"`
+	MinBootInSec int64 `json:"min_boot_in_sec"`
 }
 
-func (b *BootTime) GetMinBootInSec() *int64 {
+func (b *BootTime) GetMaxBootInSec() int64 {
 	if b == nil {
-		return nil
-	}
-	return b.MinBootInSec
-}
-
-func (b *BootTime) GetMaxBootInSec() *int64 {
-	if b == nil {
-		return nil
+		return 0
 	}
 	return b.MaxBootInSec
+}
+
+func (b *BootTime) GetMinBootInSec() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.MinBootInSec
 }

@@ -4,24 +4,43 @@
 package components
 
 import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
 	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
 )
 
-// InstanceType - Information about a specific instance type
 type InstanceType struct {
-	// Specifies the underlying cloud provider. See this [explanation](/getting-started/concepts#cloud-cloud-provider) for more details.
+	// Where the instance type can be launched right now, one entry per region and rental type.
+	Availability optionalnullable.OptionalNullable[[]InstanceTypeAvailability] `json:"availability,omitzero"`
+	// The expected time from create to active.
+	BootTime BootTime `json:"boot_time"`
+	// The underlying cloud provider; use it as cloud when creating an instance.
 	Cloud string `json:"cloud"`
-	// The Shadeform standardized instance type. See this [explanation](/getting-started/concepts#shade-instance-type-and-cloud-instance-type) for more details.
-	ShadeInstanceType string `json:"shade_instance_type"`
-	// The instance type for the underlying cloud provider. See this [explanation](/getting-started/concepts#shade-instance-type-and-cloud-instance-type) for more details.
-	CloudInstanceType string                    `json:"cloud_instance_type"`
-	Configuration     InstanceTypeConfiguration `json:"configuration"`
-	// The hourly price of the instance in cents.
+	// The cloud provider's own name for the instance type.
+	CloudInstanceType string `json:"cloud_instance_type"`
+	// The hardware of the instance type.
+	Configuration InstanceConfiguration `json:"configuration"`
+	// What is provisioned: vm (virtual machine), container (docker container) or baremetal (bare metal server).
+	DeploymentType string `json:"deployment_type"`
+	// True when the instance is a Flex VM: Shadeform virtualizes the GPU server, which may be owned by a compute provider (see cloud). Flex VMs enable additional features such as metrics and a KVM console, with more coming soon. [Learn more about Flex VMs](https://shadeform.com/flex-vms).
+	FlexVM bool `json:"flex_vm"`
+	// The GPU model.
+	GpuType string `json:"gpu_type"`
+	// The on-demand hourly price in cents.
 	HourlyPrice int64 `json:"hourly_price"`
-	// Whether the instance is a "vm" (virtual machine), a "container" (docker container), or "baremetal" (bare metal server).
-	DeploymentType string         `json:"deployment_type"`
-	Availability   []Availability `json:"availability"`
-	BootTime       *BootTime      `json:"boot_time,omitzero"`
+	// The GPU interconnect, for example pcie or sxm.
+	Interconnect string `json:"interconnect"`
+	// System memory in GB.
+	MemoryInGb int64 `json:"memory_in_gb"`
+	// Number of GPUs.
+	NumGpus int64 `json:"num_gpus"`
+	// True when the GPUs are connected with NVLink.
+	Nvlink bool `json:"nvlink"`
+	// The Shadeform standardized instance type; use it as shade_instance_type when creating an instance.
+	ShadeInstanceType string `json:"shade_instance_type"`
+	// Local storage in GB.
+	StorageInGb int64 `json:"storage_in_gb"`
+	// Number of virtual CPUs.
+	Vcpus int64 `json:"vcpus"`
 }
 
 func (i InstanceType) MarshalJSON() ([]byte, error) {
@@ -35,18 +54,25 @@ func (i *InstanceType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (i *InstanceType) GetAvailability() optionalnullable.OptionalNullable[[]InstanceTypeAvailability] {
+	if i == nil {
+		return nil
+	}
+	return i.Availability
+}
+
+func (i *InstanceType) GetBootTime() BootTime {
+	if i == nil {
+		return BootTime{}
+	}
+	return i.BootTime
+}
+
 func (i *InstanceType) GetCloud() string {
 	if i == nil {
 		return ""
 	}
 	return i.Cloud
-}
-
-func (i *InstanceType) GetShadeInstanceType() string {
-	if i == nil {
-		return ""
-	}
-	return i.ShadeInstanceType
 }
 
 func (i *InstanceType) GetCloudInstanceType() string {
@@ -56,18 +82,11 @@ func (i *InstanceType) GetCloudInstanceType() string {
 	return i.CloudInstanceType
 }
 
-func (i *InstanceType) GetConfiguration() InstanceTypeConfiguration {
+func (i *InstanceType) GetConfiguration() InstanceConfiguration {
 	if i == nil {
-		return InstanceTypeConfiguration{}
+		return InstanceConfiguration{}
 	}
 	return i.Configuration
-}
-
-func (i *InstanceType) GetHourlyPrice() int64 {
-	if i == nil {
-		return 0
-	}
-	return i.HourlyPrice
 }
 
 func (i *InstanceType) GetDeploymentType() string {
@@ -77,16 +96,72 @@ func (i *InstanceType) GetDeploymentType() string {
 	return i.DeploymentType
 }
 
-func (i *InstanceType) GetAvailability() []Availability {
+func (i *InstanceType) GetFlexVM() bool {
 	if i == nil {
-		return []Availability{}
+		return false
 	}
-	return i.Availability
+	return i.FlexVM
 }
 
-func (i *InstanceType) GetBootTime() *BootTime {
+func (i *InstanceType) GetGpuType() string {
 	if i == nil {
-		return nil
+		return ""
 	}
-	return i.BootTime
+	return i.GpuType
+}
+
+func (i *InstanceType) GetHourlyPrice() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.HourlyPrice
+}
+
+func (i *InstanceType) GetInterconnect() string {
+	if i == nil {
+		return ""
+	}
+	return i.Interconnect
+}
+
+func (i *InstanceType) GetMemoryInGb() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.MemoryInGb
+}
+
+func (i *InstanceType) GetNumGpus() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.NumGpus
+}
+
+func (i *InstanceType) GetNvlink() bool {
+	if i == nil {
+		return false
+	}
+	return i.Nvlink
+}
+
+func (i *InstanceType) GetShadeInstanceType() string {
+	if i == nil {
+		return ""
+	}
+	return i.ShadeInstanceType
+}
+
+func (i *InstanceType) GetStorageInGb() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.StorageInGb
+}
+
+func (i *InstanceType) GetVcpus() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.Vcpus
 }

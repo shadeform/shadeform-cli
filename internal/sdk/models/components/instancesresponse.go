@@ -3,13 +3,26 @@
 
 package components
 
+import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
+)
+
+// InstancesResponse schema
 type InstancesResponse struct {
-	Instances []Instance `json:"instances"`
+	Instances []Instance                               `json:"instances"`
+	Total     optionalnullable.OptionalNullable[int64] `json:"total,omitzero"`
 }
 
 func (i *InstancesResponse) GetInstances() []Instance {
 	if i == nil {
-		return []Instance{}
+		return nil
 	}
 	return i.Instances
+}
+
+func (i *InstancesResponse) GetTotal() optionalnullable.OptionalNullable[int64] {
+	if i == nil {
+		return nil
+	}
+	return i.Total
 }

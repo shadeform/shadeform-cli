@@ -3,13 +3,14 @@
 
 package components
 
+// TemplatesResponse schema
 type TemplatesResponse struct {
 	Templates []Template `json:"templates"`
 }
 
 func (t *TemplatesResponse) GetTemplates() []Template {
 	if t == nil {
-		return []Template{}
+		return nil
 	}
 	return t.Templates
 }

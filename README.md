@@ -150,11 +150,11 @@ This CLI is built to be driven by AI coding agents as well as people: everything
 
 | Run | You get |
 |-----|---------|
-| `shade --help`, `shade clusters list --help` | Commands by category, runnable examples, flags |
-| `shade --usage`, `shade clusters list --usage` | The command surface as machine-readable [KDL](https://kdl.dev): commands, aliases, flags, defaults, env vars, config keys |
-| `shade volumes create --schema` | The exact JSON Schema of the command's request body (all `$ref`s bundled) — build a valid `--body` from it |
-| `shade clusters list --dry-run` | The exact HTTP request (method, URL, headers, body), with no credentials or network call |
-| `shade clusters list --output-format json` (or `--jq`) | Machine-readable output |
+| `shade --help`, `shade ssh-keys list --help` | Commands by category, runnable examples, flags |
+| `shade --usage`, `shade ssh-keys list --usage` | The command surface as machine-readable [KDL](https://kdl.dev): commands, aliases, flags, defaults, env vars, config keys |
+| `shade instances create --schema` | The exact JSON Schema of the command's request body (all `$ref`s bundled) — build a valid `--body` from it |
+| `shade ssh-keys list --dry-run` | The exact HTTP request (method, URL, headers, body), with no credentials or network call |
+| `shade ssh-keys list --output-format json` (or `--jq`) | Machine-readable output |
 
 ### Discover the command surface
 
@@ -163,7 +163,7 @@ This CLI is built to be driven by AI coding agents as well as people: everything
 shade --usage
 
 # One command's subtree only
-shade clusters list --usage
+shade ssh-keys list --usage
 ```
 
 ### Read the exact request schema
@@ -172,7 +172,7 @@ shade clusters list --usage
 
 ```bash
 # JSON Schema (draft 2020-12) of the request body, with every $ref bundled under $defs
-shade volumes create --schema
+shade instances create --schema
 ```
 
 ### Probe before you spend
@@ -181,10 +181,10 @@ Start quota-spending commands with `--dry-run`. It validates inputs, resolves th
 
 ```bash
 # Human preview: the [DRY-RUN] block is on stderr and stdout is empty
-shade clusters list --dry-run
+shade ssh-keys list --dry-run
 
 # Machine preview: compact JSON on stdout and silent stderr
-shade clusters list --dry-run --output-format json
+shade ssh-keys list --dry-run --output-format json
 ```
 
 The machine form writes one object per would-be request, one per line (NDJSON for multi-request commands), with exactly this shape:
@@ -201,13 +201,13 @@ Local mutation commands make no request under `--dry-run`: instead of a preview 
 
 ```bash
 # JSON on stdout
-shade clusters list --output-format json
+shade ssh-keys list --output-format json
 
 # Filter or reshape with a jq expression (always emits JSON, overrides --output-format)
-shade clusters list --jq '.'
+shade ssh-keys list --jq '.'
 
 # Print jq string results as plain text instead of JSON strings (like jq -r)
-shade clusters list --jq '.' --raw-output
+shade ssh-keys list --jq '.' --raw-output
 ```
 
 `--output-format toon` emits [TOON](https://github.com/toon-format/spec), a compact line-oriented format that uses fewer tokens than JSON; it is the default in agent mode.
@@ -217,7 +217,7 @@ Required-input prompts and guided `configure` / `auth login` forms are enabled b
 
 ```bash
 # Prompt for missing command inputs
-shade clusters list --interactive
+shade ssh-keys list --interactive
 
 # Open the guided configuration form
 shade configure --interactive
@@ -255,7 +255,7 @@ Authentication credentials can be configured in four ways (in order of priority)
 Pass credentials directly as flags to any command:
 
 ```bash
-shade --api-key "$SHADEFORM_API_KEY" clusters list
+shade --api-key "$SHADEFORM_API_KEY" ssh-keys list
 ```
 
 ### 2. Environment variables
@@ -264,7 +264,7 @@ Set credentials via environment variables:
 
 | Variable | Description |
 |----------|-------------|
-| `SHADEFORM_API_KEY` | API Key |
+| `SHADEFORM_API_KEY` | API key issued from the Shadeform dashboard (Settings → API Keys). |
 
 ### 3. OS Keychain (recommended for workstations)
 
@@ -280,6 +280,8 @@ Secret credentials (tokens, API keys, passwords) are automatically stored in:
 - **Windows**: Windows Credential Locker
 
 If no keychain is available (e.g., in CI environments), credentials fall back to the config file.
+
+Where the keychain cannot be unlocked (e.g., headless Linux or SSH sessions with a locked GNOME Keyring), skip it entirely with `--no-keyring`, `SHADEFORM_NO_KEYRING=true`, or `no_keyring: true` in the config file. The keychain is then never read or written, and secrets are stored in the config file instead; flags and environment variables still take precedence.
 
 ### 4. Configuration file
 
@@ -300,37 +302,32 @@ Configuration is stored in `~/.config/shade/config.yaml`.
 
 * [`instances`](docs/shade_instances.md) - Create, inspect, update, restart and delete GPU instances
   * [`list`](docs/shade_instances_list.md) - List instances
-  * [`list-types`](docs/shade_instances_list-types.md) - List available instance types
   * [`create`](docs/shade_instances_create.md) - Create an instance
-  * [`get`](docs/shade_instances_get.md) - Get an instance
-  * [`update`](docs/shade_instances_update.md) - Update an instance
+  * [`list-types`](docs/shade_instances_list-types.md) - List instance types
   * [`delete`](docs/shade_instances_delete.md) - Delete an instance
+  * [`get`](docs/shade_instances_get.md) - Get an instance
   * [`restart`](docs/shade_instances_restart.md) - Restart an instance
-* [`clusters`](docs/shade_clusters.md) - Create, inspect and delete multi-node GPU clusters
-  * [`list`](docs/shade_clusters_list.md) - List clusters
-  * [`list-types`](docs/shade_clusters_list-types.md) - List available cluster types
-  * [`create`](docs/shade_clusters_create.md) - Create a cluster
-  * [`get`](docs/shade_clusters_get.md) - Get a cluster
-  * [`delete`](docs/shade_clusters_delete.md) - Delete a cluster
+  * [`update`](docs/shade_instances_update.md) - Update an instance
+  * [`update-model`](docs/shade_instances_update-model.md) - Update an instance's model configuration
 * [`ssh-keys`](docs/shade_ssh-keys.md) - Manage SSH keys used to access instances
   * [`list`](docs/shade_ssh-keys_list.md) - List SSH keys
   * [`add`](docs/shade_ssh-keys_add.md) - Add an SSH key
   * [`delete`](docs/shade_ssh-keys_delete.md) - Delete an SSH key
   * [`get`](docs/shade_ssh-keys_get.md) - Get an SSH key
   * [`set-default`](docs/shade_ssh-keys_set-default.md) - Set the default SSH key
-* [`volumes`](docs/shade_volumes.md) - Create, inspect and delete persistent storage volumes
-  * [`list`](docs/shade_volumes_list.md) - List volumes
-  * [`create`](docs/shade_volumes_create.md) - Create a volume
-  * [`delete`](docs/shade_volumes_delete.md) - Delete a volume
-  * [`get`](docs/shade_volumes_get.md) - Get a volume
-  * [`list-types`](docs/shade_volumes_list-types.md) - List available volume types
 * [`templates`](docs/shade_templates.md) - Save and reuse launch configurations as templates
   * [`list`](docs/shade_templates_list.md) - List templates
   * [`list-featured`](docs/shade_templates_list-featured.md) - List featured templates
-  * [`get`](docs/shade_templates_get.md) - Get a template
   * [`save`](docs/shade_templates_save.md) - Save a template
-  * [`update`](docs/shade_templates_update.md) - Update a template
   * [`delete`](docs/shade_templates_delete.md) - Delete a template
+  * [`get`](docs/shade_templates_get.md) - Get a template
+  * [`update`](docs/shade_templates_update.md) - Update a template
+* [`volumes`](docs/shade_volumes.md) - Create, inspect and delete persistent storage volumes
+  * [`list`](docs/shade_volumes_list.md) - List volumes
+  * [`create`](docs/shade_volumes_create.md) - Create a volume
+  * [`list-types`](docs/shade_volumes_list-types.md) - List volume types
+  * [`delete`](docs/shade_volumes_delete.md) - Delete a volume
+  * [`get`](docs/shade_volumes_get.md) - Get a volume
 
 </details>
 <!-- End Commands [operations] -->
@@ -338,65 +335,7 @@ Configuration is stored in `~/.config/shade/config.yaml`.
 <!-- Start Request Body Input [stdinpiping] -->
 ## Request Body Input
 
-Commands that accept a request body take it three ways, with a clear priority chain. The examples use `shade volumes create`; every body-bearing command works the same way and prints its exact request schema with `--schema`.
-
-### Individual flags (highest priority)
-
-Each top-level body field is a flag:
-
-```bash
-shade volumes create --cloud 'hyperstack' --region 'canada-1' --size-in-gb 100 --name 'My storage volume'
-```
-
-### `--body` flag
-
-Provide the entire request body as a JSON string:
-
-```bash
-shade volumes create --body '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}'
-```
-
-Individual flags override `--body` values:
-
-```bash
-# Sends {"cloud":"hyperstack","region":"canada-1","size_in_gb":101,"name":"My storage volume"}
-shade volumes create --body '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}' --size-in-gb 101
-```
-
-### Stdin piping (lowest priority)
-
-Pipe JSON into any command that accepts a request body:
-
-```bash
-echo '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}' | shade volumes create
-```
-
-Individual flags override stdin values:
-
-```bash
-# Sends {"cloud":"hyperstack","region":"canada-1","size_in_gb":101,"name":"My storage volume"}
-echo '{"cloud":"hyperstack","region":"canada-1","size_in_gb":100,"name":"My storage volume"}' | shade volumes create --size-in-gb 101
-```
-
-This is useful for chaining commands, reading from files, or scripting:
-
-```bash
-# Read body from a file
-shade volumes create < request.json
-
-# Pipe from another command
-curl -s https://example.com/request.json | shade volumes create
-```
-
-### Priority
-
-When multiple input methods are used, the priority is:
-
-| Priority | Source | Description |
-|----------|--------|-------------|
-| 1 (highest) | Individual flags | `--size-in-gb ...` always wins |
-| 2 | `--body` flag | Whole-body JSON via flag |
-| 3 (lowest) | Stdin | Piped JSON input |
+Commands that accept a request body take it three ways, with a clear priority chain: individual field flags (highest priority), the whole body as JSON via `--body`, and JSON piped on stdin (lowest priority). Later sources never override earlier ones; a body-bearing command prints its exact request schema with `--schema`.
 <!-- End Request Body Input [stdinpiping] -->
 
 <!-- Start Server Selection [server] -->
@@ -407,7 +346,7 @@ When multiple input methods are used, the priority is:
 Use `--server-url` to override the server URL entirely, bypassing any named or indexed server selection:
 
 ```bash
-shade --server-url https://custom-api.example.com clusters list
+shade --server-url https://custom-api.example.com ssh-keys list
 ```
 
 **Precedence**: `--server-url` > `--server` > default
@@ -430,16 +369,16 @@ Every command supports a `--output-format` flag that controls how the response i
 
 ```bash
 # Default pretty output
-shade clusters list
+shade ssh-keys list
 
 # Machine-readable JSON
-shade clusters list --output-format json
+shade ssh-keys list --output-format json
 
 # TOON for LLM-friendly compact output
-shade clusters list --output-format toon
+shade ssh-keys list --output-format toon
 
 # Pipe JSON to jq without using --output-format
-shade clusters list --output-format json | jq '.'
+shade ssh-keys list --output-format json | jq '.'
 ```
 
 ### jq filtering
@@ -448,10 +387,10 @@ Use `--jq` to filter or transform the response inline using a [jq](https://jqlan
 
 ```bash
 # Extract a single field
-shade clusters list --jq '.'
+shade ssh-keys list --jq '.'
 
 # Reshape with any jq program; --raw-output prints string results as plain text (like jq -r)
-shade clusters list --jq '.' --raw-output
+shade ssh-keys list --jq '.' --raw-output
 ```
 
 ### Color control
@@ -494,7 +433,7 @@ On success, the response data is printed to **stdout** as JSON. On failure, erro
 
 ```bash
 # Capture output and handle errors
-shade clusters list --output-format json > output.json 2> error.log
+shade ssh-keys list --output-format json > output.json 2> error.log
 if [ $? -ne 0 ]; then
   echo "Error occurred, see error.log"
 fi
@@ -512,7 +451,7 @@ The CLI includes two diagnostic flags available on all commands:
 Preview what would be sent without making any network calls:
 
 ```bash
-shade clusters list --dry-run
+shade ssh-keys list --dry-run
 ```
 
 In human output modes, stdout is empty and the `[DRY-RUN]` block goes to stderr. It includes:
@@ -535,7 +474,7 @@ Local mutation commands emit one `{"dry_run":true,"local":true,"command":"…","
 Log request and response diagnostics while running normally:
 
 ```bash
-shade clusters list --debug
+shade ssh-keys list --debug
 ```
 
 Debug output goes to stderr and includes:

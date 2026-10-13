@@ -16,43 +16,43 @@ import (
 )
 
 var updateCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "id", Shorthand: "i", FieldPath: "ID", Kind: flagutil.FlagKindString, Required: true, Description: "The instance id [required]"},
-	{FlagName: "name", Shorthand: "n", FieldPath: "Body.Name", Kind: flagutil.FlagKindString, Optional: true, Description: "The name of the instance"},
-	{FlagName: "auto-delete", FieldPath: "Body.AutoDelete", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"auto_delete,omitempty"`, Description: "Set a date or spend threshold to automatically delete the instance"},
-	{FlagName: "alert", FieldPath: "Body.Alert", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"alert,omitempty"`, Description: "Set a date or spend threshold to receive an email alert"},
-	{FlagName: "tags", Shorthand: "t", FieldPath: "Body.Tags", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "Add custom, searchable tags to instances."},
+	{FlagName: "instance-id", Shorthand: "i", FieldPath: "InstanceID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the instance, from the id field of GET /v1/instances or the create response. [required]"},
+	{FlagName: "alert", FieldPath: "Body.Alert", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"alert,omitempty"`, Description: "Replace the alert thresholds. Set a threshold to null to clear it; omit the object to keep both unchanged."},
+	{FlagName: "auto-delete", FieldPath: "Body.AutoDelete", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"auto_delete,omitempty"`, Description: "Replace the auto-delete thresholds. Set a threshold to null to clear it; omit the object to keep both unchanged."},
+	{FlagName: "name", Shorthand: "n", FieldPath: "Body.Name", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"name,omitempty"`, Description: "The new name of the instance. Omit to keep the current name."},
+	{FlagName: "tags", Shorthand: "t", FieldPath: "Body.Tags", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"tags,omitempty"`, Description: "Replace the instance's tags. Pass an empty list to remove them; omit to keep them. (JSON array)"},
 }
 
 // initUpdateCmd initializes the update command.
 func initUpdateCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
-		Use:     "update [id]",
+		Use:     "update [instance-id]",
 		Short:   "Update an instance",
 		Long:    "Update mutable details about the instance. Set a value to null to delete it. Omit a value or leave undefined to keep unchanged.",
-		Example: "  shade instances update --id d290f1ee-6c54-4b01-90e6-d701748f0851",
+		Example: "  shade instances update --instance-id <id>",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runUpdateCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "InstancesUpdate",
+			"speakeasy_operation": "updateInstance",
 		},
 	}
 	flagutil.RegisterFlags(cmd, updateCmdMeta)
-	if err := flagutil.ValidateMeta[operations.InstancesUpdateRequest](updateCmdMeta); err != nil {
+	if err := flagutil.ValidateMeta[operations.UpdateInstanceRequest](updateCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for update: %w", err)
 	}
 	cmd.Flags().String("body", "", "Request body as JSON (alternative to individual flags). Can also be provided via stdin; @path reads a file, @- reads stdin to EOF. Use --schema to print the exact JSON Schema.")
-	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Kind: "json", BodyFlag: true})
+	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Required: false, Kind: "json", BodyFlag: true})
 	cmd.Annotations[flagutil.AnnotationWholeBodyFlag] = "body"
 	if err := flagutil.AnnotateBodyFields(cmd, updateCmdMeta, "Body", "body"); err != nil {
 		return fmt.Errorf("annotate body fields for update: %w", err)
 	}
 	cmd.Flags().Bool("schema", false, "Print the exact JSON Schema of the request body and exit")
 	_ = flagutil.AnnotatePromptFlag(cmd, "schema", flagutil.PromptFlagSpec{Kind: "bool", DocSurface: true})
-	if err := flagutil.DeclarePositionalFlag(cmd, "id", "The instance id (or pass it as the [id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "instance-id", "The ID of the instance, from the id field of GET /v1/instances or the create response. (or pass it as the [instance-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "id", Summary: "The instance id", Required: true, SatisfiedBy: []string{"id"}},
+		{Name: "instance-id", Summary: "The ID of the instance, from the id field of GET /v1/instances or the create response.", Required: true, SatisfiedBy: []string{"instance-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for update: %w", err)
 	}
@@ -66,12 +66,12 @@ func runUpdateCmd(cmd *cobra.Command, args []string) error {
 		return usage.EmitSchema(cmd, cmd.OutOrStdout())
 	}
 	if requested, _ := cmd.Flags().GetBool("schema"); requested {
-		return usage.EmitBodySchema(cmd.OutOrStdout(), "InstancesUpdate")
+		return usage.EmitBodySchema(cmd.OutOrStdout(), "updateInstance")
 	}
 	if err := flagutil.ResolvePositionalFlag(cmd, args); err != nil {
 		return err
 	}
-	req, err := flagutil.BuildRequest[operations.InstancesUpdateRequest](cmd, updateCmdMeta, "Body", "body")
+	req, err := flagutil.BuildRequest[operations.UpdateInstanceRequest](cmd, updateCmdMeta, "Body", "body")
 	if err != nil {
 		return flagutil.WithCLIValidation(err)
 	}
@@ -94,7 +94,10 @@ func runUpdateCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Instances.Update(cmd.Context(), *req, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

@@ -13,16 +13,16 @@ import (
 )
 
 // privateKeyField is returned by the SSH key endpoints for Shadeform-managed
-// keys but is not part of the public OpenAPI document. Printing it from a
-// list command would push every private key in the account into shell
-// history, CI logs, and agent context, so it is removed here, upstream of
-// both typed deserialization and the CLI's raw JSON passthrough.
+// keys. Printing it from a list command would push every private key in the
+// account into shell history, CI logs, and agent context, so it is removed
+// here, upstream of both typed deserialization and the CLI's raw JSON
+// passthrough. ssh-keys download is the only command that opts back in.
 const privateKeyField = "private_key"
 
 // privateKeyOperations are the operation IDs whose responses carry the field.
 var privateKeyOperations = map[string]bool{
-	"SshKeys":     true,
-	"SshKeysInfo": true,
+	"listSshKeys": true,
+	"getSshKey":   true,
 }
 
 // RedactPrivateKeyHook strips private_key from SSH key responses unless the

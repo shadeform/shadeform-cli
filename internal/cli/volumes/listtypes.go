@@ -16,14 +16,14 @@ import (
 func initListTypesCmd(parent *cobra.Command) error {
 	var cmd = &cobra.Command{
 		Use:     "list-types",
-		Short:   "List available volume types",
+		Short:   "List volume types",
 		Long:    "Get list of supported storage volumes.",
 		Example: "  shade volumes list-types",
 		Args:    cobra.NoArgs,
 		RunE:    runListTypesCmd,
 		Aliases: []string{"lt"},
 		Annotations: map[string]string{
-			"speakeasy_operation": "VolumesTypes",
+			"speakeasy_operation": "listVolumeTypes",
 		},
 	}
 	parent.AddCommand(cmd)
@@ -54,7 +54,10 @@ func runListTypesCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Volumes.ListTypes(cmd.Context(), sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

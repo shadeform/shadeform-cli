@@ -16,8 +16,9 @@ import (
 )
 
 var addCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "name", Shorthand: "n", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "The name of the SSH Key. [required]"},
-	{FlagName: "public-key", Shorthand: "p", FieldPath: "PublicKey", Kind: flagutil.FlagKindString, Required: true, Description: "The public key. [required]"},
+	{FlagName: "name", Shorthand: "n", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "A name for the key. [required]"},
+	{FlagName: "private-key", FieldPath: "PrivateKey", Kind: flagutil.FlagKindString, Optional: true, Description: "Optional. The matching private key in OpenSSH PEM format, stored encrypted so Shadeform can connect to instances on your behalf. Leave empty to keep the private key on your machine."},
+	{FlagName: "public-key", FieldPath: "PublicKey", Kind: flagutil.FlagKindString, Required: true, Description: "The OpenSSH public key, as found in the .pub file. [required]"},
 }
 
 // initAddCmd initializes the add command.
@@ -26,11 +27,11 @@ func initAddCmd(parent *cobra.Command) error {
 		Use:     "add",
 		Short:   "Add an SSH key",
 		Long:    "Add a new SSH Key",
-		Example: "  shade ssh-keys add --name 'My ssh key' --public-key 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU GPl+nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3 Pbv7kOdJ/MTyBlWXFCR+HAo3FXRitBqxiX1nKhXpHAZsMciLq8V6RjsNAQwdsdMFvSlVK/7XA t3FaoJoAsncM1Q9x5+3V0Ww68/eIFmb1zuUFljQJKprrX88XypNDvjYNby6vw/Pb0rwert/En mZ+AW4OZPnTPI89ZPmVMLuayrD2cE86Z/il8b+gw3r3+1nKatmIkjn2so1d01QraTlMqVSsbx NrRFi9wrf+M7Q== schacon@mylaptop.local'",
+		Example: "  shade ssh-keys add --name <value> --public-key <value>",
 		Args:    cobra.NoArgs,
 		RunE:    runAddCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "SshKeysAdd",
+			"speakeasy_operation": "addSshKey",
 		},
 	}
 	flagutil.RegisterFlags(cmd, addCmdMeta)
@@ -38,7 +39,7 @@ func initAddCmd(parent *cobra.Command) error {
 		return fmt.Errorf("invalid metadata for add: %w", err)
 	}
 	cmd.Flags().String("body", "", "Request body as JSON (alternative to individual flags). Can also be provided via stdin; @path reads a file, @- reads stdin to EOF. Use --schema to print the exact JSON Schema.")
-	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Kind: "json", BodyFlag: true})
+	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Required: false, Kind: "json", BodyFlag: true})
 	cmd.Annotations[flagutil.AnnotationWholeBodyFlag] = "body"
 	if err := flagutil.AnnotateBodyFields(cmd, addCmdMeta, "", "body"); err != nil {
 		return fmt.Errorf("annotate body fields for add: %w", err)
@@ -55,7 +56,7 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 		return usage.EmitSchema(cmd, cmd.OutOrStdout())
 	}
 	if requested, _ := cmd.Flags().GetBool("schema"); requested {
-		return usage.EmitBodySchema(cmd.OutOrStdout(), "SshKeysAdd")
+		return usage.EmitBodySchema(cmd.OutOrStdout(), "addSshKey")
 	}
 	request, err := flagutil.BuildRequest[components.AddSSHKeyRequest](cmd, addCmdMeta, "", "body")
 	if err != nil {
@@ -80,7 +81,10 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.SSHKeys.Add(cmd.Context(), *request, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

@@ -15,7 +15,7 @@ only the path is printed. Pass --stdout to print the key itself, for example to
 pipe it somewhere; nothing else in the CLI ever prints private key material.
 
 ```
-shade ssh-keys download [id] [flags]
+shade ssh-keys download [ssh-key-id] [flags]
 ```
 
 ### Examples
@@ -29,18 +29,18 @@ shade ssh-keys download [id] [flags]
 ### Options
 
 ```
-      --force        Overwrite the output file if it already exists
-  -h, --help         help for download
-  -i, --id string    The ssh key id (or pass it as the [id] argument)
-      --out string   File to write the private key to (default ~/.ssh/shadeform-<name>.pem)
-      --stdout       Print the private key to stdout instead of writing a file
+      --force               Overwrite the output file if it already exists
+  -h, --help                help for download
+      --out string          File to write the private key to (default ~/.ssh/shadeform-<name>.pem)
+  -s, --ssh-key-id string   The ssh key id (or pass it as the [ssh-key-id] argument)
+      --stdout              Print the private key to stdout instead of writing a file
 ```
 
 ### Options inherited from parent commands
 
 ```
       --agent-mode             Enable structured errors and default TOON output for AI coding agents. Automatically enabled when a known agent environment is detected (CLAUDECODE, CURSOR_AGENT, etc.). Use --agent-mode=false to disable.
-      --api-key string         API Key
+      --api-key string         API key issued from the Shadeform dashboard (Settings → API Keys).
       --color string           Control colored output: auto (color when output is a TTY), always, or never. Respects NO_COLOR and FORCE_COLOR env vars. (default "auto")
   -d, --debug                  Log request and response diagnostics to stderr
       --dry-run                Preview API requests without sending them (no network, no OS keychain). Human preview on stderr; with -o json or --jq, one JSON object per request on stdout. Local mutation commands (auth login, auth logout and configure) make no request: they skip prompts and writes and report a no-op (stderr, or one JSON object on stdout in the machine form)
@@ -49,6 +49,7 @@ shade ssh-keys download [id] [flags]
       --interactive            Prompt for missing inputs and open guided configure/auth forms (forms fall back to line prompts on stdin off-TTY) (default true)
   -q, --jq string              Filter and transform output using a jq expression (e.g., '.name', '.items[] | .id')
       --no-interactive         Disable all interactive features (auto-prompting, explorer auto-launch, TUI forms)
+      --no-keyring             Never read or write the OS keychain; store secrets in the config file instead (env: SHADEFORM_NO_KEYRING)
   -o, --output-format string   Specify the output format. Options: pretty, json, yaml, table, toon. (default "pretty")
       --raw-output             Write --jq string results as raw text instead of JSON strings (like jq -r); non-string results stay JSON
       --server string          Select a server by index (for indexed servers) or name (for named servers)

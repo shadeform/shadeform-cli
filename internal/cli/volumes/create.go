@@ -16,10 +16,10 @@ import (
 )
 
 var createCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "cloud", Shorthand: "c", FieldPath: "Cloud", Kind: flagutil.FlagKindString, Required: true, Description: "Specifies the underlying cloud provider. See this [explanation](/getting-started/concepts#cloud-cloud-provider) for more details. [required]"},
-	{FlagName: "region", Shorthand: "r", FieldPath: "Region", Kind: flagutil.FlagKindString, Required: true, Description: "Specifies the region. [required]"},
-	{FlagName: "size-in-gb", Shorthand: "s", FieldPath: "SizeInGb", Kind: flagutil.FlagKindInt64, Required: true, Description: "Storage volume size in GB [required]"},
-	{FlagName: "name", Shorthand: "n", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "The name of the storage volume. [required]"},
+	{FlagName: "cloud", Shorthand: "c", FieldPath: "Cloud", Kind: flagutil.FlagKindString, Required: true, Description: "The cloud provider to create the volume in, as listed by GET /v1/volumes/types. See https://docs.shadeform.ai/getting-started/concepts#cloud-cloud-provider. [required]"},
+	{FlagName: "name", Shorthand: "n", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "A name for the volume. [required]"},
+	{FlagName: "region", Shorthand: "r", FieldPath: "Region", Kind: flagutil.FlagKindString, Required: true, Description: "The region to create the volume in, as listed by GET /v1/volumes/types. A volume can only be attached to instances in the same cloud and region. [required]"},
+	{FlagName: "size-in-gb", Shorthand: "s", FieldPath: "SizeInGb", Kind: flagutil.FlagKindInt64, Required: true, Description: "The size of the volume in GB. [required]"},
 }
 
 // initCreateCmd initializes the create command.
@@ -28,11 +28,11 @@ func initCreateCmd(parent *cobra.Command) error {
 		Use:     "create",
 		Short:   "Create a volume",
 		Long:    "Create a new storage volume",
-		Example: "  shade volumes create --cloud hyperstack --region canada-1 --size-in-gb 100 --name 'My storage volume'",
+		Example: "  shade volumes create --cloud <value> --name <value> --region <value> --size-in-gb 30341",
 		Args:    cobra.NoArgs,
 		RunE:    runCreateCmd,
 		Annotations: map[string]string{
-			"speakeasy_operation": "VolumesCreate",
+			"speakeasy_operation": "createVolume",
 		},
 	}
 	flagutil.RegisterFlags(cmd, createCmdMeta)
@@ -40,7 +40,7 @@ func initCreateCmd(parent *cobra.Command) error {
 		return fmt.Errorf("invalid metadata for create: %w", err)
 	}
 	cmd.Flags().String("body", "", "Request body as JSON (alternative to individual flags). Can also be provided via stdin; @path reads a file, @- reads stdin to EOF. Use --schema to print the exact JSON Schema.")
-	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Kind: "json", BodyFlag: true})
+	_ = flagutil.AnnotatePromptFlag(cmd, "body", flagutil.PromptFlagSpec{Required: false, Kind: "json", BodyFlag: true})
 	cmd.Annotations[flagutil.AnnotationWholeBodyFlag] = "body"
 	if err := flagutil.AnnotateBodyFields(cmd, createCmdMeta, "", "body"); err != nil {
 		return fmt.Errorf("annotate body fields for create: %w", err)
@@ -57,7 +57,7 @@ func runCreateCmd(cmd *cobra.Command, args []string) error {
 		return usage.EmitSchema(cmd, cmd.OutOrStdout())
 	}
 	if requested, _ := cmd.Flags().GetBool("schema"); requested {
-		return usage.EmitBodySchema(cmd.OutOrStdout(), "VolumesCreate")
+		return usage.EmitBodySchema(cmd.OutOrStdout(), "createVolume")
 	}
 	request, err := flagutil.BuildRequest[components.CreateVolumeRequest](cmd, createCmdMeta, "", "body")
 	if err != nil {
@@ -82,7 +82,10 @@ func runCreateCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Volumes.Create(cmd.Context(), *request, sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

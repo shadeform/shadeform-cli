@@ -3,15 +3,15 @@
 
 package components
 
-// ScriptConfiguration - May only be used if launch_configuration.type is 'script'. Configures a startup script to be run automatically after the instance is active. See this [tutorial]/guides/startupscript) for examples.
+// ScriptConfiguration - The startup script to run once the instance is active. Only read when type is script. See https://docs.shadeform.ai/guides/startupscript.
 type ScriptConfiguration struct {
-	// A startup script that is base64 encoded.
-	Base64Script string `json:"base64_script"`
+	// The startup script, base64 encoded. Runs as root once the instance is active; up to 40000 characters encoded.
+	Base64Script *string `json:"base64_script,omitzero"`
 }
 
-func (s *ScriptConfiguration) GetBase64Script() string {
+func (s *ScriptConfiguration) GetBase64Script() *string {
 	if s == nil {
-		return ""
+		return nil
 	}
 	return s.Base64Script
 }

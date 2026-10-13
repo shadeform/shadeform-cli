@@ -18,7 +18,7 @@ const testPrivateKey = "-----BEGIN OPENSSH PRIVATE KEY-----\nabc123\n-----END OP
 func newSSHKeyServer(t *testing.T, privateKey string) *httptest.Server {
 	t.Helper()
 	mux := http.NewServeMux()
-	mux.HandleFunc("/sshkeys", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v1/sshkeys", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]any{
 			"ssh_keys": []map[string]any{
@@ -26,7 +26,7 @@ func newSSHKeyServer(t *testing.T, privateKey string) *httptest.Server {
 			},
 		})
 	})
-	mux.HandleFunc("/sshkeys/key-1/info", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v1/sshkeys/key-1/info", func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("X-API-KEY") != "test-key" {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
@@ -148,7 +148,7 @@ func TestSSHKeysDownloadWritesFile(t *testing.T) {
 
 func TestSSHKeysDownloadDefaultPath(t *testing.T) {
 	srv := newSSHKeyServer(t, testPrivateKey)
-	stdout, stderr, err := runShade(t, srv, "ssh-keys", "download", "--id", "key-1", "-o", "json")
+	stdout, stderr, err := runShade(t, srv, "ssh-keys", "download", "--ssh-key-id", "key-1", "-o", "json")
 	if err != nil {
 		t.Fatalf("download failed: %v\n%s", err, stderr)
 	}
@@ -244,7 +244,7 @@ func TestSSHKeysDownloadDryRunMakesNoRequest(t *testing.T) {
 	if _, statErr := os.Stat(out); !os.IsNotExist(statErr) {
 		t.Fatal("dry-run must not write a file")
 	}
-	if !strings.Contains(stderr, "/sshkeys/key-1/info") {
+	if !strings.Contains(stderr, "/v1/sshkeys/key-1/info") {
 		t.Fatalf("expected request preview on stderr, got: %s", stderr)
 	}
 }

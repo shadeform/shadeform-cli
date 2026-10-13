@@ -3,18 +3,12 @@
 
 package components
 
+// RegistryCredentials - Credentials for a private docker registry, used for the pull.
 type RegistryCredentials struct {
-	// The username for the docker registry.
-	Username *string `json:"username,omitzero"`
-	// The password for the docker registry.
-	Password *string `json:"password,omitzero"`
-}
-
-func (r *RegistryCredentials) GetUsername() *string {
-	if r == nil {
-		return nil
-	}
-	return r.Username
+	// The registry password or access token.
+	Password *string `json:"password"`
+	// The registry username.
+	Username *string `json:"username"`
 }
 
 func (r *RegistryCredentials) GetPassword() *string {
@@ -22,4 +16,11 @@ func (r *RegistryCredentials) GetPassword() *string {
 		return nil
 	}
 	return r.Password
+}
+
+func (r *RegistryCredentials) GetUsername() *string {
+	if r == nil {
+		return nil
+	}
+	return r.Username
 }

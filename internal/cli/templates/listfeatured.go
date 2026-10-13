@@ -23,7 +23,7 @@ func initListFeaturedCmd(parent *cobra.Command) error {
 		RunE:    runListFeaturedCmd,
 		Aliases: []string{"lf"},
 		Annotations: map[string]string{
-			"speakeasy_operation": "TemplatesFeatured",
+			"speakeasy_operation": "listFeaturedTemplates",
 		},
 	}
 	parent.AddCommand(cmd)
@@ -54,7 +54,10 @@ func runListFeaturedCmd(cmd *cobra.Command, args []string) error {
 	if output.WantsRawJSON(cmd) {
 		sdkOpts = append(sdkOpts, operations.WithSkipDeserialization())
 	}
+	stopProgress := output.StartRequestProgress(cmd)
+	defer stopProgress()
 	res, err := s.Templates.ListFeatured(cmd.Context(), sdkOpts...)
+	stopProgress()
 	if err != nil {
 		return output.Error(cmd, err)
 	}

@@ -65,7 +65,7 @@ func runWhoamiCmd(cmd *cobra.Command, args []string) error {
 	fmt.Fprintln(out)
 	fmt.Fprintln(out, "Credentials:")
 
-	// An API key issued from the Shadeform dashboard. Routes that accept a key also accept an Auth0 bearer token in `Authorization`, which this document does not describe.
+	// API key issued from the Shadeform dashboard (Settings → API Keys).
 	{
 		value, source := config.ResolveRequestSecurityCredential(cmd, "api-key")
 		fmt.Fprintf(out, "  --%-25s [%-7s] %s\n", "api-key", source, maskSecret(value))

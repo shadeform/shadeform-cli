@@ -49,7 +49,7 @@ func Float64(f float64) *float64 { return &f }
 // Pointer provides a helper function to return a pointer to a type
 func Pointer[T any](v T) *T { return &v }
 
-// Shadeform API: The Shadeform API. This document describes a subset of the `/v1` surface and is expanding; a route that is absent here is not necessarily absent from the API.
+// Shadeform API: Shadeform is a single API and platform for deploying and managing cloud GPUs.
 type Shadeform struct {
 	SDKVersion string
 	// Create, inspect, update, restart and delete GPU instances.

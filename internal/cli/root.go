@@ -34,8 +34,8 @@ func NewRootCommand() (*cobra.Command, error) {
 	cobra.AddTemplateFunc("groupedGlobalFlagUsages", groupedGlobalFlagUsages)
 	rootCmd := &cobra.Command{
 		Use:           "shade",
-		Short:         "Shadeform API: The Shadeform API",
-		Long:          "Shadeform API: The Shadeform API. This document describes a subset of the `/v1` surface and is expanding; a route that is absent here is not necessarily absent from the API.",
+		Short:         "Shadeform API: Shadeform is a single API and platform for deploying and managing cloud GPUs",
+		Long:          "Shadeform API: Shadeform is a single API and platform for deploying and managing cloud GPUs.",
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -141,7 +141,7 @@ func NewRootCommand() (*cobra.Command, error) {
 			"Use --agent-mode=false to disable.")
 
 	// Global security flags
-	rootCmd.PersistentFlags().String("api-key", "", "An API key issued from the Shadeform dashboard. Routes that accept a key also accept an Auth0 bearer token in `Authorization`, which this document does not describe.")
+	rootCmd.PersistentFlags().String("api-key", "", "API key issued from the Shadeform dashboard (Settings → API Keys).")
 	_ = rootCmd.PersistentFlags().SetAnnotation("api-key", "speakeasy:group", []string{"Authentication"})
 	rootCmd.PersistentFlags().Bool("no-keyring", false, "Never read or write the OS keychain; store secrets in the config file instead (env: SHADEFORM_NO_KEYRING)")
 	_ = rootCmd.PersistentFlags().SetAnnotation("no-keyring", "speakeasy:group", []string{"Authentication"})

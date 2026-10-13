@@ -89,7 +89,7 @@ func runConfigureCmd(cmd *cobra.Command, args []string) error {
 		var pages []*forms.Page
 		securityFields := []*forms.Field{
 			forms.NewInput(&authApiKey).
-				Title("An API key issued from the Shadeform dashboard. Routes that accept a key also accept an Auth0 bearer token in `Authorization`, which this document does not describe.").
+				Title("API key issued from the Shadeform dashboard (Settings → API Keys).").
 				Description("--api-key").
 				Password().
 				Placeholder(maskSecret(config.GetStoredSecret("api-key", cfg.Security.ApiKey))),

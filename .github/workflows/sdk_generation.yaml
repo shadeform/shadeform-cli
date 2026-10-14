@@ -26,11 +26,15 @@ jobs:
   generate:
     uses: speakeasy-api/sdk-generation-action/.github/workflows/workflow-executor.yaml@v15
     with:
-      speakeasy_version: latest
+      speakeasy_version: 1.802.0
       force: ${{ github.event.inputs.force }}
       mode: pr
       set_version: ${{ github.event.inputs.set_version }}
       runs-on: ${{ github.event.inputs.runs-on || 'ubuntu-latest' }}
     secrets:
-      github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      # A fine-grained PAT (Contents, Pull requests, Workflows: read and write).
+      # The default GITHUB_TOKEN cannot push files under .github/workflows/,
+      # which the generator maintains, and events it creates do not trigger
+      # other workflows.
+      github_access_token: ${{ secrets.SDK_AUTOMATION_PAT }}
       speakeasy_api_key: ${{ secrets.SPEAKEASY_API_KEY }}

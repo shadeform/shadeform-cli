@@ -15,7 +15,7 @@ targets:
         sourceBlobDigest: sha256:02a81cad5eaf1b52af9acf91b03fc63ded88f62e969e52e5a4c2a00e10d0b16a
 workflow:
     workflowVersion: 1.0.0
-    speakeasyVersion: latest
+    speakeasyVersion: 1.802.0
     sources:
         Shadeform API:
             inputs:

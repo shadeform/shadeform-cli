@@ -1,0 +1,50 @@
+name: Tag release
+
+# Tags main with the generated CLI version whenever a regeneration lands,
+# which is what release.yaml listens for. Merging a Speakeasy regeneration PR
+# is therefore the whole release step.
+#
+# The tag is pushed with SDK_AUTOMATION_PAT rather than GITHUB_TOKEN for two
+# reasons: tags pushed with GITHUB_TOKEN do not trigger other workflows, so
+# release.yaml would never run; and the "Release tags are admin-only" ruleset
+# only lets an admin create v* tags, which the PAT's owner is.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .speakeasy/gen.lock
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SDK_AUTOMATION_PAT }}
+
+      - name: Tag the generated version
+        run: |
+          set -euo pipefail
+          version=$(sed -n 's/^var Version = "\(.*\)"$/\1/p' internal/cli/version.go)
+          if [ -z "$version" ]; then
+            echo "::error::could not read Version from internal/cli/version.go"
+            exit 1
+          fi
+          tag="v$version"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+            echo "$tag already exists; nothing to do"
+            echo "- $tag already exists; nothing to do" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "aychang95"
+          git config user.email "aychang995@gmail.com"
+          git tag -a "$tag" -m "shade $tag"
+          git push origin "$tag"
+          echo "- Pushed $tag; release.yaml takes it from here" >> "$GITHUB_STEP_SUMMARY"

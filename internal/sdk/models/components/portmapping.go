@@ -3,9 +3,12 @@
 
 package components
 
+// PortMapping - Ports published from the container on the instance, the equivalent of docker run -p.
 type PortMapping struct {
+	// The port inside the container.
 	ContainerPort int64 `json:"container_port"`
-	HostPort      int64 `json:"host_port"`
+	// The port on the instance.
+	HostPort int64 `json:"host_port"`
 }
 
 func (p *PortMapping) GetContainerPort() int64 {

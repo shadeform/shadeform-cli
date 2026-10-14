@@ -5,9 +5,12 @@ package components
 
 // AddSSHKeyRequest - AddSshKeyRequest schema
 type AddSSHKeyRequest struct {
-	Name       string `json:"name"`
-	PrivateKey string `json:"private_key"`
-	PublicKey  string `json:"public_key"`
+	// A name for the key.
+	Name string `json:"name"`
+	// Optional. The matching private key in OpenSSH PEM format, stored encrypted so Shadeform can connect to instances on your behalf. Leave empty to keep the private key on your machine.
+	PrivateKey *string `json:"private_key,omitzero"`
+	// The OpenSSH public key, as found in the .pub file.
+	PublicKey string `json:"public_key"`
 }
 
 func (a *AddSSHKeyRequest) GetName() string {
@@ -17,9 +20,9 @@ func (a *AddSSHKeyRequest) GetName() string {
 	return a.Name
 }
 
-func (a *AddSSHKeyRequest) GetPrivateKey() string {
+func (a *AddSSHKeyRequest) GetPrivateKey() *string {
 	if a == nil {
-		return ""
+		return nil
 	}
 	return a.PrivateKey
 }

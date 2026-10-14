@@ -7,8 +7,11 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
 )
 
+// AutoDeleteUpdate - Replace the auto-delete thresholds. Set a threshold to null to clear it; omit the object to keep both unchanged.
 type AutoDeleteUpdate struct {
-	DateThreshold  optionalnullable.OptionalNullable[string] `json:"date_threshold,omitzero"`
+	// Delete the instance at this time. RFC 3339 timestamp; null clears it.
+	DateThreshold optionalnullable.OptionalNullable[string] `json:"date_threshold,omitzero"`
+	// Delete the instance once its spend reaches this amount. Decimal dollar amount as a string; null clears it.
 	SpendThreshold optionalnullable.OptionalNullable[string] `json:"spend_threshold,omitzero"`
 }
 

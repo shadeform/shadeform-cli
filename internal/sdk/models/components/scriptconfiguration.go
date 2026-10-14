@@ -3,7 +3,9 @@
 
 package components
 
+// ScriptConfiguration - The startup script to run once the instance is active. Only read when type is script. See https://docs.shadeform.ai/guides/startupscript.
 type ScriptConfiguration struct {
+	// The startup script, base64 encoded. Runs as root once the instance is active; up to 40000 characters encoded.
 	Base64Script *string `json:"base64_script,omitzero"`
 }
 

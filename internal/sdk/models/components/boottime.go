@@ -3,6 +3,7 @@
 
 package components
 
+// BootTime - The expected time from create to active.
 type BootTime struct {
 	MaxBootInSec int64 `json:"max_boot_in_sec"`
 	MinBootInSec int64 `json:"min_boot_in_sec"`

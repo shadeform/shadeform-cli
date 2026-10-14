@@ -8,6 +8,7 @@ import (
 )
 
 type DeleteVolumeRequest struct {
+	// The ID of the volume, from the id field of GET /v1/volumes.
 	VolumeID string `pathParam:"style=simple,explode=false,name=volume_id"`
 }
 

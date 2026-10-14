@@ -7,15 +7,24 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
 )
 
+// LaunchConfiguration - What to run automatically once the instance is active: a docker container or a startup script. See https://docs.shadeform.ai/getting-started/concepts#launch-configuration.
 type LaunchConfiguration struct {
-	Args                *string              `json:"args,omitzero"`
-	Base64Script        *string              `json:"base64_script,omitzero"`
-	ContainerStatus     *string              `json:"container_status,omitzero"`
+	// Deprecated. Use docker_configuration.args.
+	Args *string `json:"args,omitzero"`
+	// Deprecated. Use script_configuration.base64_script.
+	Base64Script *string `json:"base64_script,omitzero"`
+	// Read-only. The status of the launched container as last reported by the instance.
+	ContainerStatus *string `json:"container_status,omitzero"`
+	// The container to pull and run at startup. Only read when type is docker. See https://docs.shadeform.ai/guides/dockercontainers.
 	DockerConfiguration *DockerConfiguration `json:"docker_configuration,omitzero"`
-	Image               *string              `json:"image,omitzero"`
-	ModelConfiguration  *ModelConfiguration  `json:"model_configuration,omitzero"`
+	// Deprecated. Use docker_configuration.image.
+	Image *string `json:"image,omitzero"`
+	// The model to serve with vLLM and the API key its inference endpoint requires from callers. On a launch configuration this is the legacy vLLM launch type; prefer docker_configuration.
+	ModelConfiguration *ModelConfiguration `json:"model_configuration,omitzero"`
+	// The startup script to run once the instance is active. Only read when type is script. See https://docs.shadeform.ai/guides/startupscript.
 	ScriptConfiguration *ScriptConfiguration `json:"script_configuration,omitzero"`
-	Type                *string              `json:"type,omitzero"`
+	// The kind of launch configuration: docker runs a container, script runs a startup script. Determines which of docker_configuration and script_configuration is read.
+	Type *string `json:"type,omitzero"`
 }
 
 func (l LaunchConfiguration) MarshalJSON() ([]byte, error) {

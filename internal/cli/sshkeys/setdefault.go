@@ -16,7 +16,7 @@ import (
 )
 
 var setDefaultCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "ssh-key-id", Shorthand: "s", FieldPath: "SSHKeyID", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
+	{FlagName: "ssh-key-id", Shorthand: "s", FieldPath: "SSHKeyID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the SSH key, from the id field of GET /v1/sshkeys. [required]"},
 }
 
 // initSetDefaultCmd initializes the set-default command.
@@ -37,11 +37,11 @@ func initSetDefaultCmd(parent *cobra.Command) error {
 	if err := flagutil.ValidateMeta[operations.SetDefaultSSHKeyRequest](setDefaultCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for set-default: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "ssh-key-id", "string value (or pass it as the [ssh-key-id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "ssh-key-id", "The ID of the SSH key, from the id field of GET /v1/sshkeys. (or pass it as the [ssh-key-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "ssh-key-id", Summary: "string value", Required: true, SatisfiedBy: []string{"ssh-key-id"}},
+		{Name: "ssh-key-id", Summary: "The ID of the SSH key, from the id field of GET /v1/sshkeys.", Required: true, SatisfiedBy: []string{"ssh-key-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for set-default: %w", err)
 	}

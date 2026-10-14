@@ -3,9 +3,12 @@
 
 package components
 
+// DockerVolumeMount - Bind mounts from the instance into the container, the equivalent of docker run -v.
 type DockerVolumeMount struct {
+	// The path inside the container.
 	ContainerPath string `json:"container_path"`
-	HostPath      string `json:"host_path"`
+	// The path on the instance.
+	HostPath string `json:"host_path"`
 }
 
 func (d *DockerVolumeMount) GetContainerPath() string {

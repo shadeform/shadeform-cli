@@ -3,8 +3,11 @@
 
 package components
 
+// VolumeMountMap - Explicit mounts of attached volumes to paths on the instance. Use instead of auto when the path matters.
 type VolumeMountMap struct {
-	Disk     string `json:"disk"`
+	// The ID of the attached storage volume to mount.
+	Disk string `json:"disk"`
+	// The absolute path on the instance to mount the volume at.
 	FilePath string `json:"file_path"`
 }
 

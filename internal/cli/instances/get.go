@@ -16,7 +16,7 @@ import (
 )
 
 var getCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "instance-id", Shorthand: "i", FieldPath: "InstanceID", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
+	{FlagName: "instance-id", Shorthand: "i", FieldPath: "InstanceID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the instance, from the id field of GET /v1/instances or the create response. [required]"},
 }
 
 // initGetCmd initializes the get command.
@@ -36,11 +36,11 @@ func initGetCmd(parent *cobra.Command) error {
 	if err := flagutil.ValidateMeta[operations.GetInstanceRequest](getCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for get: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "instance-id", "string value (or pass it as the [instance-id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "instance-id", "The ID of the instance, from the id field of GET /v1/instances or the create response. (or pass it as the [instance-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "instance-id", Summary: "string value", Required: true, SatisfiedBy: []string{"instance-id"}},
+		{Name: "instance-id", Summary: "The ID of the instance, from the id field of GET /v1/instances or the create response.", Required: true, SatisfiedBy: []string{"instance-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for get: %w", err)
 	}

@@ -5,10 +5,14 @@ package components
 
 // CreateVolumeRequest schema
 type CreateVolumeRequest struct {
-	Cloud    string `json:"cloud"`
-	Name     string `json:"name"`
-	Region   string `json:"region"`
-	SizeInGb int64  `json:"size_in_gb"`
+	// The cloud provider to create the volume in, as listed by GET /v1/volumes/types. See https://docs.shadeform.ai/getting-started/concepts#cloud-cloud-provider.
+	Cloud string `json:"cloud"`
+	// A name for the volume.
+	Name string `json:"name"`
+	// The region to create the volume in, as listed by GET /v1/volumes/types. A volume can only be attached to instances in the same cloud and region.
+	Region string `json:"region"`
+	// The size of the volume in GB.
+	SizeInGb int64 `json:"size_in_gb"`
 }
 
 func (c *CreateVolumeRequest) GetCloud() string {

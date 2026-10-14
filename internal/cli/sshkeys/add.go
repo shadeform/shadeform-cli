@@ -16,9 +16,9 @@ import (
 )
 
 var addCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "name", Shorthand: "n", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "private-key", FieldPath: "PrivateKey", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "public-key", FieldPath: "PublicKey", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
+	{FlagName: "name", Shorthand: "n", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "A name for the key. [required]"},
+	{FlagName: "private-key", FieldPath: "PrivateKey", Kind: flagutil.FlagKindString, Optional: true, Description: "Optional. The matching private key in OpenSSH PEM format, stored encrypted so Shadeform can connect to instances on your behalf. Leave empty to keep the private key on your machine."},
+	{FlagName: "public-key", FieldPath: "PublicKey", Kind: flagutil.FlagKindString, Required: true, Description: "The OpenSSH public key, as found in the .pub file. [required]"},
 }
 
 // initAddCmd initializes the add command.
@@ -27,7 +27,7 @@ func initAddCmd(parent *cobra.Command) error {
 		Use:     "add",
 		Short:   "Add an SSH key",
 		Long:    "Add a new SSH Key",
-		Example: "  shade ssh-keys add --name <value> --private-key <value> --public-key <value>",
+		Example: "  shade ssh-keys add --name <value> --public-key <value>",
 		Args:    cobra.NoArgs,
 		RunE:    runAddCmd,
 		Annotations: map[string]string{

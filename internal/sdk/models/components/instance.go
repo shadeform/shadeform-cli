@@ -10,46 +10,72 @@ import (
 )
 
 type Instance struct {
-	AccountID           optionalnullable.OptionalNullable[string]        `json:"account_id,omitzero"`
-	ActiveAt            *time.Time                                       `json:"active_at"`
-	Alert               *Alert                                           `json:"alert,omitzero"`
-	AutoDelete          *AutoDelete                                      `json:"auto_delete,omitzero"`
-	BootTime            BootTime                                         `json:"boot_time"`
-	Cloud               string                                           `json:"cloud"`
-	CloudAssignedID     string                                           `json:"cloud_assigned_id"`
-	CloudInstanceType   string                                           `json:"cloud_instance_type"`
-	ClusterID           optionalnullable.OptionalNullable[string]        `json:"cluster_id,omitzero"`
-	CommitmentID        optionalnullable.OptionalNullable[string]        `json:"commitment_id,omitzero"`
-	Configuration       InstanceConfiguration                            `json:"configuration"`
-	CostEstimate        *string                                          `json:"cost_estimate"`
-	CreatedAt           time.Time                                        `json:"created_at"`
-	DeletedAt           *time.Time                                       `json:"deleted_at"`
-	Details             *InstanceDetails                                 `json:"details,omitzero"`
-	Email               optionalnullable.OptionalNullable[string]        `json:"email,omitzero"`
-	Envs                optionalnullable.OptionalNullable[[]EnvVar]      `json:"envs,omitzero"`
-	HourlyPrice         int64                                            `json:"hourly_price"`
-	ID                  string                                           `json:"id"`
-	InternalHostname    optionalnullable.OptionalNullable[string]        `json:"internal_hostname,omitzero"`
-	IP                  *string                                          `json:"ip"`
-	LaunchConfiguration *LaunchConfiguration                             `json:"launch_configuration,omitzero"`
-	ModelName           *string                                          `json:"model_name,omitzero"`
-	Name                string                                           `json:"name"`
-	PortForwards        optionalnullable.OptionalNullable[[]PortForward] `json:"port_forwards,omitzero"`
-	PrivateIP           optionalnullable.OptionalNullable[string]        `json:"private_ip,omitzero"`
-	Region              string                                           `json:"region"`
-	RentalTerms         RentalTerms                                      `json:"rental_terms"`
-	RunningTimeSeconds  optionalnullable.OptionalNullable[int64]         `json:"running_time_seconds,omitzero"`
-	ShadeCloud          bool                                             `json:"shade_cloud"`
-	ShadeInstanceType   string                                           `json:"shade_instance_type"`
-	SSHKeyID            string                                           `json:"ssh_key_id"`
-	SSHPort             *int64                                           `json:"ssh_port"`
-	SSHUser             *string                                          `json:"ssh_user"`
-	Status              string                                           `json:"status"`
-	StatusDetails       string                                           `json:"status_details"`
-	Tags                optionalnullable.OptionalNullable[[]string]      `json:"tags,omitzero"`
-	TemplateID          optionalnullable.OptionalNullable[string]        `json:"template_id,omitzero"`
-	TotalSpend          optionalnullable.OptionalNullable[string]        `json:"total_spend,omitzero"`
-	VolumeIds           optionalnullable.OptionalNullable[[]string]      `json:"volume_ids,omitzero"`
+	AccountID optionalnullable.OptionalNullable[string] `json:"account_id,omitzero"`
+	// When the instance became active, in UTC. Null until then.
+	ActiveAt *time.Time `json:"active_at"`
+	// Send an email alert when a date or a spend threshold is reached.
+	Alert *Alert `json:"alert,omitzero"`
+	// Delete the instance automatically when a date or a spend threshold is reached.
+	AutoDelete *AutoDelete `json:"auto_delete,omitzero"`
+	// The expected time from create to active.
+	BootTime BootTime `json:"boot_time"`
+	// The underlying cloud provider.
+	Cloud string `json:"cloud"`
+	// The ID the cloud provider assigned to the instance.
+	CloudAssignedID string `json:"cloud_assigned_id"`
+	// The cloud provider's own name for the instance type.
+	CloudInstanceType string                                    `json:"cloud_instance_type"`
+	ClusterID         optionalnullable.OptionalNullable[string] `json:"cluster_id,omitzero"`
+	CommitmentID      optionalnullable.OptionalNullable[string] `json:"commitment_id,omitzero"`
+	// The hardware of the instance type.
+	Configuration InstanceConfiguration `json:"configuration"`
+	// The cost incurred so far through Shadeform, as a decimal dollar string. Instances in your own cloud account are billed by that provider instead.
+	CostEstimate *string `json:"cost_estimate"`
+	// When the instance was created, in UTC.
+	CreatedAt time.Time `json:"created_at"`
+	// When the instance was deleted, in UTC. Null while it exists.
+	DeletedAt *time.Time                                  `json:"deleted_at"`
+	Details   *InstanceDetails                            `json:"details,omitzero"`
+	Email     optionalnullable.OptionalNullable[string]   `json:"email,omitzero"`
+	Envs      optionalnullable.OptionalNullable[[]EnvVar] `json:"envs,omitzero"`
+	// The on-demand hourly price in cents.
+	HourlyPrice int64 `json:"hourly_price"`
+	// The ID of the instance, used in the /v1/instances/{instance_id}/... routes.
+	ID               string                                    `json:"id"`
+	InternalHostname optionalnullable.OptionalNullable[string] `json:"internal_hostname,omitzero"`
+	// The public IP address of the instance, or in some clouds its DNS name. Null until the instance is active.
+	IP *string `json:"ip"`
+	// What to run automatically once the instance is active: a docker container or a startup script. See https://docs.shadeform.ai/getting-started/concepts#launch-configuration.
+	LaunchConfiguration *LaunchConfiguration `json:"launch_configuration,omitzero"`
+	ModelName           *string              `json:"model_name,omitzero"`
+	// The name of the instance.
+	Name         string                                           `json:"name"`
+	PortForwards optionalnullable.OptionalNullable[[]PortForward] `json:"port_forwards,omitzero"`
+	PrivateIP    optionalnullable.OptionalNullable[string]        `json:"private_ip,omitzero"`
+	// The region of the cloud provider.
+	Region string `json:"region"`
+	// How the instance is rented and on what terms.
+	RentalTerms        RentalTerms                              `json:"rental_terms"`
+	RunningTimeSeconds optionalnullable.OptionalNullable[int64] `json:"running_time_seconds,omitzero"`
+	// True when the instance runs in Shade Cloud, false when it runs in your linked cloud account.
+	ShadeCloud bool `json:"shade_cloud"`
+	// The Shadeform standardized instance type.
+	ShadeInstanceType string `json:"shade_instance_type"`
+	// The ID of the SSH key installed on the instance.
+	SSHKeyID string `json:"ssh_key_id"`
+	// The SSH port. Usually 22; some clouds use another port.
+	SSHPort *int64 `json:"ssh_port"`
+	// The user to SSH in as.
+	SSHUser *string `json:"ssh_user"`
+	// The lifecycle status: pending, active, deleting, deleted or an error state.
+	Status string `json:"status"`
+	// More detail on the status. A spot instance Shadeform reclaimed carries preempted once terminated.
+	StatusDetails string                                      `json:"status_details"`
+	Tags          optionalnullable.OptionalNullable[[]string] `json:"tags,omitzero"`
+	TemplateID    optionalnullable.OptionalNullable[string]   `json:"template_id,omitzero"`
+	TotalSpend    optionalnullable.OptionalNullable[string]   `json:"total_spend,omitzero"`
+	// IDs of the storage volumes attached to the instance.
+	VolumeIds optionalnullable.OptionalNullable[[]string] `json:"volume_ids,omitzero"`
 }
 
 func (i Instance) MarshalJSON() ([]byte, error) {

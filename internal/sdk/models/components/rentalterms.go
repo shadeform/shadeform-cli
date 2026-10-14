@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// RentalTerms - How the instance is rented and on what terms.
 type RentalTerms struct {
 	EndingAt    *time.Time `json:"ending_at"`
 	HourlyPrice *string    `json:"hourly_price,omitzero"`

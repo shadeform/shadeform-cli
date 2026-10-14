@@ -16,22 +16,22 @@ import (
 )
 
 var saveCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "alert", FieldPath: "Alert", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"alert"`, Description: "[required]"},
-	{FlagName: "author", FieldPath: "Author", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"author,omitempty"`, Description: "string value"},
-	{FlagName: "auto-delete", FieldPath: "AutoDelete", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"auto_delete"`, Description: "[required]"},
-	{FlagName: "description", FieldPath: "Description", Kind: flagutil.FlagKindString, Optional: true, Description: "[required]"},
-	{FlagName: "envs", Shorthand: "e", FieldPath: "Envs", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"envs"`, Description: "JSON array [required]"},
-	{FlagName: "featured", Shorthand: "f", FieldPath: "Featured", Kind: flagutil.FlagKindBool, Optional: true, Description: "[required]"},
-	{FlagName: "id", FieldPath: "ID", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"id"`, Description: "[required]"},
-	{FlagName: "is-account-owner", FieldPath: "IsAccountOwner", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"is_account_owner,omitempty"`, Description: "boolean flag"},
-	{FlagName: "launch-configuration", FieldPath: "LaunchConfiguration", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"launch_configuration"`, Description: "[required]"},
-	{FlagName: "logo", FieldPath: "Logo", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"logo,omitempty"`, Description: "string value"},
-	{FlagName: "metadata", Shorthand: "m", FieldPath: "Metadata", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "[required]"},
-	{FlagName: "name", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "networking", FieldPath: "Networking", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"networking"`, Description: "[required]"},
-	{FlagName: "public", Shorthand: "p", FieldPath: "Public", Kind: flagutil.FlagKindBool, Required: true, Description: "[required]"},
-	{FlagName: "tags", Shorthand: "t", FieldPath: "Tags", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "[required]"},
-	{FlagName: "volume-mount", Shorthand: "v", FieldPath: "VolumeMount", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"volume_mount"`, Description: "[required]"},
+	{FlagName: "alert", FieldPath: "Alert", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"alert,omitempty"`, Description: "Send an email alert when a date or a spend threshold is reached."},
+	{FlagName: "author", FieldPath: "Author", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"author,omitempty"`, Description: "Who published the template. Up to 50 characters."},
+	{FlagName: "auto-delete", FieldPath: "AutoDelete", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"auto_delete,omitempty"`, Description: "Delete the instance automatically when a date or a spend threshold is reached."},
+	{FlagName: "description", FieldPath: "Description", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"description,omitempty"`, Description: "What the template launches and when to use it. Up to 10000 characters."},
+	{FlagName: "envs", Shorthand: "e", FieldPath: "Envs", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"envs,omitempty"`, Description: "Environment variables to set on the instance for every shell session. Up to 20. (JSON array)"},
+	{FlagName: "featured", Shorthand: "f", FieldPath: "Featured", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"featured,omitempty"`, Description: "True for templates Shadeform curates and lists under GET /v1/templates/featured. Read-only."},
+	{FlagName: "id", FieldPath: "ID", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"id,omitempty"`, Description: "The ID of the template, assigned by Shadeform. Ignored on save."},
+	{FlagName: "is-account-owner", FieldPath: "IsAccountOwner", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"is_account_owner,omitempty"`, Description: "True when the template belongs to the requesting account. Read-only."},
+	{FlagName: "launch-configuration", FieldPath: "LaunchConfiguration", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"launch_configuration,omitempty"`, Description: "What to run automatically once the instance is active: a docker container or a startup script. See https://docs.shadeform.ai/getting-started/concepts#launch-configuration."},
+	{FlagName: "logo", FieldPath: "Logo", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"logo,omitempty"`, Description: "URL of a logo shown with the template. Up to 200 characters."},
+	{FlagName: "metadata", Shorthand: "m", FieldPath: "Metadata", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"metadata,omitempty"`, Description: "Free-form labels attached to the template, such as the model or framework it runs. (JSON array)"},
+	{FlagName: "name", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "The name of the template. Alphanumeric characters, spaces, underscores and dashes, up to 100 characters. [required]"},
+	{FlagName: "networking", FieldPath: "Networking", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"networking,omitempty"`, Description: "Network configuration, currently UFW firewall rules applied at boot."},
+	{FlagName: "public", Shorthand: "p", FieldPath: "Public", Kind: flagutil.FlagKindBool, Required: true, Description: "True makes the template visible to every Shadeform account; false keeps it private to yours. [required]"},
+	{FlagName: "tags", Shorthand: "t", FieldPath: "Tags", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"tags,omitempty"`, Description: "Custom, searchable tags. Up to 200 characters each. (JSON array)"},
+	{FlagName: "volume-mount", Shorthand: "v", FieldPath: "VolumeMount", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"volume_mount,omitempty"`, Description: "How attached storage volumes are mounted onto the instance's file system."},
 }
 
 // initSaveCmd initializes the save command.
@@ -40,7 +40,7 @@ func initSaveCmd(parent *cobra.Command) error {
 		Use:     "save",
 		Short:   "Save a template",
 		Long:    "Create a new template",
-		Example: "  shade templates save --alert '{}' --auto-delete '{}' --description 'yowza torn aboard excluding sunbathe questioningly although ugh dismal' --envs <value> --featured=true",
+		Example: "  shade templates save --name <value> --public=false",
 		Args:    cobra.NoArgs,
 		RunE:    runSaveCmd,
 		Annotations: map[string]string{

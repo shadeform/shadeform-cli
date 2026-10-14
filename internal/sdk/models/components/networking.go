@@ -3,11 +3,29 @@
 
 package components
 
+import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
+	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
+)
+
+// Networking - Network configuration, currently UFW firewall rules applied at boot.
 type Networking struct {
-	UfwRules []UfwRule `json:"ufw_rules"`
+	// UFW (Uncomplicated Firewall) rules applied when the instance boots.
+	UfwRules optionalnullable.OptionalNullable[[]UfwRule] `json:"ufw_rules,omitzero"`
 }
 
-func (n *Networking) GetUfwRules() []UfwRule {
+func (n Networking) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(n, "", false)
+}
+
+func (n *Networking) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &n, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (n *Networking) GetUfwRules() optionalnullable.OptionalNullable[[]UfwRule] {
 	if n == nil {
 		return nil
 	}

@@ -3,36 +3,56 @@
 
 package components
 
+import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
+	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
+)
+
 // UpdateInstanceRequest schema
 type UpdateInstanceRequest struct {
-	Alert      AlertUpdate      `json:"alert"`
-	AutoDelete AutoDeleteUpdate `json:"auto_delete"`
-	Name       *string          `json:"name"`
-	Tags       []string         `json:"tags"`
+	// Replace the alert thresholds. Set a threshold to null to clear it; omit the object to keep both unchanged.
+	Alert *AlertUpdate `json:"alert,omitzero"`
+	// Replace the auto-delete thresholds. Set a threshold to null to clear it; omit the object to keep both unchanged.
+	AutoDelete *AutoDeleteUpdate `json:"auto_delete,omitzero"`
+	// The new name of the instance. Omit to keep the current name.
+	Name optionalnullable.OptionalNullable[string] `json:"name,omitzero"`
+	// Replace the instance's tags. Pass an empty list to remove them; omit to keep them.
+	Tags optionalnullable.OptionalNullable[[]string] `json:"tags,omitzero"`
 }
 
-func (u *UpdateInstanceRequest) GetAlert() AlertUpdate {
+func (u UpdateInstanceRequest) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(u, "", false)
+}
+
+func (u *UpdateInstanceRequest) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &u, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *UpdateInstanceRequest) GetAlert() *AlertUpdate {
 	if u == nil {
-		return AlertUpdate{}
+		return nil
 	}
 	return u.Alert
 }
 
-func (u *UpdateInstanceRequest) GetAutoDelete() AutoDeleteUpdate {
+func (u *UpdateInstanceRequest) GetAutoDelete() *AutoDeleteUpdate {
 	if u == nil {
-		return AutoDeleteUpdate{}
+		return nil
 	}
 	return u.AutoDelete
 }
 
-func (u *UpdateInstanceRequest) GetName() *string {
+func (u *UpdateInstanceRequest) GetName() optionalnullable.OptionalNullable[string] {
 	if u == nil {
 		return nil
 	}
 	return u.Name
 }
 
-func (u *UpdateInstanceRequest) GetTags() []string {
+func (u *UpdateInstanceRequest) GetTags() optionalnullable.OptionalNullable[[]string] {
 	if u == nil {
 		return nil
 	}

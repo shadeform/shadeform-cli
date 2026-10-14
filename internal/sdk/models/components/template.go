@@ -5,30 +5,58 @@ package components
 
 import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
+	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
 )
 
 type Template struct {
-	Alert               Alert                                     `json:"alert"`
-	Author              optionalnullable.OptionalNullable[string] `json:"author,omitzero"`
-	AutoDelete          AutoDelete                                `json:"auto_delete"`
-	Description         *string                                   `json:"description"`
-	Envs                []EnvVar                                  `json:"envs"`
-	Featured            *bool                                     `json:"featured"`
-	ID                  any                                       `json:"id"`
-	IsAccountOwner      optionalnullable.OptionalNullable[bool]   `json:"is_account_owner,omitzero"`
-	LaunchConfiguration LaunchConfiguration                       `json:"launch_configuration"`
-	Logo                optionalnullable.OptionalNullable[string] `json:"logo,omitzero"`
-	Metadata            []string                                  `json:"metadata"`
-	Name                string                                    `json:"name"`
-	Networking          Networking                                `json:"networking"`
-	Public              bool                                      `json:"public"`
-	Tags                []string                                  `json:"tags"`
-	VolumeMount         VolumeMount                               `json:"volume_mount"`
+	// Send an email alert when a date or a spend threshold is reached.
+	Alert *Alert `json:"alert,omitzero"`
+	// Who published the template. Up to 50 characters.
+	Author optionalnullable.OptionalNullable[string] `json:"author,omitzero"`
+	// Delete the instance automatically when a date or a spend threshold is reached.
+	AutoDelete *AutoDelete `json:"auto_delete,omitzero"`
+	// What the template launches and when to use it. Up to 10000 characters.
+	Description optionalnullable.OptionalNullable[string] `json:"description,omitzero"`
+	// Environment variables to set on the instance for every shell session. Up to 20.
+	Envs optionalnullable.OptionalNullable[[]EnvVar] `json:"envs,omitzero"`
+	// True for templates Shadeform curates and lists under GET /v1/templates/featured. Read-only.
+	Featured optionalnullable.OptionalNullable[bool] `json:"featured,omitzero"`
+	// The ID of the template, assigned by Shadeform. Ignored on save.
+	ID optionalnullable.OptionalNullable[any] `json:"id,omitzero"`
+	// True when the template belongs to the requesting account. Read-only.
+	IsAccountOwner optionalnullable.OptionalNullable[bool] `json:"is_account_owner,omitzero"`
+	// What to run automatically once the instance is active: a docker container or a startup script. See https://docs.shadeform.ai/getting-started/concepts#launch-configuration.
+	LaunchConfiguration *LaunchConfiguration `json:"launch_configuration,omitzero"`
+	// URL of a logo shown with the template. Up to 200 characters.
+	Logo optionalnullable.OptionalNullable[string] `json:"logo,omitzero"`
+	// Free-form labels attached to the template, such as the model or framework it runs.
+	Metadata optionalnullable.OptionalNullable[[]string] `json:"metadata,omitzero"`
+	// The name of the template. Alphanumeric characters, spaces, underscores and dashes, up to 100 characters.
+	Name string `json:"name"`
+	// Network configuration, currently UFW firewall rules applied at boot.
+	Networking *Networking `json:"networking,omitzero"`
+	// True makes the template visible to every Shadeform account; false keeps it private to yours.
+	Public bool `json:"public"`
+	// Custom, searchable tags. Up to 200 characters each.
+	Tags optionalnullable.OptionalNullable[[]string] `json:"tags,omitzero"`
+	// How attached storage volumes are mounted onto the instance's file system.
+	VolumeMount *VolumeMount `json:"volume_mount,omitzero"`
 }
 
-func (t *Template) GetAlert() Alert {
+func (t Template) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(t, "", false)
+}
+
+func (t *Template) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &t, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (t *Template) GetAlert() *Alert {
 	if t == nil {
-		return Alert{}
+		return nil
 	}
 	return t.Alert
 }
@@ -40,35 +68,35 @@ func (t *Template) GetAuthor() optionalnullable.OptionalNullable[string] {
 	return t.Author
 }
 
-func (t *Template) GetAutoDelete() AutoDelete {
+func (t *Template) GetAutoDelete() *AutoDelete {
 	if t == nil {
-		return AutoDelete{}
+		return nil
 	}
 	return t.AutoDelete
 }
 
-func (t *Template) GetDescription() *string {
+func (t *Template) GetDescription() optionalnullable.OptionalNullable[string] {
 	if t == nil {
 		return nil
 	}
 	return t.Description
 }
 
-func (t *Template) GetEnvs() []EnvVar {
+func (t *Template) GetEnvs() optionalnullable.OptionalNullable[[]EnvVar] {
 	if t == nil {
 		return nil
 	}
 	return t.Envs
 }
 
-func (t *Template) GetFeatured() *bool {
+func (t *Template) GetFeatured() optionalnullable.OptionalNullable[bool] {
 	if t == nil {
 		return nil
 	}
 	return t.Featured
 }
 
-func (t *Template) GetID() any {
+func (t *Template) GetID() optionalnullable.OptionalNullable[any] {
 	if t == nil {
 		return nil
 	}
@@ -82,9 +110,9 @@ func (t *Template) GetIsAccountOwner() optionalnullable.OptionalNullable[bool] {
 	return t.IsAccountOwner
 }
 
-func (t *Template) GetLaunchConfiguration() LaunchConfiguration {
+func (t *Template) GetLaunchConfiguration() *LaunchConfiguration {
 	if t == nil {
-		return LaunchConfiguration{}
+		return nil
 	}
 	return t.LaunchConfiguration
 }
@@ -96,7 +124,7 @@ func (t *Template) GetLogo() optionalnullable.OptionalNullable[string] {
 	return t.Logo
 }
 
-func (t *Template) GetMetadata() []string {
+func (t *Template) GetMetadata() optionalnullable.OptionalNullable[[]string] {
 	if t == nil {
 		return nil
 	}
@@ -110,9 +138,9 @@ func (t *Template) GetName() string {
 	return t.Name
 }
 
-func (t *Template) GetNetworking() Networking {
+func (t *Template) GetNetworking() *Networking {
 	if t == nil {
-		return Networking{}
+		return nil
 	}
 	return t.Networking
 }
@@ -124,16 +152,16 @@ func (t *Template) GetPublic() bool {
 	return t.Public
 }
 
-func (t *Template) GetTags() []string {
+func (t *Template) GetTags() optionalnullable.OptionalNullable[[]string] {
 	if t == nil {
 		return nil
 	}
 	return t.Tags
 }
 
-func (t *Template) GetVolumeMount() VolumeMount {
+func (t *Template) GetVolumeMount() *VolumeMount {
 	if t == nil {
-		return VolumeMount{}
+		return nil
 	}
 	return t.VolumeMount
 }

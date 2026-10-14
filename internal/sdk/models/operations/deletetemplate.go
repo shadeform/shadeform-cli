@@ -8,6 +8,7 @@ import (
 )
 
 type DeleteTemplateRequest struct {
+	// The ID of the template, from the id field of GET /v1/templates.
 	TemplateID string `pathParam:"style=simple,explode=false,name=template_id"`
 }
 

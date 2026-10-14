@@ -16,10 +16,10 @@ import (
 )
 
 var createCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "cloud", Shorthand: "c", FieldPath: "Cloud", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "name", Shorthand: "n", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "region", Shorthand: "r", FieldPath: "Region", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "size-in-gb", Shorthand: "s", FieldPath: "SizeInGb", Kind: flagutil.FlagKindInt64, Required: true, Description: "[required]"},
+	{FlagName: "cloud", Shorthand: "c", FieldPath: "Cloud", Kind: flagutil.FlagKindString, Required: true, Description: "The cloud provider to create the volume in, as listed by GET /v1/volumes/types. See https://docs.shadeform.ai/getting-started/concepts#cloud-cloud-provider. [required]"},
+	{FlagName: "name", Shorthand: "n", FieldPath: "Name", Kind: flagutil.FlagKindString, Required: true, Description: "A name for the volume. [required]"},
+	{FlagName: "region", Shorthand: "r", FieldPath: "Region", Kind: flagutil.FlagKindString, Required: true, Description: "The region to create the volume in, as listed by GET /v1/volumes/types. A volume can only be attached to instances in the same cloud and region. [required]"},
+	{FlagName: "size-in-gb", Shorthand: "s", FieldPath: "SizeInGb", Kind: flagutil.FlagKindInt64, Required: true, Description: "The size of the volume in GB. [required]"},
 }
 
 // initCreateCmd initializes the create command.

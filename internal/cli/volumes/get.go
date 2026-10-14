@@ -16,7 +16,7 @@ import (
 )
 
 var getCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "volume-id", Shorthand: "v", FieldPath: "VolumeID", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
+	{FlagName: "volume-id", Shorthand: "v", FieldPath: "VolumeID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the volume, from the id field of GET /v1/volumes. [required]"},
 }
 
 // initGetCmd initializes the get command.
@@ -36,11 +36,11 @@ func initGetCmd(parent *cobra.Command) error {
 	if err := flagutil.ValidateMeta[operations.GetVolumeRequest](getCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for get: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "volume-id", "string value (or pass it as the [volume-id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "volume-id", "The ID of the volume, from the id field of GET /v1/volumes. (or pass it as the [volume-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "volume-id", Summary: "string value", Required: true, SatisfiedBy: []string{"volume-id"}},
+		{Name: "volume-id", Summary: "The ID of the volume, from the id field of GET /v1/volumes.", Required: true, SatisfiedBy: []string{"volume-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for get: %w", err)
 	}

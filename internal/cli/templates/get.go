@@ -16,7 +16,7 @@ import (
 )
 
 var getCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "template-id", Shorthand: "t", FieldPath: "TemplateID", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
+	{FlagName: "template-id", Shorthand: "t", FieldPath: "TemplateID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the template, from the id field of GET /v1/templates. [required]"},
 }
 
 // initGetCmd initializes the get command.
@@ -36,11 +36,11 @@ func initGetCmd(parent *cobra.Command) error {
 	if err := flagutil.ValidateMeta[operations.GetTemplateRequest](getCmdMeta); err != nil {
 		return fmt.Errorf("invalid metadata for get: %w", err)
 	}
-	if err := flagutil.DeclarePositionalFlag(cmd, "template-id", "string value (or pass it as the [template-id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "template-id", "The ID of the template, from the id field of GET /v1/templates. (or pass it as the [template-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "template-id", Summary: "string value", Required: true, SatisfiedBy: []string{"template-id"}},
+		{Name: "template-id", Summary: "The ID of the template, from the id field of GET /v1/templates.", Required: true, SatisfiedBy: []string{"template-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for get: %w", err)
 	}

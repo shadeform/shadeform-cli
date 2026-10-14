@@ -7,8 +7,11 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
 )
 
+// Alert - Send an email alert when a date or a spend threshold is reached.
 type Alert struct {
-	DateThreshold  optionalnullable.OptionalNullable[string] `json:"date_threshold,omitzero"`
+	// Send an email alert at this time. RFC 3339 timestamp.
+	DateThreshold optionalnullable.OptionalNullable[string] `json:"date_threshold,omitzero"`
+	// Send an email alert once the instance's spend reaches this amount. Decimal dollar amount as a string.
 	SpendThreshold optionalnullable.OptionalNullable[string] `json:"spend_threshold,omitzero"`
 }
 

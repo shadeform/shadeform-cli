@@ -9,22 +9,38 @@ import (
 )
 
 type InstanceType struct {
-	Availability      optionalnullable.OptionalNullable[[]InstanceTypeAvailability] `json:"availability,omitzero"`
-	BootTime          BootTime                                                      `json:"boot_time"`
-	Cloud             string                                                        `json:"cloud"`
-	CloudInstanceType string                                                        `json:"cloud_instance_type"`
-	Configuration     InstanceConfiguration                                         `json:"configuration"`
-	DeploymentType    string                                                        `json:"deployment_type"`
-	FlexVM            bool                                                          `json:"flex_vm"`
-	GpuType           string                                                        `json:"gpu_type"`
-	HourlyPrice       int64                                                         `json:"hourly_price"`
-	Interconnect      string                                                        `json:"interconnect"`
-	MemoryInGb        int64                                                         `json:"memory_in_gb"`
-	NumGpus           int64                                                         `json:"num_gpus"`
-	Nvlink            bool                                                          `json:"nvlink"`
-	ShadeInstanceType string                                                        `json:"shade_instance_type"`
-	StorageInGb       int64                                                         `json:"storage_in_gb"`
-	Vcpus             int64                                                         `json:"vcpus"`
+	// Where the instance type can be launched right now, one entry per region and rental type.
+	Availability optionalnullable.OptionalNullable[[]InstanceTypeAvailability] `json:"availability,omitzero"`
+	// The expected time from create to active.
+	BootTime BootTime `json:"boot_time"`
+	// The underlying cloud provider; use it as cloud when creating an instance.
+	Cloud string `json:"cloud"`
+	// The cloud provider's own name for the instance type.
+	CloudInstanceType string `json:"cloud_instance_type"`
+	// The hardware of the instance type.
+	Configuration InstanceConfiguration `json:"configuration"`
+	// What is provisioned: vm (virtual machine), container (docker container) or baremetal (bare metal server).
+	DeploymentType string `json:"deployment_type"`
+	// True when the instance is a Flex VM: Shadeform virtualizes the GPU server, which may be owned by a compute provider (see cloud). Flex VMs enable additional features such as metrics and a KVM console, with more coming soon. [Learn more about Flex VMs](https://shadeform.com/flex-vms).
+	FlexVM bool `json:"flex_vm"`
+	// The GPU model.
+	GpuType string `json:"gpu_type"`
+	// The on-demand hourly price in cents.
+	HourlyPrice int64 `json:"hourly_price"`
+	// The GPU interconnect, for example pcie or sxm.
+	Interconnect string `json:"interconnect"`
+	// System memory in GB.
+	MemoryInGb int64 `json:"memory_in_gb"`
+	// Number of GPUs.
+	NumGpus int64 `json:"num_gpus"`
+	// True when the GPUs are connected with NVLink.
+	Nvlink bool `json:"nvlink"`
+	// The Shadeform standardized instance type; use it as shade_instance_type when creating an instance.
+	ShadeInstanceType string `json:"shade_instance_type"`
+	// Local storage in GB.
+	StorageInGb int64 `json:"storage_in_gb"`
+	// Number of virtual CPUs.
+	Vcpus int64 `json:"vcpus"`
 }
 
 func (i InstanceType) MarshalJSON() ([]byte, error) {

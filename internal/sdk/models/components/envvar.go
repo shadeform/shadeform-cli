@@ -4,7 +4,9 @@
 package components
 
 type EnvVar struct {
-	Name  string `json:"name"`
+	// The name of the environment variable.
+	Name string `json:"name"`
+	// The value of the environment variable.
 	Value string `json:"value"`
 }
 

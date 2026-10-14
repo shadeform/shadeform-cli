@@ -7,8 +7,11 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
 )
 
+// AlertUpdate - Replace the alert thresholds. Set a threshold to null to clear it; omit the object to keep both unchanged.
 type AlertUpdate struct {
-	DateThreshold  optionalnullable.OptionalNullable[string] `json:"date_threshold,omitzero"`
+	// Send an email alert at this time. RFC 3339 timestamp; null clears it.
+	DateThreshold optionalnullable.OptionalNullable[string] `json:"date_threshold,omitzero"`
+	// Send an email alert once the instance's spend reaches this amount. Decimal dollar amount as a string; null clears it.
 	SpendThreshold optionalnullable.OptionalNullable[string] `json:"spend_threshold,omitzero"`
 }
 

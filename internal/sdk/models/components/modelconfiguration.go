@@ -7,8 +7,11 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
 )
 
+// ModelConfiguration - The model to serve with vLLM and the API key its inference endpoint requires from callers. On a launch configuration this is the legacy vLLM launch type; prefer docker_configuration.
 type ModelConfiguration struct {
-	ModelAPIKey     string           `json:"api_key"`
+	// The API key the served model's inference endpoint will require from callers. Not your Shadeform API key.
+	ModelAPIKey string `json:"api_key"`
+	// The model to load and how to serve it.
 	ModelProperties *ModelProperties `json:"model_properties,omitzero"`
 }
 

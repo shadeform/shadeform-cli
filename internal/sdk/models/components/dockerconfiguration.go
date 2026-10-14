@@ -8,14 +8,22 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
 )
 
+// DockerConfiguration - The container to pull and run at startup. Only read when type is docker. See https://docs.shadeform.ai/guides/dockercontainers.
 type DockerConfiguration struct {
-	Args                *string                                                `json:"args,omitzero"`
-	Envs                optionalnullable.OptionalNullable[[]Env]               `json:"envs,omitzero"`
-	Image               *string                                                `json:"image,omitzero"`
-	PortMappings        optionalnullable.OptionalNullable[[]PortMapping]       `json:"port_mappings,omitzero"`
-	RegistryCredentials *RegistryCredentials                                   `json:"registry_credentials,omitzero"`
-	SharedMemoryInGb    *int64                                                 `json:"shared_memory_in_gb,omitzero"`
-	VolumeMounts        optionalnullable.OptionalNullable[[]DockerVolumeMount] `json:"volume_mounts,omitzero"`
+	// Arguments passed to the container at runtime, as one string.
+	Args *string `json:"args,omitzero"`
+	// Environment variables passed to the container, the equivalent of docker run -e.
+	Envs optionalnullable.OptionalNullable[[]Env] `json:"envs,omitzero"`
+	// The docker image to pull and run on the instance at startup.
+	Image *string `json:"image,omitzero"`
+	// Ports published from the container on the instance, the equivalent of docker run -p.
+	PortMappings optionalnullable.OptionalNullable[[]PortMapping] `json:"port_mappings,omitzero"`
+	// Credentials for a private docker registry, used for the pull.
+	RegistryCredentials *RegistryCredentials `json:"registry_credentials,omitzero"`
+	// Shared memory for the container in GB, the equivalent of docker run --shm-size. When omitted the container shares the host's IPC namespace and gets the host's shared memory.
+	SharedMemoryInGb *int64 `json:"shared_memory_in_gb,omitzero"`
+	// Bind mounts from the instance into the container, the equivalent of docker run -v.
+	VolumeMounts optionalnullable.OptionalNullable[[]DockerVolumeMount] `json:"volume_mounts,omitzero"`
 }
 
 func (d DockerConfiguration) MarshalJSON() ([]byte, error) {

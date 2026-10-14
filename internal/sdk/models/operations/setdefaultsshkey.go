@@ -8,6 +8,7 @@ import (
 )
 
 type SetDefaultSSHKeyRequest struct {
+	// The ID of the SSH key, from the id field of GET /v1/sshkeys.
 	SSHKeyID string `pathParam:"style=simple,explode=false,name=ssh_key_id"`
 }
 

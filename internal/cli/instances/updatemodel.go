@@ -16,9 +16,9 @@ import (
 )
 
 var updateModelCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "instance-id", Shorthand: "i", FieldPath: "InstanceID", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "model-api-key", FieldPath: "Body.ModelAPIKey", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "model-properties", FieldPath: "Body.ModelProperties", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"model_properties,omitempty"`, Description: "JSON object"},
+	{FlagName: "instance-id", Shorthand: "i", FieldPath: "InstanceID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the instance, from the id field of GET /v1/instances or the create response. [required]"},
+	{FlagName: "model-api-key", FieldPath: "Body.ModelAPIKey", Kind: flagutil.FlagKindString, Required: true, Description: "The API key the served model's inference endpoint will require from callers. Not your Shadeform API key. [required]"},
+	{FlagName: "model-properties", FieldPath: "Body.ModelProperties", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"model_properties,omitempty"`, Description: "The model to load and how to serve it."},
 }
 
 // initUpdateModelCmd initializes the update-model command.
@@ -47,11 +47,11 @@ func initUpdateModelCmd(parent *cobra.Command) error {
 	}
 	cmd.Flags().Bool("schema", false, "Print the exact JSON Schema of the request body and exit")
 	_ = flagutil.AnnotatePromptFlag(cmd, "schema", flagutil.PromptFlagSpec{Kind: "bool", DocSurface: true})
-	if err := flagutil.DeclarePositionalFlag(cmd, "instance-id", "string value (or pass it as the [instance-id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "instance-id", "The ID of the instance, from the id field of GET /v1/instances or the create response. (or pass it as the [instance-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "instance-id", Summary: "string value", Required: true, SatisfiedBy: []string{"instance-id"}},
+		{Name: "instance-id", Summary: "The ID of the instance, from the id field of GET /v1/instances or the create response.", Required: true, SatisfiedBy: []string{"instance-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for update-model: %w", err)
 	}

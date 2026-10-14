@@ -4,9 +4,13 @@
 package components
 
 type SSHKeyResponse struct {
-	ID        string `json:"id"`
-	IsDefault bool   `json:"is_default"`
-	Name      string `json:"name"`
+	// The ID of the SSH key.
+	ID string `json:"id"`
+	// True for the key installed on new instances when no ssh_key_id is given.
+	IsDefault bool `json:"is_default"`
+	// The name of the SSH key.
+	Name string `json:"name"`
+	// The OpenSSH public key.
 	PublicKey string `json:"public_key"`
 }
 

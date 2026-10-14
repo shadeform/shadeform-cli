@@ -5,6 +5,7 @@ package components
 
 // CreateVolumeResponse schema
 type CreateVolumeResponse struct {
+	// The ID of the new volume.
 	ID string `json:"id"`
 }
 

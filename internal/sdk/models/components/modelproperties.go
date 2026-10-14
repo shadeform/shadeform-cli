@@ -3,18 +3,30 @@
 
 package components
 
+// ModelProperties - The model to load and how to serve it.
 type ModelProperties struct {
-	BlockSize           *int64  `json:"block_size,omitzero"`
+	// The token block size for the KV cache.
+	BlockSize *int64 `json:"block_size,omitzero"`
+	// A Hugging Face access token, needed for gated or private models.
 	HuggingFaceHubToken *string `json:"hugging_face_hub_token,omitzero"`
-	MaxModelLen         *int64  `json:"max_model_len,omitzero"`
-	MaxNumBatchedTokens *int64  `json:"max_num_batched_tokens,omitzero"`
-	MaxNumSeq           *int64  `json:"max_num_seq,omitzero"`
-	MaxPaddings         *int64  `json:"max_paddings,omitzero"`
-	Model               string  `json:"model"`
-	NumGpus             *int64  `json:"num_gpus,omitzero"`
-	Quantization        *string `json:"quantization,omitzero"`
-	Revision            *string `json:"revision,omitzero"`
-	Tokenizer           *string `json:"tokenizer,omitzero"`
+	// The maximum context length in tokens. Defaults to the model's configured maximum.
+	MaxModelLen *int64 `json:"max_model_len,omitzero"`
+	// The maximum number of tokens processed per iteration.
+	MaxNumBatchedTokens *int64 `json:"max_num_batched_tokens,omitzero"`
+	// The maximum number of sequences processed per iteration.
+	MaxNumSeq *int64 `json:"max_num_seq,omitzero"`
+	// The maximum number of padding tokens per batch.
+	MaxPaddings *int64 `json:"max_paddings,omitzero"`
+	// The Hugging Face model ID to serve.
+	Model string `json:"model"`
+	// The number of GPUs to shard the model across. Defaults to all GPUs on the instance.
+	NumGpus *int64 `json:"num_gpus,omitzero"`
+	// The weight quantization method, for example awq or gptq. Defaults to none.
+	Quantization *string `json:"quantization,omitzero"`
+	// The model revision: a branch, tag or commit.
+	Revision *string `json:"revision,omitzero"`
+	// The Hugging Face tokenizer ID. Defaults to the model's own tokenizer.
+	Tokenizer *string `json:"tokenizer,omitzero"`
 }
 
 func (m *ModelProperties) GetBlockSize() *int64 {

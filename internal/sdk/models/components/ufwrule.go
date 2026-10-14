@@ -3,29 +3,39 @@
 
 package components
 
+import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
+)
+
+// UfwRule - UFW (Uncomplicated Firewall) rules applied when the instance boots.
 type UfwRule struct {
-	FromIP *string `json:"from_ip"`
-	Port   *string `json:"port"`
-	Proto  *string `json:"proto"`
-	Rule   string  `json:"rule"`
-	ToIP   *string `json:"to_ip"`
+	// Source IP address or CIDR range the rule applies to. Defaults to any.
+	FromIP optionalnullable.OptionalNullable[string] `json:"from_ip,omitzero"`
+	// Port number or range, for example 80 or 8000:8999.
+	Port optionalnullable.OptionalNullable[string] `json:"port,omitzero"`
+	// Protocol: tcp or udp. Defaults to both.
+	Proto optionalnullable.OptionalNullable[string] `json:"proto,omitzero"`
+	// The UFW action: allow, deny, reject or limit.
+	Rule string `json:"rule"`
+	// Destination IP address or CIDR range the rule applies to. Defaults to any.
+	ToIP optionalnullable.OptionalNullable[string] `json:"to_ip,omitzero"`
 }
 
-func (u *UfwRule) GetFromIP() *string {
+func (u *UfwRule) GetFromIP() optionalnullable.OptionalNullable[string] {
 	if u == nil {
 		return nil
 	}
 	return u.FromIP
 }
 
-func (u *UfwRule) GetPort() *string {
+func (u *UfwRule) GetPort() optionalnullable.OptionalNullable[string] {
 	if u == nil {
 		return nil
 	}
 	return u.Port
 }
 
-func (u *UfwRule) GetProto() *string {
+func (u *UfwRule) GetProto() optionalnullable.OptionalNullable[string] {
 	if u == nil {
 		return nil
 	}
@@ -39,7 +49,7 @@ func (u *UfwRule) GetRule() string {
 	return u.Rule
 }
 
-func (u *UfwRule) GetToIP() *string {
+func (u *UfwRule) GetToIP() optionalnullable.OptionalNullable[string] {
 	if u == nil {
 		return nil
 	}

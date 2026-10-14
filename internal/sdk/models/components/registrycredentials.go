@@ -3,8 +3,11 @@
 
 package components
 
+// RegistryCredentials - Credentials for a private docker registry, used for the pull.
 type RegistryCredentials struct {
+	// The registry password or access token.
 	Password *string `json:"password"`
+	// The registry username.
 	Username *string `json:"username"`
 }
 

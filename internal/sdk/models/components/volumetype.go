@@ -4,12 +4,18 @@
 package components
 
 type VolumeType struct {
-	Cloud                  string `json:"cloud"`
-	DisplayName            string `json:"display_name"`
-	FixedSize              bool   `json:"fixed_size"`
-	PricePerGbPerHour      string `json:"price_per_gb_per_hour"`
-	Region                 string `json:"region"`
-	SupportsMultipleMounts bool   `json:"supports_multiple_mounts"`
+	// The cloud provider offering this volume type.
+	Cloud string `json:"cloud"`
+	// The human-readable name of the region.
+	DisplayName string `json:"display_name"`
+	// True when volumes of this type have a fixed size.
+	FixedSize bool `json:"fixed_size"`
+	// The price per GB per hour, as a decimal dollar string.
+	PricePerGbPerHour string `json:"price_per_gb_per_hour"`
+	// The region the volume type is offered in; use it as region when creating a volume.
+	Region string `json:"region"`
+	// True when several instances can mount a volume of this type at once.
+	SupportsMultipleMounts bool `json:"supports_multiple_mounts"`
 }
 
 func (v *VolumeType) GetCloud() string {

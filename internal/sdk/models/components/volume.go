@@ -4,16 +4,26 @@
 package components
 
 type Volume struct {
-	Cloud              string   `json:"cloud"`
-	CloudAssignedID    string   `json:"cloud_assigned_id"`
-	CostEstimate       string   `json:"cost_estimate"`
-	FixedSize          bool     `json:"fixed_size"`
-	ID                 string   `json:"id"`
-	MountedBy          []string `json:"mounted_by"`
-	Name               string   `json:"name"`
-	Region             string   `json:"region"`
-	SizeInGb           int64    `json:"size_in_gb"`
-	SupportsMultiMount bool     `json:"supports_multi_mount"`
+	// The cloud provider the volume lives in.
+	Cloud string `json:"cloud"`
+	// The ID the cloud provider assigned to the volume.
+	CloudAssignedID string `json:"cloud_assigned_id"`
+	// The cost incurred by the volume so far through Shadeform, as a decimal dollar string.
+	CostEstimate string `json:"cost_estimate"`
+	// True when the volume has a fixed size; false when it grows with use.
+	FixedSize bool `json:"fixed_size"`
+	// The ID of the volume.
+	ID string `json:"id"`
+	// IDs of the instances currently mounting the volume.
+	MountedBy []string `json:"mounted_by"`
+	// The name of the volume.
+	Name string `json:"name"`
+	// The region the volume lives in.
+	Region string `json:"region"`
+	// The size of the volume in GB.
+	SizeInGb int64 `json:"size_in_gb"`
+	// True when several instances can mount the volume at the same time.
+	SupportsMultiMount bool `json:"supports_multi_mount"`
 }
 
 func (v *Volume) GetCloud() string {

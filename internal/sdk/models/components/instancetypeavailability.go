@@ -3,12 +3,16 @@
 
 package components
 
+// InstanceTypeAvailability - Where the instance type can be launched right now, one entry per region and rental type.
 type InstanceTypeAvailability struct {
-	Available   bool    `json:"available"`
+	// True when the instance type can be launched in this region right now.
+	Available bool `json:"available"`
+	// The human-readable name of the region.
 	DisplayName string  `json:"display_name"`
 	HourlyPrice *string `json:"hourly_price,omitzero"`
-	Region      string  `json:"region"`
-	RentalType  string  `json:"rental_type"`
+	// The region; use it as region when creating an instance.
+	Region     string `json:"region"`
+	RentalType string `json:"rental_type"`
 }
 
 func (i *InstanceTypeAvailability) GetAvailable() bool {

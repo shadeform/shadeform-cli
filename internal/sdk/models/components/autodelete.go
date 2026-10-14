@@ -7,8 +7,11 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
 )
 
+// AutoDelete - Delete the instance automatically when a date or a spend threshold is reached.
 type AutoDelete struct {
-	DateThreshold  optionalnullable.OptionalNullable[string] `json:"date_threshold,omitzero"`
+	// Delete the instance at this time. RFC 3339 timestamp.
+	DateThreshold optionalnullable.OptionalNullable[string] `json:"date_threshold,omitzero"`
+	// Delete the instance once its spend reaches this amount. Decimal dollar amount as a string.
 	SpendThreshold optionalnullable.OptionalNullable[string] `json:"spend_threshold,omitzero"`
 }
 

@@ -8,6 +8,7 @@ import (
 )
 
 type UpdateTemplateRequest struct {
+	// The ID of the template, from the id field of GET /v1/templates.
 	TemplateID string `pathParam:"style=simple,explode=false,name=template_id"`
 	// Request body for common.Template
 	Body components.Template `request:"mediaType=application/json"`

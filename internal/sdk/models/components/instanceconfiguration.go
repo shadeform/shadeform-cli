@@ -8,6 +8,7 @@ import (
 	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
 )
 
+// InstanceConfiguration - The hardware of the instance type.
 type InstanceConfiguration struct {
 	GpuManufacturer string                                      `json:"gpu_manufacturer"`
 	GpuType         string                                      `json:"gpu_type"`

@@ -16,23 +16,23 @@ import (
 )
 
 var updateCmdMeta = []flagutil.FlagMeta{
-	{FlagName: "template-id", Shorthand: "t", FieldPath: "TemplateID", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "alert", FieldPath: "Body.Alert", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"alert"`, Description: "[required]"},
-	{FlagName: "author", FieldPath: "Body.Author", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"author,omitempty"`, Description: "string value"},
-	{FlagName: "auto-delete", FieldPath: "Body.AutoDelete", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"auto_delete"`, Description: "[required]"},
-	{FlagName: "description", FieldPath: "Body.Description", Kind: flagutil.FlagKindString, Optional: true, Description: "[required]"},
-	{FlagName: "envs", Shorthand: "e", FieldPath: "Body.Envs", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"envs"`, Description: "JSON array [required]"},
-	{FlagName: "featured", Shorthand: "f", FieldPath: "Body.Featured", Kind: flagutil.FlagKindBool, Optional: true, Description: "[required]"},
-	{FlagName: "id", FieldPath: "Body.ID", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"id"`, Description: "[required]"},
-	{FlagName: "is-account-owner", FieldPath: "Body.IsAccountOwner", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"is_account_owner,omitempty"`, Description: "boolean flag"},
-	{FlagName: "launch-configuration", FieldPath: "Body.LaunchConfiguration", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"launch_configuration"`, Description: "[required]"},
-	{FlagName: "logo", FieldPath: "Body.Logo", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"logo,omitempty"`, Description: "string value"},
-	{FlagName: "metadata", Shorthand: "m", FieldPath: "Body.Metadata", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "[required]"},
-	{FlagName: "name", FieldPath: "Body.Name", Kind: flagutil.FlagKindString, Required: true, Description: "[required]"},
-	{FlagName: "networking", FieldPath: "Body.Networking", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"networking"`, Description: "[required]"},
-	{FlagName: "public", Shorthand: "p", FieldPath: "Body.Public", Kind: flagutil.FlagKindBool, Required: true, Description: "[required]"},
-	{FlagName: "tags", FieldPath: "Body.Tags", Kind: flagutil.FlagKindStringArray, Optional: true, Description: "[required]"},
-	{FlagName: "volume-mount", Shorthand: "v", FieldPath: "Body.VolumeMount", Kind: flagutil.FlagKindJSON, Required: true, Annotations: `json:"volume_mount"`, Description: "[required]"},
+	{FlagName: "template-id", Shorthand: "t", FieldPath: "TemplateID", Kind: flagutil.FlagKindString, Required: true, Description: "The ID of the template, from the id field of GET /v1/templates. [required]"},
+	{FlagName: "alert", FieldPath: "Body.Alert", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"alert,omitempty"`, Description: "Send an email alert when a date or a spend threshold is reached."},
+	{FlagName: "author", FieldPath: "Body.Author", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"author,omitempty"`, Description: "Who published the template. Up to 50 characters."},
+	{FlagName: "auto-delete", FieldPath: "Body.AutoDelete", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"auto_delete,omitempty"`, Description: "Delete the instance automatically when a date or a spend threshold is reached."},
+	{FlagName: "description", FieldPath: "Body.Description", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"description,omitempty"`, Description: "What the template launches and when to use it. Up to 10000 characters."},
+	{FlagName: "envs", Shorthand: "e", FieldPath: "Body.Envs", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"envs,omitempty"`, Description: "Environment variables to set on the instance for every shell session. Up to 20. (JSON array)"},
+	{FlagName: "featured", Shorthand: "f", FieldPath: "Body.Featured", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"featured,omitempty"`, Description: "True for templates Shadeform curates and lists under GET /v1/templates/featured. Read-only."},
+	{FlagName: "id", FieldPath: "Body.ID", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"id,omitempty"`, Description: "The ID of the template, assigned by Shadeform. Ignored on save."},
+	{FlagName: "is-account-owner", FieldPath: "Body.IsAccountOwner", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"is_account_owner,omitempty"`, Description: "True when the template belongs to the requesting account. Read-only."},
+	{FlagName: "launch-configuration", FieldPath: "Body.LaunchConfiguration", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"launch_configuration,omitempty"`, Description: "What to run automatically once the instance is active: a docker container or a startup script. See https://docs.shadeform.ai/getting-started/concepts#launch-configuration."},
+	{FlagName: "logo", FieldPath: "Body.Logo", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"logo,omitempty"`, Description: "URL of a logo shown with the template. Up to 200 characters."},
+	{FlagName: "metadata", Shorthand: "m", FieldPath: "Body.Metadata", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"metadata,omitempty"`, Description: "Free-form labels attached to the template, such as the model or framework it runs. (JSON array)"},
+	{FlagName: "name", FieldPath: "Body.Name", Kind: flagutil.FlagKindString, Required: true, Description: "The name of the template. Alphanumeric characters, spaces, underscores and dashes, up to 100 characters. [required]"},
+	{FlagName: "networking", FieldPath: "Body.Networking", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"networking,omitempty"`, Description: "Network configuration, currently UFW firewall rules applied at boot."},
+	{FlagName: "public", Shorthand: "p", FieldPath: "Body.Public", Kind: flagutil.FlagKindBool, Required: true, Description: "True makes the template visible to every Shadeform account; false keeps it private to yours. [required]"},
+	{FlagName: "tags", FieldPath: "Body.Tags", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"tags,omitempty"`, Description: "Custom, searchable tags. Up to 200 characters each. (JSON array)"},
+	{FlagName: "volume-mount", Shorthand: "v", FieldPath: "Body.VolumeMount", Kind: flagutil.FlagKindJSON, Optional: true, Annotations: `json:"volume_mount,omitempty"`, Description: "How attached storage volumes are mounted onto the instance's file system."},
 }
 
 // initUpdateCmd initializes the update command.
@@ -41,7 +41,7 @@ func initUpdateCmd(parent *cobra.Command) error {
 		Use:     "update [template-id]",
 		Short:   "Update a template",
 		Long:    "Update an existing template",
-		Example: "  shade templates update --template-id <id> --alert '{}' --auto-delete '{}' --description 'without councilman attribute phew' --envs '[{\"name\":\"<value>\",\"value\":\"<value>\"}]'",
+		Example: "  shade templates update --template-id <id> --name <value> --public=true",
 		Args:    flagutil.PositionalFlagArgs,
 		RunE:    runUpdateCmd,
 		Annotations: map[string]string{
@@ -60,11 +60,11 @@ func initUpdateCmd(parent *cobra.Command) error {
 	}
 	cmd.Flags().Bool("schema", false, "Print the exact JSON Schema of the request body and exit")
 	_ = flagutil.AnnotatePromptFlag(cmd, "schema", flagutil.PromptFlagSpec{Kind: "bool", DocSurface: true})
-	if err := flagutil.DeclarePositionalFlag(cmd, "template-id", "string value (or pass it as the [template-id] argument)", true); err != nil {
+	if err := flagutil.DeclarePositionalFlag(cmd, "template-id", "The ID of the template, from the id field of GET /v1/templates. (or pass it as the [template-id] argument)", true); err != nil {
 		return err
 	}
 	if err := interactive.Declare(cmd, interactive.CommandSpec{Args: []interactive.ArgSpec{
-		{Name: "template-id", Summary: "string value", Required: true, SatisfiedBy: []string{"template-id"}},
+		{Name: "template-id", Summary: "The ID of the template, from the id field of GET /v1/templates.", Required: true, SatisfiedBy: []string{"template-id"}},
 	}}); err != nil {
 		return fmt.Errorf("declare interactive arguments for update: %w", err)
 	}

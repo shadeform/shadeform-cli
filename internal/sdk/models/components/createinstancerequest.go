@@ -3,38 +3,72 @@
 
 package components
 
+import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
+	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
+)
+
 // CreateInstanceRequest schema
 type CreateInstanceRequest struct {
-	Alert               Alert               `json:"alert"`
-	AutoDelete          AutoDelete          `json:"auto_delete"`
-	Cloud               string              `json:"cloud"`
-	EnableMetrics       *bool               `json:"enable_metrics"`
-	Envs                []EnvVar            `json:"envs"`
-	LaunchConfiguration LaunchConfiguration `json:"launch_configuration"`
-	Name                string              `json:"name"`
-	Networking          Networking          `json:"networking"`
-	Os                  string              `json:"os"`
-	Region              string              `json:"region"`
-	RentalType          string              `json:"rental_type"`
-	ShadeCloud          *bool               `json:"shade_cloud"`
-	ShadeInstanceType   string              `json:"shade_instance_type"`
-	SSHKeyID            string              `json:"ssh_key_id"`
-	Tags                []string            `json:"tags"`
-	TemplateID          *string             `json:"template_id"`
-	VolumeIds           []string            `json:"volume_ids"`
-	VolumeMount         VolumeMount         `json:"volume_mount"`
+	// Send an email alert when a date or a spend threshold is reached.
+	Alert *Alert `json:"alert,omitzero"`
+	// Delete the instance automatically when a date or a spend threshold is reached.
+	AutoDelete *AutoDelete `json:"auto_delete,omitzero"`
+	// The underlying cloud provider, as listed by GET /v1/instances/types. See https://docs.shadeform.ai/getting-started/concepts#cloud-cloud-provider.
+	Cloud string `json:"cloud"`
+	// Enable GPU and system metrics collection on the instance where the instance type supports it.
+	EnableMetrics optionalnullable.OptionalNullable[bool] `json:"enable_metrics,omitzero"`
+	// Environment variables to set on the instance for every shell session. Up to 20.
+	Envs optionalnullable.OptionalNullable[[]EnvVar] `json:"envs,omitzero"`
+	// What to run automatically once the instance is active: a docker container or a startup script. See https://docs.shadeform.ai/getting-started/concepts#launch-configuration.
+	LaunchConfiguration *LaunchConfiguration `json:"launch_configuration,omitzero"`
+	// The name of the instance. Alphanumeric characters, underscores and dashes, up to 50 characters.
+	Name string `json:"name"`
+	// Network configuration, currently UFW firewall rules applied at boot.
+	Networking *Networking `json:"networking,omitzero"`
+	// The operating system image, from the os_options of the instance type. Defaults to the instance type's default image.
+	Os *string `json:"os,omitzero"`
+	// The region of the cloud provider, as listed in the availability entries of GET /v1/instances/types.
+	Region string `json:"region"`
+	// How the instance is rented: on_demand (default) or spot. Spot instances run at the discounted spot hourly price but are interruptible: Shadeform may reclaim the capacity at any time, at which point the instance is terminated with status_details set to preempted. See https://docs.shadeform.ai/guides/spotinstances.
+	RentalType *string `json:"rental_type,omitzero"`
+	// True launches the instance in Shade Cloud, billed through Shadeform; false launches it in your linked cloud account. Required for AWS and Azure, where only linked accounts are supported. See https://docs.shadeform.ai/getting-started/concepts#shade-cloud.
+	ShadeCloud optionalnullable.OptionalNullable[bool] `json:"shade_cloud,omitzero"`
+	// The Shadeform standardized instance type, as listed by GET /v1/instances/types. See https://docs.shadeform.ai/getting-started/concepts#shade-instance-type-and-cloud-instance-type.
+	ShadeInstanceType string `json:"shade_instance_type"`
+	// The ID of the SSH key to install, from GET /v1/sshkeys. Defaults to the account's default key.
+	SSHKeyID *string `json:"ssh_key_id,omitzero"`
+	// Custom, searchable tags. Up to 200 characters each.
+	Tags optionalnullable.OptionalNullable[[]string] `json:"tags,omitzero"`
+	// The ID of a template whose launch configuration, auto-delete, alert, volume mount, tags, environment variables and networking are applied to the instance. Fields set directly on this request take precedence.
+	TemplateID optionalnullable.OptionalNullable[string] `json:"template_id,omitzero"`
+	// IDs of storage volumes to attach at launch. Currently at most one volume.
+	VolumeIds optionalnullable.OptionalNullable[[]string] `json:"volume_ids,omitzero"`
+	// How attached storage volumes are mounted onto the instance's file system.
+	VolumeMount *VolumeMount `json:"volume_mount,omitzero"`
 }
 
-func (c *CreateInstanceRequest) GetAlert() Alert {
+func (c CreateInstanceRequest) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(c, "", false)
+}
+
+func (c *CreateInstanceRequest) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &c, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *CreateInstanceRequest) GetAlert() *Alert {
 	if c == nil {
-		return Alert{}
+		return nil
 	}
 	return c.Alert
 }
 
-func (c *CreateInstanceRequest) GetAutoDelete() AutoDelete {
+func (c *CreateInstanceRequest) GetAutoDelete() *AutoDelete {
 	if c == nil {
-		return AutoDelete{}
+		return nil
 	}
 	return c.AutoDelete
 }
@@ -46,23 +80,23 @@ func (c *CreateInstanceRequest) GetCloud() string {
 	return c.Cloud
 }
 
-func (c *CreateInstanceRequest) GetEnableMetrics() *bool {
+func (c *CreateInstanceRequest) GetEnableMetrics() optionalnullable.OptionalNullable[bool] {
 	if c == nil {
 		return nil
 	}
 	return c.EnableMetrics
 }
 
-func (c *CreateInstanceRequest) GetEnvs() []EnvVar {
+func (c *CreateInstanceRequest) GetEnvs() optionalnullable.OptionalNullable[[]EnvVar] {
 	if c == nil {
 		return nil
 	}
 	return c.Envs
 }
 
-func (c *CreateInstanceRequest) GetLaunchConfiguration() LaunchConfiguration {
+func (c *CreateInstanceRequest) GetLaunchConfiguration() *LaunchConfiguration {
 	if c == nil {
-		return LaunchConfiguration{}
+		return nil
 	}
 	return c.LaunchConfiguration
 }
@@ -74,16 +108,16 @@ func (c *CreateInstanceRequest) GetName() string {
 	return c.Name
 }
 
-func (c *CreateInstanceRequest) GetNetworking() Networking {
+func (c *CreateInstanceRequest) GetNetworking() *Networking {
 	if c == nil {
-		return Networking{}
+		return nil
 	}
 	return c.Networking
 }
 
-func (c *CreateInstanceRequest) GetOs() string {
+func (c *CreateInstanceRequest) GetOs() *string {
 	if c == nil {
-		return ""
+		return nil
 	}
 	return c.Os
 }
@@ -95,14 +129,14 @@ func (c *CreateInstanceRequest) GetRegion() string {
 	return c.Region
 }
 
-func (c *CreateInstanceRequest) GetRentalType() string {
+func (c *CreateInstanceRequest) GetRentalType() *string {
 	if c == nil {
-		return ""
+		return nil
 	}
 	return c.RentalType
 }
 
-func (c *CreateInstanceRequest) GetShadeCloud() *bool {
+func (c *CreateInstanceRequest) GetShadeCloud() optionalnullable.OptionalNullable[bool] {
 	if c == nil {
 		return nil
 	}
@@ -116,37 +150,37 @@ func (c *CreateInstanceRequest) GetShadeInstanceType() string {
 	return c.ShadeInstanceType
 }
 
-func (c *CreateInstanceRequest) GetSSHKeyID() string {
+func (c *CreateInstanceRequest) GetSSHKeyID() *string {
 	if c == nil {
-		return ""
+		return nil
 	}
 	return c.SSHKeyID
 }
 
-func (c *CreateInstanceRequest) GetTags() []string {
+func (c *CreateInstanceRequest) GetTags() optionalnullable.OptionalNullable[[]string] {
 	if c == nil {
 		return nil
 	}
 	return c.Tags
 }
 
-func (c *CreateInstanceRequest) GetTemplateID() *string {
+func (c *CreateInstanceRequest) GetTemplateID() optionalnullable.OptionalNullable[string] {
 	if c == nil {
 		return nil
 	}
 	return c.TemplateID
 }
 
-func (c *CreateInstanceRequest) GetVolumeIds() []string {
+func (c *CreateInstanceRequest) GetVolumeIds() optionalnullable.OptionalNullable[[]string] {
 	if c == nil {
 		return nil
 	}
 	return c.VolumeIds
 }
 
-func (c *CreateInstanceRequest) GetVolumeMount() VolumeMount {
+func (c *CreateInstanceRequest) GetVolumeMount() *VolumeMount {
 	if c == nil {
-		return VolumeMount{}
+		return nil
 	}
 	return c.VolumeMount
 }

@@ -3,19 +3,38 @@
 
 package components
 
+import (
+	"github.com/shadeform/shadeform-cli/internal/sdk/optionalnullable"
+	"github.com/shadeform/shadeform-cli/internal/sdk/sdkinternal/utils"
+)
+
+// VolumeMount - How attached storage volumes are mounted onto the instance's file system.
 type VolumeMount struct {
-	Auto    *bool            `json:"auto"`
-	Mapping []VolumeMountMap `json:"mapping"`
+	// True mounts every attached volume that is not already mounted at a default path under /home/shadeform.
+	Auto optionalnullable.OptionalNullable[bool] `json:"auto,omitzero"`
+	// Explicit mounts of attached volumes to paths on the instance. Use instead of auto when the path matters.
+	Mapping optionalnullable.OptionalNullable[[]VolumeMountMap] `json:"mapping,omitzero"`
 }
 
-func (v *VolumeMount) GetAuto() *bool {
+func (v VolumeMount) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(v, "", false)
+}
+
+func (v *VolumeMount) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &v, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (v *VolumeMount) GetAuto() optionalnullable.OptionalNullable[bool] {
 	if v == nil {
 		return nil
 	}
 	return v.Auto
 }
 
-func (v *VolumeMount) GetMapping() []VolumeMountMap {
+func (v *VolumeMount) GetMapping() optionalnullable.OptionalNullable[[]VolumeMountMap] {
 	if v == nil {
 		return nil
 	}

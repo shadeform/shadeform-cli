@@ -8,6 +8,7 @@ import (
 )
 
 type UpdateInstanceRequest struct {
+	// The ID of the instance, from the id field of GET /v1/instances or the create response.
 	InstanceID string `pathParam:"style=simple,explode=false,name=instance_id"`
 	// Request body for instances.UpdateInstanceRequest
 	Body components.UpdateInstanceRequest `request:"mediaType=application/json"`

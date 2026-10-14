@@ -5,14 +5,14 @@ management:
   docVersion: 1.0.0
   speakeasyVersion: 1.802.0
   generationVersion: 2.948.4
-  releaseVersion: 0.2.0
-  configChecksum: 5ce90e5a4ee6616b4b591e82f4bb034b
+  releaseVersion: 0.2.1
+  configChecksum: 6f50241a1f37e15f1f76a203d6cead5d
   repoURL: https://github.com/shadeform/shadeform-cli.git
   installationURL: https://github.com/shadeform/shadeform-cli
 persistentEdits:
-  generation_id: e07e85d6-d629-4f99-abb1-8ec67a9e2e86
-  pristine_commit_hash: 979274b479c055c3f79a8adc861c937064b79178
-  pristine_tree_hash: 93cf0297c5783aa9c5be56ef9a41ac9f203df0e2
+  generation_id: abde53ac-aa7e-4c49-9c4b-f5de79a0d942
+  pristine_commit_hash: 8f86843beddd610e6311cd86f6f0d9c6be62e1e4
+  pristine_tree_hash: 4fdb9e53694ad9012c18decb81a7855db9abd290
 features:
   cli:
     core: 0.9.4
@@ -123,7 +123,7 @@ trackedFiles:
     pristine_git_object: 76f06e91dad3050d8376fda86ac1efc9fbcd0e1a
   internal/cli/sshkeys/root.go:
     id: a683cf4a8c88
-    last_write_checksum: sha1:57a87445bbcec5c954d5f458cb0f2e0f704b3549
+    last_write_checksum: sha1:505a36e279e372f1485df6ac41c3598eeab86b7c
     pristine_git_object: f48803a78e94dd0bb57e4f93dd0499d227ed0fd6
   internal/cli/sshkeys/setdefault.go:
     id: 7a799a53356a
@@ -159,8 +159,8 @@ trackedFiles:
     pristine_git_object: 2e8fe9e37b9ec987c23e53186b06237bcadc58a7
   internal/cli/version.go:
     id: 7b0665492f72
-    last_write_checksum: sha1:9435d1238c237120bade4eff566417c962b49297
-    pristine_git_object: 80370478c9cc095f62103e503b9e9217c4509853
+    last_write_checksum: sha1:d64322ee458f56de4dc8c62e3fe1c469bb48c9f2
+    pristine_git_object: afe67761b6eb8268e1fe582ebfd86393ce660a7d
   internal/cli/volumes/create.go:
     id: b0b9373f2b85
     last_write_checksum: sha1:85e1cac0c98b9bc74880affd2925b179904caba8
@@ -683,8 +683,8 @@ trackedFiles:
     pristine_git_object: d8cd82c5e85edd916706018bed176cd3583c343e
   internal/sdk/shadeform.go:
     id: 16d1ebef77ce
-    last_write_checksum: sha1:05e6544fc5d94d195ad1f7f561f6bacec9ef8f89
-    pristine_git_object: 7e0d3a7087b7990882f0a8874e46a80f9528ee17
+    last_write_checksum: sha1:a7347f31a28d1362fac3750651c02609e9b2052b
+    pristine_git_object: 80a5eb59798e307f00ed253968d7e5ddb98f8235
   internal/sdk/sshkeys.go:
     id: 53ea6c91766f
     last_write_checksum: sha1:6800eff32769e542f97f500315c4aa4abd77d4f8
@@ -723,8 +723,8 @@ trackedFiles:
     pristine_git_object: 50a1f8887b844c1bed4fe7be02c6e34dbdf51e37
   internal/usage/schema.go:
     id: 0f40f4612437
-    last_write_checksum: sha1:c297d9f3e6a01b65da1ac4b2e89ac82d0b33438e
-    pristine_git_object: 69f7894194a63e1ce913b4dd0364c3d0f4ccfdb0
+    last_write_checksum: sha1:1fc1f8b7de24366b042082a8761771eae28bd926
+    pristine_git_object: fa381f31db30c97655fdc937ababf1d78a297e30
   scripts/install.ps1:
     id: fee0853709e9
     last_write_checksum: sha1:3221e3bf56ac74c91d6bdfcb3182b1e25b517dfb

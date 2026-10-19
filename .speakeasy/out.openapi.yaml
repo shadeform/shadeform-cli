@@ -425,6 +425,10 @@ components:
             $ref: "#/components/schemas/EnvVar"
           nullable: true
           type: "array"
+        flex_vm:
+          description: "True when Shadeform virtualizes this instance. The cloud field stays the hardware owner."
+          example: true
+          type: "boolean"
         hourly_price:
           description: "The on-demand hourly price in cents."
           example: 210
@@ -525,6 +529,7 @@ components:
         - "cost_estimate"
         - "created_at"
         - "deleted_at"
+        - "flex_vm"
         - "hourly_price"
         - "id"
         - "ip"

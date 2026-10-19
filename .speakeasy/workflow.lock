@@ -2,8 +2,8 @@ speakeasyVersion: 1.802.0
 sources:
     Shadeform API:
         sourceNamespace: shadeform-api
-        sourceRevisionDigest: sha256:be817fad2e67d3c8be025305916e588070aa5778b3d34957768de757919f6196
-        sourceBlobDigest: sha256:02a81cad5eaf1b52af9acf91b03fc63ded88f62e969e52e5a4c2a00e10d0b16a
+        sourceRevisionDigest: sha256:b22513bc5eed8ddf7a94cb63f33b3cf2363b574f79ad610e562a2b51d8e9d7a1
+        sourceBlobDigest: sha256:220e895e351d3a951fb8928ba92ff449201c792217a92a7fd46f52b1419a5355
         tags:
             - latest
             - 1.0.0
@@ -11,8 +11,8 @@ targets:
     shadeform:
         source: Shadeform API
         sourceNamespace: shadeform-api
-        sourceRevisionDigest: sha256:be817fad2e67d3c8be025305916e588070aa5778b3d34957768de757919f6196
-        sourceBlobDigest: sha256:02a81cad5eaf1b52af9acf91b03fc63ded88f62e969e52e5a4c2a00e10d0b16a
+        sourceRevisionDigest: sha256:b22513bc5eed8ddf7a94cb63f33b3cf2363b574f79ad610e562a2b51d8e9d7a1
+        sourceBlobDigest: sha256:220e895e351d3a951fb8928ba92ff449201c792217a92a7fd46f52b1419a5355
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: 1.802.0

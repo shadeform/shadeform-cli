@@ -38,6 +38,8 @@ type Instance struct {
 	Details   *InstanceDetails                            `json:"details,omitzero"`
 	Email     optionalnullable.OptionalNullable[string]   `json:"email,omitzero"`
 	Envs      optionalnullable.OptionalNullable[[]EnvVar] `json:"envs,omitzero"`
+	// True when Shadeform virtualizes this instance. The cloud field stays the hardware owner.
+	FlexVM bool `json:"flex_vm"`
 	// The on-demand hourly price in cents.
 	HourlyPrice int64 `json:"hourly_price"`
 	// The ID of the instance, used in the /v1/instances/{instance_id}/... routes.
@@ -206,6 +208,13 @@ func (i *Instance) GetEnvs() optionalnullable.OptionalNullable[[]EnvVar] {
 		return nil
 	}
 	return i.Envs
+}
+
+func (i *Instance) GetFlexVM() bool {
+	if i == nil {
+		return false
+	}
+	return i.FlexVM
 }
 
 func (i *Instance) GetHourlyPrice() int64 {

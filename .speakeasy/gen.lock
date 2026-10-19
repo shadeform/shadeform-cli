@@ -1,18 +1,18 @@
 lockVersion: 2.0.0
 id: 595f323d-8232-4ac8-8c5f-9520148d2bca
 management:
-  docChecksum: 152cc12626dfa8aa0d21c58a9bd4c9a6
+  docChecksum: 80c0eb9c5fb340b785ddaca51f5ca846
   docVersion: 1.0.0
   speakeasyVersion: 1.802.0
   generationVersion: 2.948.4
-  releaseVersion: 0.2.0
-  configChecksum: 5ce90e5a4ee6616b4b591e82f4bb034b
+  releaseVersion: 0.2.1
+  configChecksum: 6f50241a1f37e15f1f76a203d6cead5d
   repoURL: https://github.com/shadeform/shadeform-cli.git
   installationURL: https://github.com/shadeform/shadeform-cli
 persistentEdits:
-  generation_id: e07e85d6-d629-4f99-abb1-8ec67a9e2e86
-  pristine_commit_hash: 979274b479c055c3f79a8adc861c937064b79178
-  pristine_tree_hash: 93cf0297c5783aa9c5be56ef9a41ac9f203df0e2
+  generation_id: 3c12e0e7-1622-4a82-8f73-996e1ad296ac
+  pristine_commit_hash: c572e5785edd9bba4bbe88f257a4f8211a15ba98
+  pristine_tree_hash: 2547f8b171e33cd233de39b9f5dfa782f0074256
 features:
   cli:
     core: 0.9.4
@@ -123,7 +123,7 @@ trackedFiles:
     pristine_git_object: 76f06e91dad3050d8376fda86ac1efc9fbcd0e1a
   internal/cli/sshkeys/root.go:
     id: a683cf4a8c88
-    last_write_checksum: sha1:57a87445bbcec5c954d5f458cb0f2e0f704b3549
+    last_write_checksum: sha1:505a36e279e372f1485df6ac41c3598eeab86b7c
     pristine_git_object: f48803a78e94dd0bb57e4f93dd0499d227ed0fd6
   internal/cli/sshkeys/setdefault.go:
     id: 7a799a53356a
@@ -159,8 +159,8 @@ trackedFiles:
     pristine_git_object: 2e8fe9e37b9ec987c23e53186b06237bcadc58a7
   internal/cli/version.go:
     id: 7b0665492f72
-    last_write_checksum: sha1:9435d1238c237120bade4eff566417c962b49297
-    pristine_git_object: 80370478c9cc095f62103e503b9e9217c4509853
+    last_write_checksum: sha1:d64322ee458f56de4dc8c62e3fe1c469bb48c9f2
+    pristine_git_object: afe67761b6eb8268e1fe582ebfd86393ce660a7d
   internal/cli/volumes/create.go:
     id: b0b9373f2b85
     last_write_checksum: sha1:85e1cac0c98b9bc74880affd2925b179904caba8
@@ -371,8 +371,8 @@ trackedFiles:
     pristine_git_object: a5c05d8c1fb5671491f1a355fb73723056b97a35
   internal/sdk/models/components/instance.go:
     id: bc81e19f788c
-    last_write_checksum: sha1:19b04d6ebb9419eb6c8d2ce39c3e4182b362611c
-    pristine_git_object: 0df8f7981f829b8a289adae8694ce5a8b391e0b2
+    last_write_checksum: sha1:7f31085ef3aba15d3e637c35a49c20d7f21ee9ef
+    pristine_git_object: 1b8a4a5ad6f9d1b3e7536cc9b06c4436e18cedd8
   internal/sdk/models/components/instanceconfiguration.go:
     id: d6a331ea34f2
     last_write_checksum: sha1:202f1fe47f4e66721029b9ebe7494c62e68071ef
@@ -683,8 +683,8 @@ trackedFiles:
     pristine_git_object: d8cd82c5e85edd916706018bed176cd3583c343e
   internal/sdk/shadeform.go:
     id: 16d1ebef77ce
-    last_write_checksum: sha1:05e6544fc5d94d195ad1f7f561f6bacec9ef8f89
-    pristine_git_object: 7e0d3a7087b7990882f0a8874e46a80f9528ee17
+    last_write_checksum: sha1:a7347f31a28d1362fac3750651c02609e9b2052b
+    pristine_git_object: 80a5eb59798e307f00ed253968d7e5ddb98f8235
   internal/sdk/sshkeys.go:
     id: 53ea6c91766f
     last_write_checksum: sha1:6800eff32769e542f97f500315c4aa4abd77d4f8
@@ -723,8 +723,8 @@ trackedFiles:
     pristine_git_object: 50a1f8887b844c1bed4fe7be02c6e34dbdf51e37
   internal/usage/schema.go:
     id: 0f40f4612437
-    last_write_checksum: sha1:c297d9f3e6a01b65da1ac4b2e89ac82d0b33438e
-    pristine_git_object: 69f7894194a63e1ce913b4dd0364c3d0f4ccfdb0
+    last_write_checksum: sha1:1fc1f8b7de24366b042082a8761771eae28bd926
+    pristine_git_object: fa381f31db30c97655fdc937ababf1d78a297e30
   scripts/install.ps1:
     id: fee0853709e9
     last_write_checksum: sha1:3221e3bf56ac74c91d6bdfcb3182b1e25b517dfb
@@ -916,7 +916,7 @@ examples:
     speakeasy-default-list-instances:
       responses:
         "200":
-          application/json: {"instances": [{"active_at": "2026-12-13T02:14:57.566Z", "boot_time": {"max_boot_in_sec": 455426, "min_boot_in_sec": 689337}, "cloud": "<value>", "cloud_assigned_id": "<id>", "cloud_instance_type": "<value>", "configuration": {"gpu_manufacturer": "<value>", "gpu_type": "<value>", "interconnect": "<value>", "memory_in_gb": 109368, "num_gpus": 142781, "nvlink": true, "storage_in_gb": 622550, "vcpus": 569047, "vram_per_gpu_in_gb": 460504}, "cost_estimate": "<value>", "created_at": "2025-07-09T19:49:53.381Z", "deleted_at": "2025-07-02T13:26:56.615Z", "hourly_price": 698473, "id": "<id>", "ip": null, "name": "<value>", "region": "<value>", "rental_terms": {"ending_at": "2026-07-23T09:32:55.200Z", "rental_type": "<value>"}, "shade_cloud": false, "shade_instance_type": "<value>", "ssh_key_id": "<id>", "ssh_port": 93964, "ssh_user": "<value>", "status": "<value>", "status_details": "<value>"}]}
+          application/json: {"instances": [{"active_at": "2026-12-13T02:14:57.566Z", "boot_time": {"max_boot_in_sec": 455426, "min_boot_in_sec": 689337}, "cloud": "<value>", "cloud_assigned_id": "<id>", "cloud_instance_type": "<value>", "configuration": {"gpu_manufacturer": "<value>", "gpu_type": "<value>", "interconnect": "<value>", "memory_in_gb": 109368, "num_gpus": 142781, "nvlink": true, "storage_in_gb": 622550, "vcpus": 569047, "vram_per_gpu_in_gb": 460504}, "cost_estimate": "<value>", "created_at": "2025-07-09T19:49:53.381Z", "deleted_at": "2025-07-02T13:26:56.615Z", "flex_vm": true, "hourly_price": 698473, "id": "<id>", "ip": null, "name": "<value>", "region": "<value>", "rental_terms": {"ending_at": "2026-07-23T09:32:55.200Z", "rental_type": "<value>"}, "shade_cloud": false, "shade_instance_type": "<value>", "ssh_key_id": "<id>", "ssh_port": 93964, "ssh_user": "<value>", "status": "<value>", "status_details": "<value>"}]}
   createInstance:
     speakeasy-default-create-instance:
       requestBody:
@@ -968,7 +968,7 @@ examples:
           instance_id: "<id>"
       responses:
         "200":
-          application/json: {"active_at": "2024-04-02T04:21:59.404Z", "alert": {"date_threshold": "2026-12-31T23:59:00Z", "spend_threshold": "10.00"}, "auto_delete": {"date_threshold": "2026-12-31T23:59:00Z", "spend_threshold": "25.00"}, "boot_time": {"max_boot_in_sec": 449702, "min_boot_in_sec": 459785}, "cloud": "<value>", "cloud_assigned_id": "<id>", "cloud_instance_type": "<value>", "configuration": {"gpu_manufacturer": "<value>", "gpu_type": "<value>", "interconnect": "<value>", "memory_in_gb": 11161, "num_gpus": 437232, "nvlink": false, "storage_in_gb": 613093, "vcpus": 288118, "vram_per_gpu_in_gb": 75673}, "cost_estimate": "<value>", "created_at": "2025-01-25T05:31:19.483Z", "deleted_at": null, "envs": [{"name": "WANDB_API_KEY", "value": "wandb_xxxxxxxx"}], "hourly_price": 893590, "id": "<id>", "ip": null, "launch_configuration": {"args": "--model mistralai/Mistral-7B-v0.1", "base64_script": "IyEvYmluL2Jhc2gKZWNobyAiaGVsbG8iCg==", "container_status": "running", "docker_configuration": {"args": "--model mistralai/Mistral-7B-v0.1", "envs": null, "image": "vllm/vllm-openai:latest", "port_mappings": [{"container_port": 8000, "host_port": 80}], "registry_credentials": {"password": "password", "username": "username"}, "shared_memory_in_gb": 8, "volume_mounts": [{"container_path": "/root/.cache/huggingface", "host_path": "~/.cache/huggingface"}]}, "image": "vllm/vllm-openai:latest", "model_configuration": {"api_key": "<value>", "model_properties": {"block_size": 16, "max_model_len": 4096, "max_num_batched_tokens": 8192, "max_num_seq": 256, "max_paddings": 256, "model": "mistralai/Mistral-7B-v0.1", "num_gpus": 1, "quantization": "awq", "revision": "main", "tokenizer": "mistralai/Mistral-7B-v0.1"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKZWNobyAiaGVsbG8iCg=="}, "type": "docker"}, "name": "<value>", "region": "<value>", "rental_terms": {"ending_at": "2024-11-18T19:55:57.208Z", "rental_type": "<value>"}, "shade_cloud": false, "shade_instance_type": "<value>", "ssh_key_id": "<id>", "ssh_port": 345035, "ssh_user": "<value>", "status": "<value>", "status_details": "<value>"}
+          application/json: {"active_at": "2024-04-02T04:21:59.404Z", "alert": {"date_threshold": "2026-12-31T23:59:00Z", "spend_threshold": "10.00"}, "auto_delete": {"date_threshold": "2026-12-31T23:59:00Z", "spend_threshold": "25.00"}, "boot_time": {"max_boot_in_sec": 449702, "min_boot_in_sec": 459785}, "cloud": "<value>", "cloud_assigned_id": "<id>", "cloud_instance_type": "<value>", "configuration": {"gpu_manufacturer": "<value>", "gpu_type": "<value>", "interconnect": "<value>", "memory_in_gb": 11161, "num_gpus": 437232, "nvlink": false, "storage_in_gb": 613093, "vcpus": 288118, "vram_per_gpu_in_gb": 75673}, "cost_estimate": "<value>", "created_at": "2025-01-25T05:31:19.483Z", "deleted_at": null, "envs": [{"name": "WANDB_API_KEY", "value": "wandb_xxxxxxxx"}], "flex_vm": true, "hourly_price": 893590, "id": "<id>", "ip": null, "launch_configuration": {"args": "--model mistralai/Mistral-7B-v0.1", "base64_script": "IyEvYmluL2Jhc2gKZWNobyAiaGVsbG8iCg==", "container_status": "running", "docker_configuration": {"args": "--model mistralai/Mistral-7B-v0.1", "envs": null, "image": "vllm/vllm-openai:latest", "port_mappings": [{"container_port": 8000, "host_port": 80}], "registry_credentials": {"password": "password", "username": "username"}, "shared_memory_in_gb": 8, "volume_mounts": [{"container_path": "/root/.cache/huggingface", "host_path": "~/.cache/huggingface"}]}, "image": "vllm/vllm-openai:latest", "model_configuration": {"api_key": "<value>", "model_properties": {"block_size": 16, "max_model_len": 4096, "max_num_batched_tokens": 8192, "max_num_seq": 256, "max_paddings": 256, "model": "mistralai/Mistral-7B-v0.1", "num_gpus": 1, "quantization": "awq", "revision": "main", "tokenizer": "mistralai/Mistral-7B-v0.1"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKZWNobyAiaGVsbG8iCg=="}, "type": "docker"}, "name": "<value>", "region": "<value>", "rental_terms": {"ending_at": "2024-11-18T19:55:57.208Z", "rental_type": "<value>"}, "shade_cloud": false, "shade_instance_type": "<value>", "ssh_key_id": "<id>", "ssh_port": 345035, "ssh_user": "<value>", "status": "<value>", "status_details": "<value>"}
   restartInstance:
     speakeasy-default-restart-instance:
       parameters:
@@ -1114,3 +1114,7 @@ examples:
         "200":
           application/json: {"cloud": "<value>", "cloud_assigned_id": "<id>", "cost_estimate": "<value>", "fixed_size": true, "id": "<id>", "mounted_by": [], "name": "<value>", "region": "<value>", "size_in_gb": 670853, "supports_multi_mount": false}
 examplesVersion: 1.0.2
+releaseNotes: |
+  ## Cli SDK Changes:
+  * `Shadeform.Instances.List()`:  `response.Instances[].FlexVm` **Added**
+  * `Shadeform.Instances.Get()`:  `response.FlexVm` **Added**

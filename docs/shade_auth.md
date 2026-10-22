@@ -7,9 +7,9 @@ Manage authentication credentials
 Manage authentication credentials for shade.
 
 Subcommands:
-  login   - Interactively configure credentials
+  login   - Sign in through your browser and store an API key for this machine
   whoami  - Display current authentication status
-  logout  - Clear all stored credentials
+  logout  - Revoke this machine's API key and clear stored credentials
 
 ```
 shade auth [flags]
@@ -46,8 +46,8 @@ shade auth [flags]
 ### SEE ALSO
 
 * [shade](shade.md)	 - Shadeform API: Shadeform is a single API and platform for deploying and managing cloud GPUs
-* [shade auth login](shade_auth_login.md)	 - Interactively configure authentication credentials
-* [shade auth logout](shade_auth_logout.md)	 - Clear all stored authentication credentials
+* [shade auth login](shade_auth_login.md)	 - Sign in through your browser and store an API key for this machine
+* [shade auth logout](shade_auth_logout.md)	 - Revoke this machine's API key and clear stored credentials
 * [shade auth whoami](shade_auth_whoami.md)	 - Display current authentication configuration
 
 Exit codes: 0 ok · 1 runtime · 2 usage · 3 authentication/authorization

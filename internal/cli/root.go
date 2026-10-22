@@ -95,6 +95,11 @@ func NewRootCommand() (*cobra.Command, error) {
 	if err := initVersionCmd(rootCmd); err != nil {
 		return nil, fmt.Errorf("init version: %w", err)
 	}
+	// Hand-written login/logout (browser sign-in) must register before the
+	// generated ones, which only add themselves when the names are free.
+	if err := initCustomAuthCmds(rootCmd); err != nil {
+		return nil, fmt.Errorf("init custom auth: %w", err)
+	}
 	if err := initAuthCmd(rootCmd); err != nil {
 		return nil, fmt.Errorf("init auth: %w", err)
 	}

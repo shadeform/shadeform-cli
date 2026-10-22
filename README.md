@@ -66,14 +66,20 @@ Download pre-built binaries for your platform from the [releases page](https://g
 
 ## Quickstart
 
-Get an API key from the [Shadeform console](https://platform.shadeform.ai/settings/api), then:
-
 ```bash
-# Store your API key once (OS keychain, with a config-file fallback)
-shade configure
+# Sign in through your browser. shade creates an API key for this machine
+# (named "shade CLI (<hostname>)" in Settings > API Keys) and stores it in
+# the OS keychain, with a config-file fallback.
+shade auth login
 
-# Or export it for the current shell / CI
+# No browser on this machine? Open the printed URL anywhere and enter the code.
+shade auth login --no-browser
+
+# Or use a key you already have (CI, scripts): get one from
+# https://platform.shadeform.ai/settings/api
 export SHADEFORM_API_KEY="your-api-key"
+# ...or store it once
+shade auth login --api-key "your-api-key"
 
 # Find the cheapest available A6000
 shade instances list-types --shade-instance-type A6000 --available --sort price
@@ -87,7 +93,12 @@ shade ssh-keys download <ssh-key-id>
 
 # Clean up
 shade instances delete <id>
+
+# Sign out: revokes this machine's key on the server and clears it locally
+shade auth logout
 ```
+
+`shade auth login` uses the OAuth device flow against Shadeform's Auth0 tenant: nothing listens on your machine, there is no client secret, and the browser sign-in is used exactly once, to mint the API key. The sign-in token is never stored. Signing in again on the same machine replaces the previous key. A key you pass with `--api-key` is only ever stored locally; `shade auth logout` leaves it valid in the dashboard because shade did not create it.
 
 SSH private keys are never included in `shade ssh-keys list` or `shade ssh-keys get` output, in any format. `shade ssh-keys download` is the only command that retrieves them, and it writes to a file rather than your terminal unless you pass `--stdout`.
 

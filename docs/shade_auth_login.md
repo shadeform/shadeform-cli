@@ -1,24 +1,44 @@
 ## shade auth login
 
-Interactively configure authentication credentials
+Sign in through your browser and store an API key for this machine
 
 ### Synopsis
 
-Interactively configure authentication credentials for shade.
-Secret credentials are stored in the OS keychain when available,
-with a config file fallback.
+Sign in to Shadeform from the terminal.
 
-All fields are optional — press Enter to skip any field you don't need.
-Use the configure command for both authentication and global parameters.
+shade opens your browser to confirm a short code. Once you approve, it
+creates an API key for this machine - named "shade CLI (<hostname>)" so
+you can recognise it under Settings > API Keys - and stores it in the OS
+keychain (or ~/.config/shade/config.yaml with --no-keyring). Nothing else
+is stored: the browser sign-in is used once and forgotten.
+
+Signing in again on the same machine replaces the previous key. To use a
+key you already have instead, pass --api-key; nothing is opened and no key
+is created.
+
+On a machine without a browser, open the printed URL anywhere and enter the
+code there.
 
 ```
 shade auth login [flags]
 ```
 
+### Examples
+
+```
+  shade auth login
+  shade auth login --no-browser
+  shade auth login --name "shade CLI (build box)"
+  shade auth login --api-key sk_live_xxxxxxxx
+```
+
 ### Options
 
 ```
-  -h, --help   help for login
+  -h, --help                 help for login
+      --name string          Name for the API key as shown in the dashboard (default "shade CLI (<hostname>)")
+      --no-browser           Print the sign-in URL and code instead of opening a browser
+      --permissions string   Comma-separated permissions for the key: platform_read, platform_write, billing_read, billing_write (default "platform_read,platform_write")
 ```
 
 ### Options inherited from parent commands

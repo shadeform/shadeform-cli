@@ -73,6 +73,19 @@ func TestRequestDeviceCodeNeedsAClientID(t *testing.T) {
 	}
 }
 
+func TestDefaultConfigTargetsProduction(t *testing.T) {
+	t.Setenv(EnvDomain, "")
+	t.Setenv(EnvClientID, "")
+	t.Setenv(EnvAudience, "")
+	cfg := DefaultConfig()
+	if cfg.BaseURL != "https://auth.shadeform.ai" || cfg.ClientID != DefaultClientID || cfg.Audience != "https://api.shadeform.ai" {
+		t.Fatalf("%+v", cfg)
+	}
+	if DefaultClientID == "" {
+		t.Fatal("DefaultClientID must be set for a release build")
+	}
+}
+
 func TestDefaultConfigEnvOverrides(t *testing.T) {
 	t.Setenv(EnvDomain, "tenant.example.test")
 	t.Setenv(EnvClientID, "id")

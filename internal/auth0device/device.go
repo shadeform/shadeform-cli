@@ -33,9 +33,11 @@ const (
 	// token's aud claim must carry for api.shadeform.ai to accept it.
 	DefaultAudience = "https://api.shadeform.ai"
 	// DefaultClientID identifies the "Shadeform CLI" Native application on
-	// the tenant. Empty until that application exists; login reports a
-	// clear error rather than failing inside Auth0.
-	DefaultClientID = ""
+	// the tenant. A Native application is a public client: it has no secret,
+	// and its client ID is meant to ship inside distributed binaries. Holding
+	// the ID only lets you start a device flow that a signed-in user still
+	// has to approve on auth.shadeform.ai.
+	DefaultClientID = "TI0huqTByjfE3iQ5CWqaC4Uqh5X4Vhkz"
 
 	// Environment variables that override the defaults, for a staging tenant
 	// or a local test server. The domain may be a bare host or a full URL.

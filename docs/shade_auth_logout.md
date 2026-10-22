@@ -1,21 +1,34 @@
 ## shade auth logout
 
-Clear all stored authentication credentials
+Revoke this machine's API key and clear stored credentials
 
 ### Synopsis
 
-Clear all stored authentication credentials from both the OS keychain and config file.
+Sign out of Shadeform on this machine.
 
-This removes all credentials previously set via auth login or configure.
+If the stored API key was created by "shade auth login", it is revoked on
+the server first, so it stops working everywhere, not just here. Then the
+key is removed from the OS keychain and the config file.
+
+A key you pasted with --api-key is only removed locally; it stays valid in
+the dashboard because shade did not create it.
 
 ```
 shade auth logout [flags]
 ```
 
+### Examples
+
+```
+  shade auth logout
+  shade auth logout --keep-remote
+```
+
 ### Options
 
 ```
-  -h, --help   help for logout
+  -h, --help          help for logout
+      --keep-remote   Clear local credentials only; leave the API key valid on the server
 ```
 
 ### Options inherited from parent commands

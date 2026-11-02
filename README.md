@@ -102,6 +102,18 @@ shade auth logout
 
 SSH private keys are never included in `shade ssh-keys list` or `shade ssh-keys get` output, in any format. `shade ssh-keys download` is the only command that retrieves them, and it writes to a file rather than your terminal unless you pass `--stdout`.
 
+## Updating
+
+```bash
+shade update                    # install the latest release in place
+shade update --check            # only say whether one exists
+shade update --version v0.3.1   # install a specific release
+```
+
+`shade update` downloads the archive for your platform from the [releases page](https://github.com/shadeform/shadeform-cli/releases), verifies it against the release's `checksums.txt`, and swaps the binary atomically; the old one is only replaced once the new one is fully written and verified. Binaries installed with Homebrew or `go install` are left alone and pointed at the right command instead.
+
+Once a day at most, after a command finishes at an interactive terminal, shade prints a one-line note on stderr when a newer release exists. It is a single anonymous request to `api.github.com` and sends nothing about you. It stays quiet with `-o json`, `--jq`, `--dry-run`, in agent mode, when `CI` is set, in dev builds, and whenever `SHADEFORM_NO_UPDATE_CHECK=1`.
+
 <!-- Start Shell Completion [completion] -->
 ## Shell Completion
 

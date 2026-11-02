@@ -42,6 +42,7 @@ shade [flags]
 * [shade instances](shade_instances.md)	 - Create, inspect, update, restart and delete GPU instances
 * [shade ssh-keys](shade_ssh-keys.md)	 - Manage SSH keys used to access instances
 * [shade templates](shade_templates.md)	 - Save and reuse launch configurations as templates
+* [shade update](shade_update.md)	 - Update shade to the latest release
 * [shade version](shade_version.md)	 - Print the CLI version
 * [shade volumes](shade_volumes.md)	 - Create, inspect and delete persistent storage volumes
 * [shade whoami](shade_whoami.md)	 - Display current authentication configuration

@@ -104,6 +104,8 @@ func NewRootCommand() (*cobra.Command, error) {
 		return nil, fmt.Errorf("init auth: %w", err)
 	}
 	initExploreCmd(rootCmd)
+	// Hand-written: `shade update` (see update.go).
+	initUpdateCmd(rootCmd)
 
 	// Global output format flag
 	rootCmd.PersistentFlags().StringP("output-format", "o", "pretty", "Specify the output format. Options: "+strings.Join(output.Formats, ", ")+".")
@@ -231,7 +233,10 @@ func ExecuteRoot(ctx context.Context, root *cobra.Command, args []string) error 
 	if err != nil && findErr != nil {
 		err = flagutil.WithCLIValidation(err)
 	}
-	return output.CLIError(executed, err)
+	err = output.CLIError(executed, err)
+	// Hand-written: once-a-day update notice on stderr (see update.go).
+	maybeNotifyUpdate(ctx, executed, err)
+	return err
 }
 func shouldAutoExplore() bool {
 	if len(os.Args) > 1 {

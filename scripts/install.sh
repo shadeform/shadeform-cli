@@ -158,6 +158,44 @@ install_cli() {
 
     log_info "Download complete"
 
+    # Verify the archive against the release's checksums.txt. This is the
+    # same check `shade update` performs; a mismatch means a corrupt or
+    # tampered download and nothing is installed.
+    local checksums_url="https://github.com/${REPO}/releases/download/${VERSION}/checksums.txt"
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSL "$checksums_url" -o "$tmp_dir/checksums.txt" || {
+            log_error "Failed to download $checksums_url"
+            exit 1
+        }
+    else
+        wget -q "$checksums_url" -O "$tmp_dir/checksums.txt" || {
+            log_error "Failed to download $checksums_url"
+            exit 1
+        }
+    fi
+    local expected_sum actual_sum
+    expected_sum=$(awk -v name="$archive_name" '$2 == name || $2 == "*" name { print tolower($1) }' "$tmp_dir/checksums.txt")
+    if [ -z "$expected_sum" ]; then
+        log_error "checksums.txt for ${VERSION} does not list $archive_name"
+        exit 1
+    fi
+    if command -v sha256sum >/dev/null 2>&1; then
+        actual_sum=$(sha256sum "$tmp_dir/$archive_name" | awk '{ print tolower($1) }')
+    elif command -v shasum >/dev/null 2>&1; then
+        actual_sum=$(shasum -a 256 "$tmp_dir/$archive_name" | awk '{ print tolower($1) }')
+    else
+        log_error "sha256sum or shasum is required to verify the download"
+        exit 1
+    fi
+    if [ "$expected_sum" != "$actual_sum" ]; then
+        log_error "Checksum mismatch for $archive_name"
+        log_error "  expected: $expected_sum"
+        log_error "  got:      $actual_sum"
+        log_error "Nothing was installed. Try again; if it keeps happening, report it at https://github.com/${REPO}/issues"
+        exit 1
+    fi
+    log_info "Checksum verified"
+
     # Extract archive based on format
     log_info "Extracting archive..."
     if [ "$archive_format" = "zip" ]; then

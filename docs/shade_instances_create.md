@@ -33,7 +33,7 @@ shade instances create [flags]
       --region string                 The region of the cloud provider, as listed in the availability entries of GET /v1/instances/types. [required]
       --rental-type string            How the instance is rented: on_demand (default) or spot. Spot instances run at the discounted spot hourly price but are interruptible: Shadeform may reclaim the capacity at any time, at which point the instance is terminated with status_details set to preempted. See https://docs.shadeform.ai/guides/spotinstances.
       --schema                        Print the exact JSON Schema of the request body and exit
-      --shade-cloud string            True launches the instance in Shade Cloud, billed through Shadeform; false launches it in your linked cloud account. Required for AWS and Azure, where only linked accounts are supported. See https://docs.shadeform.ai/getting-started/concepts#shade-cloud.
+      --shade-cloud string            True launches the instance in Shade Cloud, billed through Shadeform; false launches it in your linked cloud account. See https://docs.shadeform.ai/getting-started/concepts#shade-cloud.
       --shade-instance-type string    The Shadeform standardized instance type, as listed by GET /v1/instances/types. See https://docs.shadeform.ai/getting-started/concepts#shade-instance-type-and-cloud-instance-type. [required]
       --ssh-key-id string             The ID of the SSH key to install, from GET /v1/sshkeys. Defaults to the account's default key.
       --tags string                   Custom, searchable tags. Up to 200 characters each. (JSON array)

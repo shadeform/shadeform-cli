@@ -1,18 +1,18 @@
 lockVersion: 2.0.0
 id: 595f323d-8232-4ac8-8c5f-9520148d2bca
 management:
-  docChecksum: 80c0eb9c5fb340b785ddaca51f5ca846
+  docChecksum: fab53a6c57bf97ef219a01081e39e0d9
   docVersion: 1.0.0
   speakeasyVersion: 1.802.0
   generationVersion: 2.948.4
-  releaseVersion: 0.3.0
-  configChecksum: 6f50241a1f37e15f1f76a203d6cead5d
+  releaseVersion: 0.3.1
+  configChecksum: 275cfbc054f0e0793463fa99b05fa02f
   repoURL: https://github.com/shadeform/shadeform-cli.git
   installationURL: https://github.com/shadeform/shadeform-cli
 persistentEdits:
-  generation_id: 3c12e0e7-1622-4a82-8f73-996e1ad296ac
-  pristine_commit_hash: c572e5785edd9bba4bbe88f257a4f8211a15ba98
-  pristine_tree_hash: 2547f8b171e33cd233de39b9f5dfa782f0074256
+  generation_id: 21313edc-04b2-4aa9-8908-829e24e0f519
+  pristine_commit_hash: 77ee2328ea2f14b32370342ff3466ff5ec4a0037
+  pristine_tree_hash: a57e41467261cd6e5110e7aa1482e470814b02aa
 features:
   cli:
     core: 0.9.4
@@ -63,8 +63,8 @@ trackedFiles:
     pristine_git_object: 24b361e94912455060a8c9e85dd2a09ca3bcf35d
   internal/cli/instances/create.go:
     id: 9e702d8aea35
-    last_write_checksum: sha1:2637e33579a310d42cdff52e68db1b3ca9bf676d
-    pristine_git_object: 2b91413d6df66606c3ce0e7df8fceaf1f3cc3463
+    last_write_checksum: sha1:c4b599d60caa3618a932538230cb698c83722848
+    pristine_git_object: fc69d32618b98b9ba2c2e2fdd5eb9dad8f970cfa
   internal/cli/instances/delete.go:
     id: 4a7e43e335f0
     last_write_checksum: sha1:2453ee15c96759f8ff0d622f419ee114b8274db4
@@ -79,8 +79,8 @@ trackedFiles:
     pristine_git_object: c6de3ae0237ac57813d936d8e384fe90db1838f0
   internal/cli/instances/listtypes.go:
     id: 1ad8d3f12c48
-    last_write_checksum: sha1:32e069dd6c455d5ab5c69b96326d4a7b62c70721
-    pristine_git_object: b19599e632b3b857b5c695d01fbbba3d2e8ea64d
+    last_write_checksum: sha1:ab22d094d85dc5780de4f043a0207ede72afb6af
+    pristine_git_object: b50b00c0f730185ca8bb4975355c4a0a536977e3
   internal/cli/instances/restart.go:
     id: 0a0696aa0e0f
     last_write_checksum: sha1:1eaa63ca5c6f25beb7ffa6af8fd2101bbc872c55
@@ -103,7 +103,7 @@ trackedFiles:
     pristine_git_object: 1b085bdc9b9770e0d96a0f3c47b3690b01a192cd
   internal/cli/root.go:
     id: 239d55a0d6be
-    last_write_checksum: sha1:10d8a3effcb23fd5c701d8eb1bd8a44a9abcded0
+    last_write_checksum: sha1:947bce9bae0059292b6aa82192cdc1a31fd07f0f
     pristine_git_object: 4810fdc38a4d7c9a46ddd8d1ba1e6634cb83f63f
   internal/cli/sshkeys/add.go:
     id: a8537348b160
@@ -159,8 +159,8 @@ trackedFiles:
     pristine_git_object: 2e8fe9e37b9ec987c23e53186b06237bcadc58a7
   internal/cli/version.go:
     id: 7b0665492f72
-    last_write_checksum: sha1:d64322ee458f56de4dc8c62e3fe1c469bb48c9f2
-    pristine_git_object: afe67761b6eb8268e1fe582ebfd86393ce660a7d
+    last_write_checksum: sha1:6f51943129cfcaea1a3e2c15250fde1c0367cb54
+    pristine_git_object: f20729c6e3651c21b51d94a3d837d24b7d682655
   internal/cli/volumes/create.go:
     id: b0b9373f2b85
     last_write_checksum: sha1:85e1cac0c98b9bc74880affd2925b179904caba8
@@ -299,8 +299,8 @@ trackedFiles:
     pristine_git_object: e6a994416d0f527912d2d272e2583458f4fc9bcb
   internal/sdk/instances.go:
     id: a87df50e827b
-    last_write_checksum: sha1:8b82dc0f9241a06518ee07202bdaac1afc7871e4
-    pristine_git_object: 8129203d3dfdc02a3ea8675ca99bc721818f91ff
+    last_write_checksum: sha1:09193ee2c46284f7907b474e1210730b88704db0
+    pristine_git_object: f3faa601f44a1232f141b07010910a6fdd33966f
   internal/sdk/models/components/addsshkeyrequest.go:
     id: 9a4cdaee66e0
     last_write_checksum: sha1:64f9e4f9f6b44da373ab46063b65e437c8f3a4dd
@@ -331,8 +331,8 @@ trackedFiles:
     pristine_git_object: 2c99963ee214166e742926feb40694728bc48149
   internal/sdk/models/components/createinstancerequest.go:
     id: 303664d33bed
-    last_write_checksum: sha1:89d3da04d1037322087a5444d0bf7c7ca9ebef0d
-    pristine_git_object: bfc7edba7cfba17f5892ee6f64efc9a5b1d25ef5
+    last_write_checksum: sha1:3260a674e3d25124224482cfdc9cc698816dfb1c
+    pristine_git_object: 305902040a091d75e2240328fe2385411fdbee43
   internal/sdk/models/components/createinstanceresponse.go:
     id: 86821ed230be
     last_write_checksum: sha1:95a4de748cb602104e6894aad2981930646985de
@@ -547,8 +547,8 @@ trackedFiles:
     pristine_git_object: 8ce28b8ebf54f6bed2353a704a8a6a72a01fbe67
   internal/sdk/models/operations/listinstancetypes.go:
     id: b96a2083819c
-    last_write_checksum: sha1:ec13e4c0200025d03173bcef3d659bd32dcc9ade
-    pristine_git_object: 016650aa5100258875935838d8843f40f89048fd
+    last_write_checksum: sha1:1beb470802eee7e8fa0b9c2cb3a38a7d93025388
+    pristine_git_object: 38b31cfa00e2798c166ec0e1bc64d4523dde08e7
   internal/sdk/models/operations/listsshkeys.go:
     id: 814796e8a030
     last_write_checksum: sha1:d8d218b52d58dd6f9648d14b641a4cb87a350090
@@ -567,8 +567,8 @@ trackedFiles:
     pristine_git_object: 1675a3fd6da413a5bbfdcb17b7002ea18c7b723a
   internal/sdk/models/operations/options.go:
     id: 6d0d29414e00
-    last_write_checksum: sha1:6699db30d900a85dafcc9dcd61f898d74ddb8670
-    pristine_git_object: 5bcefd7c3df48955c3a3788d8c9676dd1a88c5ec
+    last_write_checksum: sha1:a14786b757c9ddf622aa83c7ebdea0421cd16dd7
+    pristine_git_object: f1ede3588896f924f600794aa99ac4e9ddd331de
   internal/sdk/models/operations/restartinstance.go:
     id: 07a8882f3ada
     last_write_checksum: sha1:da2a3c6e8f707fd008751fc2c10e2c20569bb665
@@ -683,16 +683,16 @@ trackedFiles:
     pristine_git_object: d8cd82c5e85edd916706018bed176cd3583c343e
   internal/sdk/shadeform.go:
     id: 16d1ebef77ce
-    last_write_checksum: sha1:a7347f31a28d1362fac3750651c02609e9b2052b
-    pristine_git_object: 80a5eb59798e307f00ed253968d7e5ddb98f8235
+    last_write_checksum: sha1:c3d45a6d5e3d6ef9a677f8e1df2ed05076c33a6d
+    pristine_git_object: b62047ccbe3fe9f679356e5b91aaa105c3e7d576
   internal/sdk/sshkeys.go:
     id: 53ea6c91766f
-    last_write_checksum: sha1:6800eff32769e542f97f500315c4aa4abd77d4f8
-    pristine_git_object: 787cc117ee6d0db2e33cc5d4fa76faf4283584fd
+    last_write_checksum: sha1:46915df9b58ec8e89ebe8c7178c7665999f782f7
+    pristine_git_object: 7031a76df442387f0f80038922c222494a12b9c5
   internal/sdk/templates.go:
     id: 03b26cc56f2e
-    last_write_checksum: sha1:25b646bd7607097403acc6bc60e658997a39473b
-    pristine_git_object: 891ad17fbd815c883f0fe76a02b31618a2a50d42
+    last_write_checksum: sha1:9ab6273fbe7bf6fe680b478c0c46e08e5a7dcd09
+    pristine_git_object: 0727218d330ff1b820da81cade8caa70c959af3b
   internal/sdk/types/bigint.go:
     id: fc530b70337e
     last_write_checksum: sha1:c1ec8524ee4ed730b8514bb36c6abbb3c063d787
@@ -711,20 +711,20 @@ trackedFiles:
     pristine_git_object: 86e71b1c243584ac30f4b897d54367f831a07aa6
   internal/sdk/volumes.go:
     id: 39778bc10437
-    last_write_checksum: sha1:d7872ee828f499f58d1831a016ab217127fbcbe0
-    pristine_git_object: 0e163fed7f383920c658e3be061a10c444c587cf
+    last_write_checksum: sha1:c11c2cd9a6d26f937f47ccb51c25bf16b58734bf
+    pristine_git_object: daee2798def634edf9424bbc4c835fa25d19bd7f
   internal/testclient/testclient.go:
     id: 20fc511b8b00
     last_write_checksum: sha1:a2d1a6066e5a70f6d11f3439c8d303fff8a5f6c7
     pristine_git_object: 7e1f465c87ec82286f5efb5c1be95501ba0a1cc8
   internal/usage/bodyschemas.go:
     id: 4b0b56c39dfb
-    last_write_checksum: sha1:f57823e310918c274f6c76a3ca702a6fc75756c8
-    pristine_git_object: 50a1f8887b844c1bed4fe7be02c6e34dbdf51e37
+    last_write_checksum: sha1:5452619aab760cf7c3c4c15c35a65316f5e84b64
+    pristine_git_object: 5bbbf9fac834cb4a20cea2b8b24a115e4dbdb29c
   internal/usage/schema.go:
     id: 0f40f4612437
-    last_write_checksum: sha1:1fc1f8b7de24366b042082a8761771eae28bd926
-    pristine_git_object: fa381f31db30c97655fdc937ababf1d78a297e30
+    last_write_checksum: sha1:301482464bbc7198251c858784dab16a49be5e08
+    pristine_git_object: a987bff7e1a008dddb9dc09f304b5059cc3db668
   scripts/install.ps1:
     id: fee0853709e9
     last_write_checksum: sha1:3221e3bf56ac74c91d6bdfcb3182b1e25b517dfb
@@ -917,6 +917,8 @@ examples:
       responses:
         "200":
           application/json: {"instances": [{"active_at": "2026-12-13T02:14:57.566Z", "boot_time": {"max_boot_in_sec": 455426, "min_boot_in_sec": 689337}, "cloud": "<value>", "cloud_assigned_id": "<id>", "cloud_instance_type": "<value>", "configuration": {"gpu_manufacturer": "<value>", "gpu_type": "<value>", "interconnect": "<value>", "memory_in_gb": 109368, "num_gpus": 142781, "nvlink": true, "storage_in_gb": 622550, "vcpus": 569047, "vram_per_gpu_in_gb": 460504}, "cost_estimate": "<value>", "created_at": "2025-07-09T19:49:53.381Z", "deleted_at": "2025-07-02T13:26:56.615Z", "flex_vm": true, "hourly_price": 698473, "id": "<id>", "ip": null, "name": "<value>", "region": "<value>", "rental_terms": {"ending_at": "2026-07-23T09:32:55.200Z", "rental_type": "<value>"}, "shade_cloud": false, "shade_instance_type": "<value>", "ssh_key_id": "<id>", "ssh_port": 93964, "ssh_user": "<value>", "status": "<value>", "status_details": "<value>"}]}
+        "401":
+          application/problem+json: {"status": 403}
   createInstance:
     speakeasy-default-create-instance:
       requestBody:
@@ -926,6 +928,8 @@ examples:
           application/json: {"id": "<id>"}
         "409":
           application/json: {"error": "<value>", "error_code": "<value>"}
+        "401":
+          application/problem+json: {"status": 403}
   listInstanceTypes:
     example:
       parameters:
@@ -961,6 +965,8 @@ examples:
       responses:
         "409":
           application/json: {"error": "<value>", "error_code": "<value>"}
+        "401":
+          application/problem+json: {"status": 403}
   getInstance:
     speakeasy-default-get-instance:
       parameters:
@@ -969,6 +975,8 @@ examples:
       responses:
         "200":
           application/json: {"active_at": "2024-04-02T04:21:59.404Z", "alert": {"date_threshold": "2026-12-31T23:59:00Z", "spend_threshold": "10.00"}, "auto_delete": {"date_threshold": "2026-12-31T23:59:00Z", "spend_threshold": "25.00"}, "boot_time": {"max_boot_in_sec": 449702, "min_boot_in_sec": 459785}, "cloud": "<value>", "cloud_assigned_id": "<id>", "cloud_instance_type": "<value>", "configuration": {"gpu_manufacturer": "<value>", "gpu_type": "<value>", "interconnect": "<value>", "memory_in_gb": 11161, "num_gpus": 437232, "nvlink": false, "storage_in_gb": 613093, "vcpus": 288118, "vram_per_gpu_in_gb": 75673}, "cost_estimate": "<value>", "created_at": "2025-01-25T05:31:19.483Z", "deleted_at": null, "envs": [{"name": "WANDB_API_KEY", "value": "wandb_xxxxxxxx"}], "flex_vm": true, "hourly_price": 893590, "id": "<id>", "ip": null, "launch_configuration": {"args": "--model mistralai/Mistral-7B-v0.1", "base64_script": "IyEvYmluL2Jhc2gKZWNobyAiaGVsbG8iCg==", "container_status": "running", "docker_configuration": {"args": "--model mistralai/Mistral-7B-v0.1", "envs": null, "image": "vllm/vllm-openai:latest", "port_mappings": [{"container_port": 8000, "host_port": 80}], "registry_credentials": {"password": "password", "username": "username"}, "shared_memory_in_gb": 8, "volume_mounts": [{"container_path": "/root/.cache/huggingface", "host_path": "~/.cache/huggingface"}]}, "image": "vllm/vllm-openai:latest", "model_configuration": {"api_key": "<value>", "model_properties": {"block_size": 16, "max_model_len": 4096, "max_num_batched_tokens": 8192, "max_num_seq": 256, "max_paddings": 256, "model": "mistralai/Mistral-7B-v0.1", "num_gpus": 1, "quantization": "awq", "revision": "main", "tokenizer": "mistralai/Mistral-7B-v0.1"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKZWNobyAiaGVsbG8iCg=="}, "type": "docker"}, "name": "<value>", "region": "<value>", "rental_terms": {"ending_at": "2024-11-18T19:55:57.208Z", "rental_type": "<value>"}, "shade_cloud": false, "shade_instance_type": "<value>", "ssh_key_id": "<id>", "ssh_port": 345035, "ssh_user": "<value>", "status": "<value>", "status_details": "<value>"}
+        "401":
+          application/problem+json: {"status": 403}
   restartInstance:
     speakeasy-default-restart-instance:
       parameters:
@@ -977,6 +985,8 @@ examples:
       responses:
         "409":
           application/json: {"error": "<value>", "error_code": "<value>"}
+        "401":
+          application/problem+json: {"status": 403}
   updateInstance:
     speakeasy-default-update-instance:
       parameters:
@@ -987,6 +997,8 @@ examples:
       responses:
         "409":
           application/json: {"error": "<value>", "error_code": "<value>"}
+        "401":
+          application/problem+json: {"status": 403}
   updateInstanceModel:
     speakeasy-default-update-instance-model:
       parameters:
@@ -999,11 +1011,15 @@ examples:
           application/json: {"id": "<id>"}
         "409":
           application/json: {"error": "<value>", "error_code": "<value>"}
+        "401":
+          application/problem+json: {"status": 403}
   listSshKeys:
     speakeasy-default-list-ssh-keys:
       responses:
         "200":
           application/json: {"ssh_keys": []}
+        "401":
+          application/problem+json: {"status": 403}
   addSshKey:
     speakeasy-default-add-ssh-key:
       requestBody:
@@ -1015,6 +1031,8 @@ examples:
           application/json: {"error": "<value>", "error_code": "<value>"}
         "500":
           application/problem+json: {"status": 403}
+        "401":
+          application/problem+json: {"status": 403}
   deleteSshKey:
     speakeasy-default-delete-ssh-key:
       parameters:
@@ -1025,6 +1043,8 @@ examples:
           application/json: "<value>"
         "409":
           application/json: {"error": "<value>", "error_code": "<value>"}
+        "401":
+          application/problem+json: {"status": 403}
   getSshKey:
     speakeasy-default-get-ssh-key:
       parameters:
@@ -1033,6 +1053,8 @@ examples:
       responses:
         "200":
           application/json: {"id": "<id>", "is_default": true, "name": "<value>", "public_key": "<value>"}
+        "401":
+          application/problem+json: {"status": 403}
   setDefaultSshKey:
     speakeasy-default-set-default-ssh-key:
       parameters:
@@ -1041,16 +1063,22 @@ examples:
       responses:
         "200":
           application/json: "<value>"
+        "401":
+          application/problem+json: {"status": 403}
   listTemplates:
     speakeasy-default-list-templates:
       responses:
         "200":
           application/json: {"templates": []}
+        "401":
+          application/problem+json: {"status": 403}
   listFeaturedTemplates:
     speakeasy-default-list-featured-templates:
       responses:
         "200":
           application/json: {"templates": [{"alert": {}, "auto_delete": {}, "description": "including alongside quaintly nor dependent unwieldy colorfully how why", "envs": [{"name": "<value>", "value": "<value>"}], "featured": true, "id": "<id>", "launch_configuration": {}, "metadata": ["<value 1>"], "name": "<value>", "networking": {"ufw_rules": []}, "public": true, "tags": ["<value 1>", "<value 2>"], "volume_mount": {"auto": null, "mapping": [{"disk": "<value>", "file_path": "/mnt/ew.bz2"}]}}]}
+        "401":
+          application/problem+json: {"status": 403}
   saveTemplate:
     speakeasy-default-save-template:
       requestBody:
@@ -1058,11 +1086,16 @@ examples:
       responses:
         "200":
           application/json: {"id": "<id>"}
+        "401":
+          application/problem+json: {"status": 403}
   deleteTemplate:
     speakeasy-default-delete-template:
       parameters:
         path:
           template_id: "<id>"
+      responses:
+        "401":
+          application/problem+json: {"status": 403}
   getTemplate:
     speakeasy-default-get-template:
       parameters:
@@ -1071,6 +1104,8 @@ examples:
       responses:
         "200":
           application/json: {"alert": {"date_threshold": "2026-12-31T23:59:00Z", "spend_threshold": "10.00"}, "author": "Shadeform", "auto_delete": {"date_threshold": "2026-12-31T23:59:00Z", "spend_threshold": "25.00"}, "description": "joyfully lyre since", "envs": [], "featured": false, "id": null, "is_account_owner": true, "launch_configuration": {"args": "--model mistralai/Mistral-7B-v0.1", "base64_script": "IyEvYmluL2Jhc2gKZWNobyAiaGVsbG8iCg==", "container_status": "running", "docker_configuration": {"args": "--model mistralai/Mistral-7B-v0.1", "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hf_xxxxxxxxxxxxxxxx"}], "image": "vllm/vllm-openai:latest", "port_mappings": null, "registry_credentials": {"password": "password", "username": "username"}, "shared_memory_in_gb": 8, "volume_mounts": [{"container_path": "/root/.cache/huggingface", "host_path": "~/.cache/huggingface"}]}, "image": "vllm/vllm-openai:latest", "model_configuration": {"api_key": "<value>", "model_properties": {"block_size": 16, "max_model_len": 4096, "max_num_batched_tokens": 8192, "max_num_seq": 256, "max_paddings": 256, "model": "mistralai/Mistral-7B-v0.1", "num_gpus": 1, "quantization": "awq", "revision": "main", "tokenizer": "mistralai/Mistral-7B-v0.1"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKZWNobyAiaGVsbG8iCg=="}, "type": "docker"}, "logo": "https://example.com/logo.png", "name": "<value>", "networking": {"ufw_rules": []}, "public": true, "volume_mount": {"auto": null, "mapping": []}}
+        "401":
+          application/problem+json: {"status": 403}
   updateTemplate:
     speakeasy-default-update-template:
       parameters:
@@ -1078,11 +1113,16 @@ examples:
           template_id: "<id>"
       requestBody:
         application/json: {"alert": {"date_threshold": "2026-12-31T23:59:00Z", "spend_threshold": "10.00"}, "author": "Shadeform", "auto_delete": {"date_threshold": "2026-12-31T23:59:00Z", "spend_threshold": "25.00"}, "description": "without councilman attribute phew", "envs": [{"name": "<value>", "value": "<value>"}], "featured": null, "id": "<id>", "is_account_owner": true, "launch_configuration": {"args": "--model mistralai/Mistral-7B-v0.1", "base64_script": "IyEvYmluL2Jhc2gKZWNobyAiaGVsbG8iCg==", "container_status": "running", "docker_configuration": {"args": "--model mistralai/Mistral-7B-v0.1", "envs": [{"name": "HUGGING_FACE_HUB_TOKEN", "value": "hf_xxxxxxxxxxxxxxxx"}], "image": "vllm/vllm-openai:latest", "port_mappings": [{"container_port": 8000, "host_port": 80}], "registry_credentials": {"password": "password", "username": "username"}, "shared_memory_in_gb": 8, "volume_mounts": [{"container_path": "/root/.cache/huggingface", "host_path": "~/.cache/huggingface"}]}, "image": "vllm/vllm-openai:latest", "model_configuration": {"api_key": "<value>", "model_properties": {"block_size": 16, "max_model_len": 4096, "max_num_batched_tokens": 8192, "max_num_seq": 256, "max_paddings": 256, "model": "mistralai/Mistral-7B-v0.1", "num_gpus": 1, "quantization": "awq", "revision": "main", "tokenizer": "mistralai/Mistral-7B-v0.1"}}, "script_configuration": {"base64_script": "IyEvYmluL2Jhc2gKZWNobyAiaGVsbG8iCg=="}, "type": "docker"}, "logo": "https://example.com/logo.png", "name": "<value>", "networking": {"ufw_rules": []}, "public": true, "volume_mount": {"auto": true, "mapping": [{"disk": "<value>", "file_path": "/lost+found/consequently_below.pptx"}]}}
+      responses:
+        "401":
+          application/problem+json: {"status": 403}
   listVolumes:
     speakeasy-default-list-volumes:
       responses:
         "200":
           application/json: {"volumes": [{"cloud": "<value>", "cloud_assigned_id": "<id>", "cost_estimate": "<value>", "fixed_size": false, "id": "<id>", "mounted_by": ["<value 1>", "<value 2>"], "name": "<value>", "region": "<value>", "size_in_gb": 10591, "supports_multi_mount": true}]}
+        "401":
+          application/problem+json: {"status": 403}
   createVolume:
     speakeasy-default-create-volume:
       requestBody:
@@ -1092,11 +1132,15 @@ examples:
           application/json: {"id": "<id>"}
         "409":
           application/json: {"error": "<value>", "error_code": "<value>"}
+        "401":
+          application/problem+json: {"status": 403}
   listVolumeTypes:
     speakeasy-default-list-volume-types:
       responses:
         "200":
           application/json: {"volume_types": []}
+        "401":
+          application/problem+json: {"status": 403}
   deleteVolume:
     speakeasy-default-delete-volume:
       parameters:
@@ -1105,6 +1149,8 @@ examples:
       responses:
         "409":
           application/json: {"error": "<value>", "error_code": "<value>"}
+        "401":
+          application/problem+json: {"status": 403}
   getVolume:
     speakeasy-default-get-volume:
       parameters:
@@ -1113,8 +1159,6 @@ examples:
       responses:
         "200":
           application/json: {"cloud": "<value>", "cloud_assigned_id": "<id>", "cost_estimate": "<value>", "fixed_size": true, "id": "<id>", "mounted_by": [], "name": "<value>", "region": "<value>", "size_in_gb": 670853, "supports_multi_mount": false}
+        "401":
+          application/problem+json: {"status": 403}
 examplesVersion: 1.0.2
-releaseNotes: |
-  ## Cli SDK Changes:
-  * `Shadeform.Instances.List()`:  `response.Instances[].FlexVm` **Added**
-  * `Shadeform.Instances.Get()`:  `response.FlexVm` **Added**

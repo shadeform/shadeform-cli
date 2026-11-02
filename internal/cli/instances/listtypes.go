@@ -22,7 +22,7 @@ var listTypesCmdMeta = []flagutil.FlagMeta{
 	{FlagName: "shade-instance-type", FieldPath: "ShadeInstanceType", Kind: flagutil.FlagKindString, Optional: true, Description: "Only return this Shade instance type (case-insensitive)."},
 	{FlagName: "available", Shorthand: "a", FieldPath: "Available", Kind: flagutil.FlagKindString, Optional: true, Description: "\"true\" keeps only available entries, \"false\" only unavailable ones. Any other value is ignored."},
 	{FlagName: "sort", FieldPath: "Sort", Kind: flagutil.FlagKindString, Optional: true, Description: "Ordering, not filtering: \"price\" sorts ascending by on-demand hourly price, removing nothing. Any other value is ignored."},
-	{FlagName: "shade-cloud", FieldPath: "ShadeCloud", Kind: flagutil.FlagKindString, Optional: true, Description: "\"true\" excludes the hyperscalers (AWS, Azure). Any other value is ignored."},
+	{FlagName: "shade-cloud", FieldPath: "ShadeCloud", Kind: flagutil.FlagKindString, Optional: true, Description: "\"true\" hides leftover aws and azure catalog rows. Those clouds are no longer integrated. Any other value is ignored."},
 }
 
 // initListTypesCmd initializes the list-types command.

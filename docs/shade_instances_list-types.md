@@ -27,7 +27,7 @@ shade instances list-types [flags]
   -h, --help                         help for list-types
   -n, --num-gpus int                 A non-zero value returns only instance types with exactly that GPU count. 0 disables the filter, and so does omitting the parameter - the two are indistinguishable, so this filter cannot select instance types with no GPUs.
   -r, --region string                Only return availability entries in this Shade region (case-insensitive). Instance types left with no matching region are dropped from the response entirely.
-      --shade-cloud string           "true" excludes the hyperscalers (AWS, Azure). Any other value is ignored.
+      --shade-cloud string           "true" hides leftover aws and azure catalog rows. Those clouds are no longer integrated. Any other value is ignored.
       --shade-instance-type string   Only return this Shade instance type (case-insensitive).
       --sort string                  Ordering, not filtering: "price" sorts ascending by on-demand hourly price, removing nothing. Any other value is ignored.
 ```

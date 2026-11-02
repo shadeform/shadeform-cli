@@ -32,7 +32,7 @@ type CreateInstanceRequest struct {
 	Region string `json:"region"`
 	// How the instance is rented: on_demand (default) or spot. Spot instances run at the discounted spot hourly price but are interruptible: Shadeform may reclaim the capacity at any time, at which point the instance is terminated with status_details set to preempted. See https://docs.shadeform.ai/guides/spotinstances.
 	RentalType *string `json:"rental_type,omitzero"`
-	// True launches the instance in Shade Cloud, billed through Shadeform; false launches it in your linked cloud account. Required for AWS and Azure, where only linked accounts are supported. See https://docs.shadeform.ai/getting-started/concepts#shade-cloud.
+	// True launches the instance in Shade Cloud, billed through Shadeform; false launches it in your linked cloud account. See https://docs.shadeform.ai/getting-started/concepts#shade-cloud.
 	ShadeCloud optionalnullable.OptionalNullable[bool] `json:"shade_cloud,omitzero"`
 	// The Shadeform standardized instance type, as listed by GET /v1/instances/types. See https://docs.shadeform.ai/getting-started/concepts#shade-instance-type-and-cloud-instance-type.
 	ShadeInstanceType string `json:"shade_instance_type"`

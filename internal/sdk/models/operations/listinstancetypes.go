@@ -23,7 +23,7 @@ type ListInstanceTypesRequest struct {
 	Available *string `queryParam:"style=form,explode=true,name=available"`
 	// Ordering, not filtering: "price" sorts ascending by on-demand hourly price, removing nothing. Any other value is ignored.
 	Sort *string `queryParam:"style=form,explode=true,name=sort"`
-	// "true" excludes the hyperscalers (AWS, Azure). Any other value is ignored.
+	// "true" hides leftover aws and azure catalog rows. Those clouds are no longer integrated. Any other value is ignored.
 	ShadeCloud *string `queryParam:"style=form,explode=true,name=shade_cloud"`
 }
 

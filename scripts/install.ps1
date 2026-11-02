@@ -88,6 +88,31 @@ function Install-CLI {
 
         Write-ColorOutput "Download complete" -Color Green
 
+        # Verify the archive against the release's checksums.txt. This is the
+        # same check `shade update` performs; a mismatch means a corrupt or
+        # tampered download and nothing is installed.
+        $checksumsUrl = "https://github.com/$Repo/releases/download/$Version/checksums.txt"
+        $checksumsPath = Join-Path $tempDir "checksums.txt"
+        try {
+            Invoke-WebRequest -Uri $checksumsUrl -OutFile $checksumsPath -UseBasicParsing
+        }
+        catch {
+            throw "Failed to download ${checksumsUrl}: $_"
+        }
+        $expectedLine = Get-Content $checksumsPath | Where-Object {
+            $parts = $_ -split '\s+'
+            $parts.Length -ge 2 -and ($parts[-1] -eq $archiveName -or $parts[-1] -eq "*$archiveName")
+        } | Select-Object -First 1
+        if (-not $expectedLine) {
+            throw "checksums.txt for $Version does not list $archiveName"
+        }
+        $expectedSum = (($expectedLine -split '\s+')[0]).ToLowerInvariant()
+        $actualSum = (Get-FileHash -Path $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+        if ($expectedSum -ne $actualSum) {
+            throw "Checksum mismatch for ${archiveName}: expected $expectedSum, got $actualSum. Nothing was installed. Try again; if it keeps happening, report it at https://github.com/$Repo/issues"
+        }
+        Write-ColorOutput "Checksum verified" -Color Green
+
         # Extract archive
         Write-ColorOutput "Extracting archive..." -Color Cyan
         Expand-Archive -Path $archivePath -DestinationPath $tempDir -Force

@@ -45,6 +45,26 @@ func RegisterCustomCommand(cmd *cobra.Command, parentPath ...string) {
 	}
 }
 
+// RegisterRootCommand makes a hand-written top-level command visible to
+// `shade --usage`, by appending its rendered entry to the root schema. Call
+// it after cmd has been added to the root. Idempotent.
+func RegisterRootCommand(cmd *cobra.Command) {
+	MarkDynamic(cmd)
+	root, ok := usageSchemas[""]
+	if !ok {
+		return
+	}
+	opener := "cmd " + kdlQuote(cmd.Name()) + " "
+	if strings.Contains(root, "\n"+opener) || strings.HasPrefix(root, opener) {
+		return
+	}
+	var buf strings.Builder
+	if err := emitLiveSchema(cmd, &buf); err != nil {
+		return
+	}
+	usageSchemas[""] = strings.TrimRight(root, "\n") + "\n" + buf.String()
+}
+
 // spliceChild inserts child (indented) before the closing brace of a single
 // command entry, or opens a block if the entry has none.
 func spliceChild(schema, child, opener, indent string) string {

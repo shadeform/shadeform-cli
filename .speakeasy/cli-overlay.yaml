@@ -1,0 +1,22 @@
+overlay: 1.0.0
+info:
+  title: CLI adjustments
+  version: 0.0.1
+  description: >-
+    Applied after the shared overlay.yaml (which must stay byte-identical to
+    the copies in shadeform-python and shadeform-mcp). Only CLI-specific
+    presentation tweaks belong here.
+actions:
+  # The upstream document declares an oauth2 scheme so that MCP clients
+  # negotiate OAuth. In the CLI the generated surface for it would be a
+  # global `--oauth2 <token>` flag plus prompts in `configure`, i.e. pasting
+  # a raw bearer token, which is not how shade signs in: the hand-written
+  # `shade auth login` runs the browser flow and mints an API key. Hide the
+  # scheme from the generator until the CLI gets a proper OAuth session
+  # (ENG-1055). The API itself still accepts bearer tokens.
+  - target: $.security[?(@.oauth2)]
+    description: Drop the oauth2 requirement from the global security list
+    remove: true
+  - target: $.components.securitySchemes.oauth2
+    description: Drop the oauth2 scheme definition
+    remove: true

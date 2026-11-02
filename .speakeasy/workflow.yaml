@@ -6,6 +6,7 @@ sources:
             - location: https://api.shadeform.ai/v1/openapi.json
         overlays:
             - location: .speakeasy/overlay.yaml
+            - location: .speakeasy/cli-overlay.yaml
         output: .speakeasy/out.openapi.yaml
         registry:
             location: registry.speakeasyapi.dev/shadeform-ivx/production/shadeform-api

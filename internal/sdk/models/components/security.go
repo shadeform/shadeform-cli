@@ -4,7 +4,15 @@
 package components
 
 type Security struct {
+	Oauth2 *string `security:"scheme,type=oauth2,name=Authorization"`
 	APIKey *string `security:"scheme,type=apiKey,subtype=header,name=X-API-KEY"`
+}
+
+func (s *Security) GetOauth2() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Oauth2
 }
 
 func (s *Security) GetAPIKey() *string {

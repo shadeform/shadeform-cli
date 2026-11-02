@@ -141,6 +141,8 @@ func NewRootCommand() (*cobra.Command, error) {
 			"Use --agent-mode=false to disable.")
 
 	// Global security flags
+	rootCmd.PersistentFlags().String("oauth2", "", "Sign in with a Shadeform account. The access token is sent as `Authorization: Bearer <token>`. Request `offline_access` as well to receive a refresh token. The resource identifier to request a token for is published at `/.well-known/oauth-protected-resource`.")
+	_ = rootCmd.PersistentFlags().SetAnnotation("oauth2", "speakeasy:group", []string{"Authentication"})
 	rootCmd.PersistentFlags().String("api-key", "", "API key issued from the Shadeform dashboard (Settings → API Keys).")
 	_ = rootCmd.PersistentFlags().SetAnnotation("api-key", "speakeasy:group", []string{"Authentication"})
 	rootCmd.PersistentFlags().Bool("no-keyring", false, "Never read or write the OS keychain; store secrets in the config file instead (env: SHADEFORM_NO_KEYRING)")

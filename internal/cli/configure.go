@@ -54,7 +54,7 @@ func runConfigureCmd(cmd *cobra.Command, args []string) error {
 
 	keychainStored := false
 
-	formMode := interactive.Resolve(cmd).SetupFormMode(flagutil.AnyFlagChanged(cmd, "api-key", "default-output-format"))
+	formMode := interactive.Resolve(cmd).SetupFormMode(flagutil.AnyFlagChanged(cmd, "oauth2", "api-key", "default-output-format"))
 	if cmd.Flags().Changed("default-output-format") {
 		formMode = interactive.FormOff
 	}
@@ -71,6 +71,13 @@ func runConfigureCmd(cmd *cobra.Command, args []string) error {
 			}
 			changed = true
 		}
+		if f := cmd.Flags().Lookup("oauth2"); f != nil && f.Changed {
+			v, _ := cmd.Flags().GetString("oauth2")
+			if config.StoreSecret("oauth2", v, &cfg.Security.Oauth2) == nil {
+				keychainStored = true
+			}
+			changed = true
+		}
 		if f := cmd.Flags().Lookup("api-key"); f != nil && f.Changed {
 			v, _ := cmd.Flags().GetString("api-key")
 			if config.StoreSecret("api-key", v, &cfg.Security.ApiKey) == nil {
@@ -83,11 +90,17 @@ func runConfigureCmd(cmd *cobra.Command, args []string) error {
 			return flagutil.WithCLIValidation(fmt.Errorf("no flags provided; use flags to store values in %s, or pass --interactive to open the form", config.GetConfigPath()))
 		}
 	} else {
+		var authOauth2 string
 		var authApiKey string
 		accessible := formMode == interactive.FormAccessible
 
 		var pages []*forms.Page
 		securityFields := []*forms.Field{
+			forms.NewInput(&authOauth2).
+				Title("Sign in with a Shadeform account. The access token is sent as `Authorization: Bearer <token>`. Request `offline_access` as well to receive a refresh token. The resource identifier to request a token for is published at `/.well-known/oauth-protected-resource`.").
+				Description("--oauth2").
+				Password().
+				Placeholder(maskSecret(config.GetStoredSecret("oauth2", cfg.Security.Oauth2))),
 			forms.NewInput(&authApiKey).
 				Title("API key issued from the Shadeform dashboard (Settings → API Keys).").
 				Description("--api-key").
@@ -121,6 +134,12 @@ func runConfigureCmd(cmd *cobra.Command, args []string) error {
 		if err := form.Run(); err != nil {
 			return fmt.Errorf("configure: %w", err)
 		}
+		if authOauth2 != "" {
+			if config.StoreSecret("oauth2", authOauth2, &cfg.Security.Oauth2) == nil {
+				keychainStored = true
+			}
+		}
+
 		if authApiKey != "" {
 			if config.StoreSecret("api-key", authApiKey, &cfg.Security.ApiKey) == nil {
 				keychainStored = true

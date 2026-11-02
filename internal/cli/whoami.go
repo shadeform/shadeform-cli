@@ -48,6 +48,10 @@ func runWhoamiCmd(cmd *cobra.Command, args []string) error {
 		}
 		credentials := map[string]any{}
 		{
+			value, source := config.ResolveRequestSecurityCredential(cmd, "oauth2")
+			credentials["oauth2"] = map[string]any{"source": source, "value": maskSecret(value)}
+		}
+		{
 			value, source := config.ResolveRequestSecurityCredential(cmd, "api-key")
 			credentials["api-key"] = map[string]any{"source": source, "value": maskSecret(value)}
 		}
@@ -64,6 +68,12 @@ func runWhoamiCmd(cmd *cobra.Command, args []string) error {
 	fmt.Fprintf(out, "Environment prefix: SHADEFORM_\n")
 	fmt.Fprintln(out)
 	fmt.Fprintln(out, "Credentials:")
+
+	// Sign in with a Shadeform account. The access token is sent as `Authorization: Bearer <token>`. Request `offline_access` as well to receive a refresh token. The resource identifier to request a token for is published at `/.well-known/oauth-protected-resource`.
+	{
+		value, source := config.ResolveRequestSecurityCredential(cmd, "oauth2")
+		fmt.Fprintf(out, "  --%-25s [%-7s] %s\n", "oauth2", source, maskSecret(value))
+	}
 
 	// API key issued from the Shadeform dashboard (Settings → API Keys).
 	{

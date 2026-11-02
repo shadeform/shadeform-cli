@@ -80,7 +80,7 @@ type errorRule struct {
 
 var builtinTypeHints = map[ErrorType][]string{
 	ErrorTypeAuthentication: {
-		"Set SHADEFORM_API_KEY (or use --api-key)",
+		"Set SHADEFORM_API_KEY (or another credential via the SHADEFORM_* environment variables / the credential flags listed in --help)",
 		fmt.Sprintf("Run '%s whoami' to check current authentication status", cliName),
 	},
 	ErrorTypeAuthorization: {

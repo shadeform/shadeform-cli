@@ -103,13 +103,40 @@ func resolveStringFlag(cmd *cobra.Command, name string) string {
 
 // BuildGlobalSecurity reads security credentials with priority: flag > env var > keyring > config.
 func BuildGlobalSecurity(cmd *cobra.Command, allowedSecurityFields []string) components.Security {
-	_ = allowedSecurityFields
 	// Resolve request credentials: flag > env var > keyring > config file (keyring skipped for dry-run)
-	apiKey, _ := config.ResolveRequestSecurityCredential(cmd, "api-key")
+	var (
+		oauth2 string
+		apiKey string
+	)
+	credentialSources := map[string]string{}
 	globalSecurity := components.Security{}
-	if apiKey != "" {
+	// Rank the alternatives by how explicitly the caller supplied them
+	// (flag > env > keyring > config; complete before partial at the same
+	// tier) and send exactly one: an explicit credential picks its scheme
+	// regardless of the declared order.
+	resolveCandidates := func(resolve func(*cobra.Command, string) (string, string)) []config.CredentialCandidate {
+		oauth2, credentialSources["oauth2"] = resolve(cmd, "oauth2")
+		apiKey, credentialSources["api-key"] = resolve(cmd, "api-key")
+		return []config.CredentialCandidate{
+			{Field: "Oauth2", Complete: oauth2 != "", Sources: []string{credentialSources["oauth2"]}},
+			{Field: "APIKey", Complete: apiKey != "", Sources: []string{credentialSources["api-key"]}},
+		}
+	}
+	// A complete flag or env credential outranks anything in the keychain,
+	// so only fall back to it (and risk a slow or locked keychain) when no
+	// allowed alternative was supplied explicitly.
+	credentialCandidates := resolveCandidates(config.ResolveExplicitSecurityCredential)
+	picked := config.PickExplicitCredential(credentialCandidates, allowedSecurityFields)
+	if picked == -1 {
+		credentialCandidates = resolveCandidates(config.ResolveRequestSecurityCredential)
+		picked = config.PickCredential(credentialCandidates, allowedSecurityFields)
+	}
+	flagutil.RecordCredentialsMissing(cmd, picked == -1 && config.PickCredential(credentialCandidates, nil) == -1, "")
+	switch picked {
+	case 0:
+		globalSecurity.Oauth2 = &oauth2
+	case 1:
 		globalSecurity.APIKey = &apiKey
 	}
-	flagutil.RecordRequestSecurity(cmd, globalSecurity, "")
 	return globalSecurity
 }

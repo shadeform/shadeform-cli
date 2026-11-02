@@ -103,11 +103,18 @@ func runAuthLoginCmd(cmd *cobra.Command, args []string) error {
 	}
 
 	keychainStored := false
-	formMode := interactive.Resolve(cmd).SetupFormMode(flagutil.AnyFlagChanged(cmd, "api-key"))
+	formMode := interactive.Resolve(cmd).SetupFormMode(flagutil.AnyFlagChanged(cmd, "oauth2", "api-key"))
 
 	if formMode == interactive.FormOff {
 		// Non-interactive: store any explicitly-set flags without prompting
 		changed := false
+		if f := cmd.Flags().Lookup("oauth2"); f != nil && f.Changed {
+			v, _ := cmd.Flags().GetString("oauth2")
+			if config.StoreSecret("oauth2", v, &cfg.Security.Oauth2) == nil {
+				keychainStored = true
+			}
+			changed = true
+		}
 		if f := cmd.Flags().Lookup("api-key"); f != nil && f.Changed {
 			v, _ := cmd.Flags().GetString("api-key")
 			if config.StoreSecret("api-key", v, &cfg.Security.ApiKey) == nil {
@@ -121,28 +128,68 @@ func runAuthLoginCmd(cmd *cobra.Command, args []string) error {
 		}
 	} else {
 
-		var authApiKey string
-
 		accessible := formMode == interactive.FormAccessible
+		promptInput := forms.NewReader(cmd.InOrStdin())
 
-		fields := []*forms.Field{
-			forms.NewInput(&authApiKey).
-				Title("API key issued from the Shadeform dashboard (Settings → API Keys).").
-				Description("--api-key").
-				Password().
-				Placeholder(maskSecret(config.GetStoredSecret("api-key", cfg.Security.ApiKey))),
-		}
+		var selectedScheme string
+		schemeSelect := forms.NewSelect(&selectedScheme,
+			forms.NewOption("Sign in with a Shadeform account. The access token is sent as `Authorization: Bearer <token>`. Request `offline_access` as well to receive a refresh token. The resource identifier to request a token for is published at `/.well-known/oauth-protected-resource`.", "oauth2"),
+			forms.NewOption("API key issued from the Shadeform dashboard (Settings → API Keys).", "api-key"),
+		).
+			Title("Authentication Method").
+			Description("Choose which credentials to configure")
 
-		form := forms.New(forms.NewPage("", fields...)).Accessible(accessible).IO(cmd.InOrStdin(), cmd.OutOrStdout())
-
-		if err := form.Run(); err != nil {
+		if err := forms.New(forms.NewPage("", schemeSelect)).Accessible(accessible).IO(promptInput, cmd.OutOrStdout()).Run(); err != nil {
 			return fmt.Errorf("auth login: %w", err)
 		}
 
-		if authApiKey != "" {
-			if config.StoreSecret("api-key", authApiKey, &cfg.Security.ApiKey) == nil {
-				keychainStored = true
+		switch selectedScheme {
+		case "oauth2":
+			var authOauth2 string
+
+			fields := []*forms.Field{
+				forms.NewInput(&authOauth2).
+					Title("Sign in with a Shadeform account. The access token is sent as `Authorization: Bearer <token>`. Request `offline_access` as well to receive a refresh token. The resource identifier to request a token for is published at `/.well-known/oauth-protected-resource`.").
+					Description("--oauth2").
+					Password().
+					Placeholder(maskSecret(config.GetStoredSecret("oauth2", cfg.Security.Oauth2))),
 			}
+
+			form := forms.New(forms.NewPage("", fields...)).Accessible(accessible).IO(promptInput, cmd.OutOrStdout())
+
+			if err := form.Run(); err != nil {
+				return fmt.Errorf("auth login: %w", err)
+			}
+
+			if authOauth2 != "" {
+				if config.StoreSecret("oauth2", authOauth2, &cfg.Security.Oauth2) == nil {
+					keychainStored = true
+				}
+			}
+
+		case "api-key":
+			var authApiKey string
+
+			fields := []*forms.Field{
+				forms.NewInput(&authApiKey).
+					Title("API key issued from the Shadeform dashboard (Settings → API Keys).").
+					Description("--api-key").
+					Password().
+					Placeholder(maskSecret(config.GetStoredSecret("api-key", cfg.Security.ApiKey))),
+			}
+
+			form := forms.New(forms.NewPage("", fields...)).Accessible(accessible).IO(promptInput, cmd.OutOrStdout())
+
+			if err := form.Run(); err != nil {
+				return fmt.Errorf("auth login: %w", err)
+			}
+
+			if authApiKey != "" {
+				if config.StoreSecret("api-key", authApiKey, &cfg.Security.ApiKey) == nil {
+					keychainStored = true
+				}
+			}
+
 		}
 
 	}
@@ -169,6 +216,10 @@ func runAuthLogoutCmd(cmd *cobra.Command, args []string) error {
 		cfg = &config.Config{}
 	}
 
+	if config.KeyringAvailable() {
+		_ = config.DeleteKeyringValue("oauth2")
+	}
+	cfg.Security.Oauth2 = ""
 	if config.KeyringAvailable() {
 		_ = config.DeleteKeyringValue("api-key")
 	}

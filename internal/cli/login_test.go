@@ -87,6 +87,8 @@ type fakeAPI struct {
 	secrets map[string]string // id -> plaintext key
 	deleted []string
 	created []map[string]any
+	// userAgents has one "METHOD path User-Agent" entry per request received.
+	userAgents []string
 }
 
 func newFakeAPI(t *testing.T, existingNames ...string) *fakeAPI {
@@ -179,7 +181,12 @@ func newFakeAPI(t *testing.T, existingNames ...string) *fakeAPI {
 		f.deleted = append(f.deleted, id)
 		w.WriteHeader(http.StatusOK)
 	})
-	f.srv = httptest.NewServer(mux)
+	f.srv = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		f.mu.Lock()
+		f.userAgents = append(f.userAgents, r.Method+" "+r.URL.Path+" "+r.Header.Get("User-Agent"))
+		f.mu.Unlock()
+		mux.ServeHTTP(w, r)
+	}))
 	t.Cleanup(f.srv.Close)
 	return f
 }

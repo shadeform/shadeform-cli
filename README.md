@@ -114,6 +114,26 @@ shade update --version v0.3.1   # install a specific release
 
 Once a day at most, after a command finishes at an interactive terminal, shade prints a one-line note on stderr when a newer release exists. It is a single anonymous request to `api.github.com` and sends nothing about you. It stays quiet with `-o json`, `--jq`, `--dry-run`, in agent mode, when `CI` is set, in dev builds, and whenever `SHADEFORM_NO_UPDATE_CHECK=1`.
 
+## What shade sends
+
+Every request to the Shadeform API carries a `User-Agent` header that says which shade made it:
+
+```
+shade/0.4.0 (darwin/arm64; agent=off; op=listInstances) speakeasy-sdk/go 0.4.0 2.948.4 1.0.0 github.com/shadeform/shadeform-cli/internal/sdk
+```
+
+| Part | Meaning |
+| --- | --- |
+| `shade/0.4.0` | The shade version. |
+| `darwin/arm64` | Operating system and CPU architecture. |
+| `agent=off` | `on` when [agent mode](#agent-mode-and-structured-errors) is active, by flag or because a coding agent was detected. |
+| `op=listInstances` | The API operation the command called. |
+| `speakeasy-sdk/go ...` | The generated API client inside shade and its versions. |
+
+Shadeform uses it to count requests by shade version, so we know which releases are still in use and whether people or agents are driving them. The API already sees the request itself and the account your API key belongs to; this header adds only the fields above. It holds no hostname, username, path, command-line argument or environment variable.
+
+shade has no other usage reporting and no analytics service. Besides the API server you point it at, it only contacts Shadeform's sign-in service during `shade auth login`, and GitHub for `shade update` and the update check described above. To see the header for any command, add `--dry-run`.
+
 <!-- Start Shell Completion [completion] -->
 ## Shell Completion
 

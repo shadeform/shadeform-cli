@@ -18,6 +18,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/shadeform/shadeform-cli/internal/useragent"
 )
 
 // Permissions a key can be minted with, as the API spells them.
@@ -110,7 +112,7 @@ func (c *Client) List(ctx context.Context) ([]Key, error) {
 	var resp struct {
 		APIKeys []Key `json:"api_keys"`
 	}
-	if err := c.do(ctx, http.MethodGet, "/v1/apikeys", nil, &resp); err != nil {
+	if err := c.do(ctx, "listApiKeys", http.MethodGet, "/v1/apikeys", nil, &resp); err != nil {
 		return nil, fmt.Errorf("listing API keys: %w", err)
 	}
 	return resp.APIKeys, nil
@@ -121,7 +123,7 @@ func (c *Client) List(ctx context.Context) ([]Key, error) {
 func (c *Client) Create(ctx context.Context, name string, permissions []string) (*Created, error) {
 	body := map[string]any{"name": name, "permissions": permissions}
 	var created Created
-	if err := c.do(ctx, http.MethodPost, "/v1/apikeys", body, &created); err != nil {
+	if err := c.do(ctx, "createApiKey", http.MethodPost, "/v1/apikeys", body, &created); err != nil {
 		return nil, fmt.Errorf("creating API key %q: %w", name, err)
 	}
 	if created.APIKey == "" {
@@ -133,7 +135,7 @@ func (c *Client) Create(ctx context.Context, name string, permissions []string) 
 // Delete revokes a key by ID. Revoking a key that is already gone is not an
 // error here: the state the caller wanted is the state that exists.
 func (c *Client) Delete(ctx context.Context, id string) error {
-	err := c.do(ctx, http.MethodPost, "/v1/apikeys/"+id+"/delete", nil, nil)
+	err := c.do(ctx, "deleteApiKey", http.MethodPost, "/v1/apikeys/"+id+"/delete", nil, nil)
 	var ae *APIError
 	if errors.As(err, &ae) && ae.Status == http.StatusNotFound {
 		return nil
@@ -144,7 +146,10 @@ func (c *Client) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-func (c *Client) do(ctx context.Context, method, path string, body any, out any) error {
+// do sends one request. operation names it in the User-Agent the same way the
+// generated SDK's operation IDs do; these endpoints are not in the API
+// document, so the names are this package's own.
+func (c *Client) do(ctx context.Context, operation, method, path string, body any, out any) error {
 	var payload io.Reader
 	if body != nil {
 		b, err := json.Marshal(body)
@@ -161,6 +166,9 @@ func (c *Client) do(ctx context.Context, method, path string, body any, out any)
 		req.Header.Set("Content-Type", "application/json")
 	}
 	req.Header.Set("Accept", "application/json")
+	// Without this the request carries Go's default User-Agent, and the API
+	// would count signing in as some unnamed Go program, not as the CLI.
+	req.Header.Set("User-Agent", useragent.With(operation, ""))
 	c.auth(req)
 
 	resp, err := c.HTTP.Do(req)

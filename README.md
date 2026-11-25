@@ -552,6 +552,19 @@ This CLI is in beta, and there may be breaking changes between versions without 
 to a specific package version. This way, you can install the same version each time without breaking changes unless you are intentionally
 looking for the latest version.
 
+## Releases
+
+Merging to `main` is the release step. When a merge changes shipped code (`cmd/`, `internal/`, `go.mod`, `go.sum`, `.goreleaser.yaml` or a Speakeasy regeneration), the `Tag release` workflow runs `go vet` and `go test`, tags the commit, and the `Release` workflow builds and publishes the archives. Changes to docs, workflows or tests alone do not release.
+
+The version is chosen by `.github/scripts/next-release-tag.sh`:
+
+- A regeneration that raises the generated version in `internal/cli/version.go` past the latest release is tagged with that version. Minor and major bumps arrive this way.
+- Anything else is tagged as the latest release plus one patch.
+
+To release `main` without a code change, or to pick the version yourself, run the `Tag release` workflow by hand and fill in `version` (for example `0.4.0`). The version has to be newer than the latest release and not older than the generated version.
+
+The tag is the released version. GoReleaser stamps it into the binary, so `internal/cli/version.go` can lag behind it between regenerations.
+
 ## Contributions
 
 This CLI is generated programmatically. Edits to generated files are overwritten on regeneration. To customize it:

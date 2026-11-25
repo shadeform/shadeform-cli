@@ -1,8 +1,18 @@
 name: Tag release
 
-# Tags main with the generated CLI version whenever a regeneration lands,
-# which is what release.yaml listens for. Merging a Speakeasy regeneration PR
-# is therefore the whole release step.
+# Tags main for release whenever shipped code lands, which is what
+# release.yaml listens for. Merging a pull request that changes the CLI is
+# therefore the whole release step, whether the change is hand-written or a
+# Speakeasy regeneration.
+#
+# .github/scripts/next-release-tag.sh picks the version: the generated
+# version when a regeneration raised it past the latest release, otherwise the
+# latest release plus one patch. A commit that already has a release tag is
+# left alone. Run the workflow by hand to release main without a code change,
+# or to choose the version (a minor bump, say) yourself.
+#
+# The tag is only pushed after go vet and go test pass, because pull requests
+# in this repository have no test check of their own.
 #
 # The tag is pushed with SDK_AUTOMATION_PAT rather than GITHUB_TOKEN for two
 # reasons: tags pushed with GITHUB_TOKEN do not trigger other workflows, so
@@ -12,15 +22,52 @@ on:
   push:
     branches:
       - main
+    # What ends up in the binary. Docs, workflows, tests and test data do not
+    # release. Nothing under cmd/ or internal/ is embedded into the binary; if
+    # that changes, make sure the exclusions below do not hide the embedded
+    # files.
     paths:
+      - "cmd/**"
+      - "internal/**"
+      - "!**/*_test.go"
+      - "!**/testdata/**"
+      - "!**/*.md"
+      - go.mod
+      - go.sum
+      - .goreleaser.yaml
       - .speakeasy/gen.lock
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, for example 0.4.0. Leave empty for the next version."
+        required: false
+        type: string
 
 permissions:
   contents: read
 
+# Within a group GitHub runs one run at a time and keeps at most one more
+# waiting. A newer waiting run replaces an older one, which is cancelled.
+#
+# Runs started by a merge share a group. Losing a waiting one is harmless: the
+# run that replaced it is for a newer commit, which contains the older one, so
+# the change is still released, in one release rather than two.
+#
+# Manual runs have a group of their own, so a merge cannot take a waiting
+# manual run's place and drop the version it asked for. Starting a second
+# manual run while one is waiting still cancels the first.
+#
+# A manual run and a merge run can therefore be going at the same time.
+# push-release-tag.sh fetches the tags and picks the version again right
+# before it pushes, so the slower run acts on what the faster one released.
+concurrency:
+  group: tag-release-${{ github.event_name }}
+  cancel-in-progress: false
+
 jobs:
   tag:
+    # Releases are cut from main only, including manual runs.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,22 +76,51 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.SDK_AUTOMATION_PAT }}
 
-      - name: Tag the generated version
+      - name: Test the release scripts
         run: |
           set -euo pipefail
-          version=$(sed -n 's/^var Version = "\(.*\)"$/\1/p' internal/cli/version.go)
-          if [ -z "$version" ]; then
-            echo "::error::could not read Version from internal/cli/version.go"
-            exit 1
+          .github/scripts/next-release-tag_test.sh
+          .github/scripts/push-release-tag_test.sh
+
+      # Decides whether there is anything to test and release, and fails
+      # early on a version that cannot be used. The tag step picks again.
+      - name: Pick the version
+        id: next
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          tag=$(.github/scripts/next-release-tag.sh "$REQUESTED_VERSION")
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if [ -z "$tag" ]; then
+            echo "- This commit is already released; nothing to do" >> "$GITHUB_STEP_SUMMARY"
           fi
-          tag="v$version"
-          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
-            echo "$tag already exists; nothing to do"
-            echo "- $tag already exists; nothing to do" >> "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
+
+      - name: Setup Go
+        if: steps.next.outputs.tag != ''
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: "go.mod"
+          cache: true
+
+      - name: Vet and test
+        if: steps.next.outputs.tag != ''
+        run: |
+          set -euo pipefail
+          go vet ./...
+          go test ./...
+
+      - name: Push the tag
+        if: steps.next.outputs.tag != ''
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
           git config user.name "aychang95"
           git config user.email "aychang995@gmail.com"
-          git tag -a "$tag" -m "shade $tag"
-          git push origin "$tag"
-          echo "- Pushed $tag; release.yaml takes it from here" >> "$GITHUB_STEP_SUMMARY"
+          tag=$(.github/scripts/push-release-tag.sh "$REQUESTED_VERSION")
+          if [ -z "$tag" ]; then
+            echo "- Another run released this commit while this one was testing; nothing to do" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- Pushed $tag; release.yaml takes it from here" >> "$GITHUB_STEP_SUMMARY"
+          fi

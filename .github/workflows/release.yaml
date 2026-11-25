@@ -20,17 +20,34 @@ jobs:
       # The tag is the released version: GoReleaser stamps it into the binary.
       # It may run ahead of the generated version in internal/cli/version.go,
       # which only moves on a Speakeasy regeneration, but it must never fall
-      # behind it. A prerelease suffix (v1.0.0-rc.1) is left out of the
-      # comparison.
+      # behind it.
+      #
+      # A prerelease (v1.0.0-rc.1) comes before the version it is named after,
+      # so it has to be for a version strictly newer than the generated one:
+      # v0.4.0-rc.1 is older than a generated 0.4.0.
+      #
+      # Numbers have no leading zeros, the same rule as
+      # .github/scripts/next-release-tag.sh, so that a tag published here is
+      # also counted there when the next version is worked out.
       - name: Check release version
         run: |
           tag_version="${GITHUB_REF_NAME#v}"
           tag_core="${tag_version%%-*}"
           cli_version=$(sed -n 's/^var Version = "\(.*\)"$/\1/p' internal/cli/version.go)
-          version_re='^[0-9]+\.[0-9]+\.[0-9]+$'
+          number='(0|[1-9][0-9]*)'
+          version_re="^${number}\\.${number}\\.${number}$"
+          prerelease_re='^[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*$'
           if ! [[ "$tag_core" =~ $version_re ]]; then
             printf '::error::Release tag %s is not a vX.Y.Z version.\n' "$GITHUB_REF_NAME"
             exit 1
+          fi
+          prerelease=false
+          if [ "$tag_core" != "$tag_version" ]; then
+            prerelease=true
+            if ! [[ "${tag_version#*-}" =~ $prerelease_re ]]; then
+              printf '::error::Release tag %s does not have a valid prerelease suffix.\n' "$GITHUB_REF_NAME"
+              exit 1
+            fi
           fi
           if ! [[ "$cli_version" =~ $version_re ]]; then
             printf '::error::Could not read the generated CLI version from internal/cli/version.go.\n'
@@ -39,6 +56,10 @@ jobs:
           oldest=$(printf '%s\n%s\n' "$tag_core" "$cli_version" | sort -V | head -n 1)
           if [ "$oldest" != "$cli_version" ]; then
             printf '::error::Release tag %s is older than the generated CLI version %s. Tag %s or newer.\n' "$GITHUB_REF_NAME" "$cli_version" "v$cli_version"
+            exit 1
+          fi
+          if [ "$prerelease" = true ] && [ "$tag_core" = "$cli_version" ]; then
+            printf '::error::Release tag %s is a prerelease of %s, which the generated CLI version has already reached. A prerelease has to be for a newer version.\n' "$GITHUB_REF_NAME" "$cli_version"
             exit 1
           fi
 

@@ -561,7 +561,7 @@ The version is chosen by `.github/scripts/next-release-tag.sh`:
 - A regeneration that raises the generated version in `internal/cli/version.go` past the latest release is tagged with that version. Minor and major bumps arrive this way.
 - Anything else is tagged as the latest release plus one patch.
 
-To release `main` without a code change, or to pick the version yourself, run the `Tag release` workflow by hand and fill in `version` (for example `0.4.0`). The version has to be newer than the latest release and not older than the generated version.
+To release `main` without a code change, or to pick the version yourself, run the `Tag release` workflow by hand and fill in `version` (for example `0.4.0`). The version has to be newer than the latest release and not older than the generated version. A merge that changes shipped code is released as a patch on its own, and a commit is released only once, so a manual run can choose the version only while the latest commit on `main` has no release tag, for example after a merge that changes only docs. If a manual run shows as cancelled or failed, it released nothing and has to be started again.
 
 The tag is the released version. GoReleaser stamps it into the binary, so `internal/cli/version.go` can lag behind it between regenerations.
 

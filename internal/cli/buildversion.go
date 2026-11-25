@@ -23,7 +23,8 @@ import (
 // has no ldflags, and without this file it would report the generated number
 // in `shade version`, in the User-Agent, and to `shade update --check`, which
 // would then offer the release that is already installed. Go records the
-// module version such a binary was built from, so that is used instead.
+// module version such a binary was built from, so that is used instead. The
+// same goes for a go build of a clean checkout of the tag.
 //
 // This runs before main, which still overrides Version when the release
 // ldflags are present. BuildTime is not touched, so these binaries are still
@@ -41,10 +42,13 @@ var pseudoVersion = regexp.MustCompile(`^v[0-9]+\.(0\.0-|\d+\.\d+-([^+]*\.)?0\.)
 // version from the build info when that is a real release tag newer than the
 // generated number, and the generated number otherwise.
 //
-// A plain go build from a checkout keeps the generated number. Its module
-// version is empty or "(devel)", a pseudo-version when the commit is not
-// tagged, or carries "+dirty" when the tree has local changes; none of those
-// is a release.
+// go build records a module version too, from version control. For a clean
+// checkout of a release tag that is the tag itself, so such a build reports
+// the tag just as go install does. Every other build from a checkout keeps
+// the generated number: its module version is a pseudo-version when the
+// commit is not tagged, carries "+dirty" when the tree has local changes, or
+// is empty or "(devel)" when Go found no version control to read. None of
+// those is a release.
 func moduleVersion(generated string, readBuildInfo func() (*debug.BuildInfo, bool)) string {
 	info, ok := readBuildInfo()
 	if !ok || info == nil {

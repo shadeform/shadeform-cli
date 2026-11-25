@@ -25,6 +25,13 @@ func TestModuleVersion(t *testing.T) {
 			want: "0.3.2",
 		},
 		{
+			// Go records the tag for this build exactly as it does for
+			// go install, so the two cannot be told apart and need not be.
+			name: "go build of a clean checkout of a release tag",
+			read: withVersion("v0.3.2"),
+			want: "0.3.2",
+		},
+		{
 			name: "go install of a later minor",
 			read: withVersion("v0.10.0"),
 			want: "0.10.0",
